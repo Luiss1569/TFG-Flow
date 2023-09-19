@@ -22,6 +22,9 @@ project.lock.json
 appsettings.json
 local.settings.json
 
+.vscode
+*.code-workspace
+
 node_modules
 dist
 
