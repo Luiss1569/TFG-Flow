@@ -13,7 +13,10 @@ export default new ApiWrapper(handler)
   .setPublic()
   .setSchemaValidator((schema) => ({
     body: schema.object().shape({
-      email: schema.string().email().required(),
+      cpf: schema
+        .string()
+        .matches(/^[0-9]{11}$/)
+        .required(),
       password: schema.string().required(),
     }),
   }))

@@ -1,0 +1,242 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum user_roles {
+  student
+  teacher
+  admin
+}
+
+model Users {
+  id                 String               @id @default(uuid())
+  name               String
+  cpf                String
+  role               user_roles           @default(student)
+  email              String
+  password           String
+  matriculation      String
+  institute_id       String               @map("institute_id")
+  institute          Institutes           @relation(fields: [institute_id], references: [id])
+  created_at         DateTime             @default(now())
+  updated_at         DateTime             @updatedAt
+  teachers           Teachers[]
+  Answers            Answers[]
+  UserRequestAnswers UserRequestAnswers[]
+
+  @@map(name: "users")
+}
+
+model Institutes {
+  id         String     @id @default(uuid())
+  acronym    String?
+  name       String?
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  Users      Users[]
+  teachers   Teachers[]
+
+  @@map(name: "institutes")
+}
+
+enum university_degrees {
+  mastermin
+  doctor
+}
+
+model Teachers {
+  id                 String               @id @default(uuid())
+  matriculation      String
+  university_degree  university_degrees
+  user_id            String               @map("user_id")
+  user               Users                @relation(fields: [user_id], references: [id])
+  institute_id       String               @map("institute_id")
+  institute          Institutes           @relation(fields: [institute_id], references: [id])
+  created_at         DateTime             @default(now())
+  updated_at         DateTime             @updatedAt
+  activitiesTeachers ActivitiesTeachers[]
+
+  @@map(name: "teachers")
+}
+
+model Status {
+  id         String     @id @default(uuid())
+  name       String
+  Forms      Forms?
+  Workflows  Workflows?
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+
+  @@map(name: "status")
+}
+
+enum step_types {
+  send_email
+  request_answer
+  conditional
+  swap_workflow
+}
+
+model Steps {
+  id           String     @id @default(uuid())
+  name         String
+  type         step_types
+  content      Json       @default("{}")
+  workflow_id  String     @map("workflow_id")
+  workflow     Workflows  @relation(fields: [workflow_id], references: [id])
+  next_step_id String     @unique @map("next_step_id")
+  created_at   DateTime   @default(now())
+  updated_at   DateTime   @updatedAt
+
+  @@map(name: "steps")
+}
+
+model Workflows {
+  id               String             @id @default(uuid())
+  name             String
+  status_id        String             @unique @map("status_id")
+  status           Status             @relation(fields: [status_id], references: [id])
+  created_at       DateTime           @default(now())
+  updated_at       DateTime           @updatedAt
+  Steps            Steps[]
+  ActivityWorkflow ActivityWorkflow[]
+
+  @@map(name: "workflows")
+}
+
+model Forms {
+  id                String              @id @default(uuid())
+  slug              String              @unique
+  status_id         String              @unique @map("status_id")
+  status            Status              @relation(fields: [status_id], references: [id])
+  content           Json                @default("{}")
+  created_at        DateTime            @default(now())
+  updated_at        DateTime            @updatedAt
+  FormOpeningPeriod FormOpeningPeriod[]
+  RequestAnswers    RequestAnswers?
+
+  @@map(name: "forms")
+}
+
+model FormOpeningPeriod {
+  id         String   @id @default(uuid())
+  start_date DateTime
+  end_date   DateTime
+  form_id    String   @map("form_id")
+  form       Forms    @relation(fields: [form_id], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map(name: "form_opening_period")
+}
+
+model Activities {
+  id               String               @id @default(uuid())
+  matriculation    Int                  @unique @default(autoincrement())
+  created_at       DateTime             @default(now())
+  updated_at       DateTime             @updatedAt
+  masterminds      ActivitiesTeachers[]
+  ActivityWorkflow ActivityWorkflow[]
+  Answers          Answers[]
+  RequestAnswers   RequestAnswers[]
+
+  @@map(name: "activities")
+}
+
+model ActivitiesTeachers {
+  activity_id String     @map("activity_id")
+  activity    Activities @relation(fields: [activity_id], references: [id])
+  teacher_id  String     @map("teacher_id")
+  teacher     Teachers   @relation(fields: [teacher_id], references: [id])
+  assigned_at DateTime   @default(now())
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+
+  @@id([activity_id, teacher_id])
+  @@map(name: "activities_teachers")
+}
+
+enum activity_workflow_status {
+  inactive
+  done
+  error
+  in_progress
+}
+
+model ActivityWorkflow {
+  id                    String                   @id @default(uuid())
+  status                activity_workflow_status
+  activity_id           String                   @map("activity_id")
+  activity              Activities               @relation(fields: [activity_id], references: [id])
+  workflow_id           String                   @map("workflow_id")
+  workflow              Workflows                @relation(fields: [workflow_id], references: [id])
+  created_at            DateTime                 @default(now())
+  updated_at            DateTime                 @updatedAt
+  ActivityWorkflowSteps ActivityWorkflowSteps[]
+
+  @@map(name: "activity_workflow")
+}
+
+model ActivityWorkflowSteps {
+  id                 String           @id @default(uuid())
+  active_workflow_id String           @map("active_workflow_id")
+  active_workflow    ActivityWorkflow @relation(fields: [active_workflow_id], references: [id])
+  response           Json?
+  created_at         DateTime         @default(now())
+  updated_at         DateTime         @updatedAt
+
+  @@map(name: "activity_workflow_steps")
+}
+
+model Answers {
+  id                 String               @id @default(uuid())
+  content            Json                 @default("{}")
+  user_id            String               @map("user_id")
+  user               Users                @relation(fields: [user_id], references: [id])
+  activity_id        String               @map("activity_id")
+  activity           Activities           @relation(fields: [activity_id], references: [id])
+  created_at         DateTime             @default(now())
+  updated_at         DateTime             @updatedAt
+  UserRequestAnswers UserRequestAnswers[]
+
+  @@map(name: "answers")
+}
+
+enum request_answer_status {
+  pending
+  proccess
+  evaluated
+}
+
+model RequestAnswers {
+  id                 String                @id @default(uuid())
+  status             request_answer_status @default(pending)
+  form_id            String                @unique @map("form_id")
+  form               Forms                 @relation(fields: [form_id], references: [id])
+  activity_id        String                @map("activity_id")
+  activity           Activities            @relation(fields: [activity_id], references: [id])
+  created_at         DateTime              @default(now())
+  updated_at         DateTime              @updatedAt
+  UserRequestAnswers UserRequestAnswers[]
+
+  @@map(name: "request_answers")
+}
+
+model UserRequestAnswers {
+  request_answer_id String         @map("request_answer_id")
+  request_answer    RequestAnswers @relation(fields: [request_answer_id], references: [id])
+  user_id           String         @map("user_id")
+  user              Users          @relation(fields: [user_id], references: [id])
+  answer_id         String         @unique @map("answer_id")
+  answer            Answers        @relation(fields: [answer_id], references: [id])
+  created_at        DateTime       @default(now())
+  updated_at        DateTime       @updatedAt
+
+  @@map(name: "request_answers_users")
+}
