@@ -1,17 +1,26 @@
-import ApiWrapper from "../../utils/type-functions/apiWrapper";
+import ApiWrapper, {
+  ApiWrapperHandler,
+} from "../../utils/type-functions/apiWrapper";
 
-const Login = new ApiWrapper(
-  {
+const handler: ApiWrapperHandler = async (res, context) => {
+  return {
+    status: 200,
+    body: "Hello World!",
+  };
+};
+
+export default new ApiWrapper(handler)
+  .setPublic()
+  .setSchemaValidator((schema) => ({
+    body: schema.object().shape({
+      email: schema.string().email().required(),
+      password: schema.string().required(),
+    }),
+  }))
+  .configure({
     name: "Login",
     options: {
       authLevel: "anonymous",
-      methods: ["GET"],
+      methods: ["GET", "POST"],
     },
-  },
-  async (request, context) => {
-    return {
-      status: 200,
-      body: "Hello World!",
-    };
-  }
-);
+  });
