@@ -34,13 +34,12 @@ model Users {
 }
 
 model Institutes {
-  id         String     @id @default(uuid())
+  id         String   @id @default(uuid())
   acronym    String?
   name       String?
-  created_at DateTime   @default(now())
-  updated_at DateTime   @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
   Users      Users[]
-  teachers   Teachers[]
 
   @@map(name: "institutes")
 }
@@ -56,8 +55,6 @@ model Teachers {
   university_degree  university_degrees
   user_id            String               @map("user_id")
   user               Users                @relation(fields: [user_id], references: [id])
-  institute_id       String               @map("institute_id")
-  institute          Institutes           @relation(fields: [institute_id], references: [id])
   created_at         DateTime             @default(now())
   updated_at         DateTime             @updatedAt
   activitiesTeachers ActivitiesTeachers[]
