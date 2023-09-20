@@ -7,6 +7,8 @@ import {
 } from "@azure/functions";
 import * as yup from "yup";
 import jwt from "../../services/jwt";
+import * as prisma from "../../services/prisma";
+import * as res from "./apiResponse";
 
 interface THttpRequest {
   body: Object;
@@ -19,6 +21,7 @@ interface THttpRequest {
 }
 
 export type ApiWrapperHandler = (
+  conn: ReturnType<typeof prisma.connect>,
   request: THttpRequest,
   context: InvocationContext
 ) => Promise<HttpResponseInit>;
@@ -60,14 +63,21 @@ export default class ApiWrapper {
           headers,
         })
         .catch((error) => {
-          throw error;
+          const err = {
+            status: 400,
+            message: error.message,
+          };
+          throw err;
         });
 
       if (!this.isPublic) {
         user = jwt.verify(headers);
       }
 
+      const conn = prisma.connect();
+
       return await this.handler(
+        conn,
         {
           ...request,
           body,
@@ -79,10 +89,7 @@ export default class ApiWrapper {
       );
     } catch (error) {
       context.error(error);
-      return {
-        status: error.status || 500,
-        body: error.message,
-      };
+      return res.error(error.status ?? 500, null, error.message ?? error);
     }
   };
 
@@ -93,6 +100,7 @@ export default class ApiWrapper {
     const { name, options } = configs;
     app.http(name, {
       ...options,
+      route: options.route ?? name.toLowerCase().replace(/\s/g, "-"),
       handler: this.run,
     });
     return this;
