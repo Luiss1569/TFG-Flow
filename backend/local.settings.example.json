@@ -2,8 +2,6 @@
   "IsEncrypted": false,
   "Values": {
     "JWT_SECRET": "",
-    "CRYPTO_KEY": "",
-    "CRYPTO_IV": "",
     "FUNCTIONS_WORKER_RUNTIME": "node",
     "AzureWebJobsFeatureFlags": "EnableWorkerIndexing",
     "AzureWebJobsStorage": ""
