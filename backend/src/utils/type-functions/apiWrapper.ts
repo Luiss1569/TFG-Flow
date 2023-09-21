@@ -4,6 +4,7 @@ import {
   HttpResponseInit,
   InvocationContext,
   HttpTriggerOptions,
+  HttpRequestParams,
 } from "@azure/functions";
 import * as yup from "yup";
 import jwt from "../../services/jwt";
@@ -12,7 +13,8 @@ import * as res from "./apiResponse";
 
 interface THttpRequest {
   body: Object;
-  params: Object;
+  query: Object;
+  params: HttpRequestParams;
   headers: Object;
   method: string;
   url: string;
@@ -33,8 +35,9 @@ type AzureFunctionHandler = (
 
 type callbackSchema = (schema: typeof yup) => {
   body?: yup.ObjectSchema<yup.AnyObject>;
-  params?: yup.ObjectSchema<yup.AnyObject>;
+  query?: yup.ObjectSchema<yup.AnyObject>;
   headers?: yup.ObjectSchema<yup.AnyObject>;
+  params?: yup.ObjectSchema<yup.AnyObject>;
 };
 
 export default class ApiWrapper {
@@ -42,6 +45,7 @@ export default class ApiWrapper {
   private isPublic: boolean = false;
   private schemaValidator = yup.object().shape({
     body: yup.object().shape({}),
+    query: yup.object().shape({}),
     params: yup.object().shape({}),
     headers: yup.object().shape({}),
   });
@@ -52,14 +56,15 @@ export default class ApiWrapper {
   private run: AzureFunctionHandler = async (request, context) => {
     try {
       const body = await request.json();
-      const params = Object.fromEntries(request.query.entries());
+      const query = Object.fromEntries(request.query.entries());
       const headers = Object.fromEntries(request.headers.entries());
+      const params = request.params;
       let user = null;
 
       await this.schemaValidator
         .validate({
           body,
-          params,
+          query,
           headers,
         })
         .catch((error) => {
@@ -81,6 +86,7 @@ export default class ApiWrapper {
         {
           ...request,
           body,
+          query,
           params,
           headers,
           user,
@@ -118,6 +124,7 @@ export default class ApiWrapper {
       body: body ?? yup.object().shape({}),
       params: params ?? yup.object().shape({}),
       headers: headers ?? yup.object().shape({}),
+      query: yup.object().shape({}),
     });
 
     return this;

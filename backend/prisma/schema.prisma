@@ -53,7 +53,7 @@ model Teachers {
   id                 String               @id @default(uuid())
   matriculation      String
   university_degree  university_degrees
-  user_id            String               @map("user_id")
+  user_id            String               @unique @map("user_id")
   user               Users                @relation(fields: [user_id], references: [id])
   created_at         DateTime             @default(now())
   updated_at         DateTime             @updatedAt
