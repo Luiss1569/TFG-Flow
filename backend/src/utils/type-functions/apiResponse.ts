@@ -37,10 +37,10 @@ export const internalServerError = (body: any): HttpResponseInit =>
   response(StatusCodes.INTERNAL_SERVER_ERROR, body);
 
 export const error = (
-  status: StatusCodes,
+  status: number,
   body: any,
   message: any
-): HttpResponseInit => response(200, body, message);
+): HttpResponseInit => response(status, body, message);
 
 export default {
   success,
