@@ -15,7 +15,7 @@ const verify = (header: Object) => {
     throw err;
   }
 
-  return jwt.verify(token, process.env.SECRET, function (err, decoded) {
+  return jwt.verify(token, secret, function (err, decoded) {
     if (err) throw err;
 
     return decoded;

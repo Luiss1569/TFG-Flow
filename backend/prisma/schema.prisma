@@ -15,20 +15,20 @@ enum user_roles {
 }
 
 model Users {
-  id                 String               @id @default(uuid())
-  name               String
-  cpf                String
-  role               user_roles           @default(student)
-  email              String
-  password           String
-  matriculation      String
-  institute_id       String               @map("institute_id")
-  institute          Institutes           @relation(fields: [institute_id], references: [id])
-  created_at         DateTime             @default(now())
-  updated_at         DateTime             @updatedAt
-  teachers           Teachers[]
-  Answers            Answers[]
-  UserRequestAnswers UserRequestAnswers[]
+  id            String       @id @default(uuid())
+  name          String
+  cpf           String
+  role          user_roles   @default(student)
+  email         String
+  password      String
+  matriculation String
+  institute_id  String       @map("institute_id")
+  institute     Institutes   @relation(fields: [institute_id], references: [id])
+  created_at    DateTime     @default(now())
+  updated_at    DateTime     @updatedAt
+  teachers      Teachers[]
+  Answers       Answers[]
+  Activities    Activities[]
 
   @@map(name: "users")
 }
@@ -81,15 +81,16 @@ enum step_types {
 }
 
 model Steps {
-  id           String     @id @default(uuid())
-  name         String
-  type         step_types
-  content      Json       @default("{}")
-  workflow_id  String     @map("workflow_id")
-  workflow     Workflows  @relation(fields: [workflow_id], references: [id])
-  next_step_id String     @unique @map("next_step_id")
-  created_at   DateTime   @default(now())
-  updated_at   DateTime   @updatedAt
+  id                    String                  @id @default(uuid())
+  name                  String
+  type                  step_types
+  content               Json                    @default("{}")
+  workflow_id           String                  @map("workflow_id")
+  workflow              Workflows               @relation(fields: [workflow_id], references: [id])
+  next_step_id          String                  @unique @map("next_step_id")
+  created_at            DateTime                @default(now())
+  updated_at            DateTime                @updatedAt
+  ActivityWorkflowSteps ActivityWorkflowSteps[]
 
   @@map(name: "steps")
 }
@@ -107,16 +108,23 @@ model Workflows {
   @@map(name: "workflows")
 }
 
+enum form_types {
+  public
+  private
+}
+
 model Forms {
   id                String              @id @default(uuid())
+  form_type         form_types          @default(public)
   slug              String              @unique
-  status_id         String              @unique @map("status_id")
-  status            Status              @relation(fields: [status_id], references: [id])
+  status_id         String?             @unique @map("status_id")
+  status            Status?             @relation(fields: [status_id], references: [id])
   content           Json                @default("{}")
   created_at        DateTime            @default(now())
   updated_at        DateTime            @updatedAt
   FormOpeningPeriod FormOpeningPeriod[]
   RequestAnswers    RequestAnswers?
+  Answers           Answers[]
 
   @@map(name: "forms")
 }
@@ -138,6 +146,8 @@ model Activities {
   matriculation    Int                  @unique @default(autoincrement())
   created_at       DateTime             @default(now())
   updated_at       DateTime             @updatedAt
+  user_id          String               @map("user_id")
+  users            Users                @relation(fields: [user_id], references: [id])
   masterminds      ActivitiesTeachers[]
   ActivityWorkflow ActivityWorkflow[]
   Answers          Answers[]
@@ -184,9 +194,12 @@ model ActivityWorkflowSteps {
   id                 String           @id @default(uuid())
   active_workflow_id String           @map("active_workflow_id")
   active_workflow    ActivityWorkflow @relation(fields: [active_workflow_id], references: [id])
+  step_id            String           @map("step_id")
+  step               Steps            @relation(fields: [step_id], references: [id])
   response           Json?
   created_at         DateTime         @default(now())
   updated_at         DateTime         @updatedAt
+  RequestAnswers     RequestAnswers[]
 
   @@map(name: "activity_workflow_steps")
 }
@@ -198,6 +211,8 @@ model Answers {
   user               Users                @relation(fields: [user_id], references: [id])
   activity_id        String               @map("activity_id")
   activity           Activities           @relation(fields: [activity_id], references: [id])
+  form_id            String               @map("form_id")
+  form               Forms                @relation(fields: [form_id], references: [id])
   created_at         DateTime             @default(now())
   updated_at         DateTime             @updatedAt
   UserRequestAnswers UserRequestAnswers[]
@@ -212,15 +227,17 @@ enum request_answer_status {
 }
 
 model RequestAnswers {
-  id                 String                @id @default(uuid())
-  status             request_answer_status @default(pending)
-  form_id            String                @unique @map("form_id")
-  form               Forms                 @relation(fields: [form_id], references: [id])
-  activity_id        String                @map("activity_id")
-  activity           Activities            @relation(fields: [activity_id], references: [id])
-  created_at         DateTime              @default(now())
-  updated_at         DateTime              @updatedAt
-  UserRequestAnswers UserRequestAnswers[]
+  id                        String                @id @default(uuid())
+  status                    request_answer_status @default(pending)
+  form_id                   String                @unique @map("form_id")
+  form                      Forms                 @relation(fields: [form_id], references: [id])
+  activity_id               String                @map("activity_id")
+  activity                  Activities            @relation(fields: [activity_id], references: [id])
+  activity_workflow_step_id String                @map("activity_workflow_step_id")
+  activity_workflow_step    ActivityWorkflowSteps @relation(fields: [activity_workflow_step_id], references: [id])
+  created_at                DateTime              @default(now())
+  updated_at                DateTime              @updatedAt
+  UserRequestAnswers        UserRequestAnswers[]
 
   @@map(name: "request_answers")
 }
@@ -228,12 +245,21 @@ model RequestAnswers {
 model UserRequestAnswers {
   request_answer_id String         @map("request_answer_id")
   request_answer    RequestAnswers @relation(fields: [request_answer_id], references: [id])
-  user_id           String         @map("user_id")
-  user              Users          @relation(fields: [user_id], references: [id])
   answer_id         String         @unique @map("answer_id")
   answer            Answers        @relation(fields: [answer_id], references: [id])
   created_at        DateTime       @default(now())
   updated_at        DateTime       @updatedAt
 
   @@map(name: "request_answers_users")
+}
+
+model Logs {
+  id         String   @id @default(uuid())
+  user_id    String
+  function   String
+  content    Json     @default("{}")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map(name: "logs")
 }
