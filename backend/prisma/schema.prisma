@@ -11,10 +11,11 @@ datasource db {
 enum user_roles {
   student
   teacher
+  coordinator
   admin
 }
 
-model Users {
+model users {
   id            String       @id @default(uuid())
   name          String
   cpf           String
@@ -23,23 +24,23 @@ model Users {
   password      String
   matriculation String
   institute_id  String       @map("institute_id")
-  institute     Institutes   @relation(fields: [institute_id], references: [id])
+  institute     institutes   @relation(fields: [institute_id], references: [id])
   created_at    DateTime     @default(now())
   updated_at    DateTime     @updatedAt
-  teachers      Teachers[]
-  Answers       Answers[]
-  Activities    Activities[]
+  teachers      teachers[]
+  answers       answers[]
+  activities    activities[]
 
   @@map(name: "users")
 }
 
-model Institutes {
+model institutes {
   id         String   @id @default(uuid())
   acronym    String?
   name       String?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  Users      Users[]
+  users      users[]
 
   @@map(name: "institutes")
 }
@@ -49,24 +50,24 @@ enum university_degrees {
   doctor
 }
 
-model Teachers {
+model teachers {
   id                 String               @id @default(uuid())
   matriculation      String
   university_degree  university_degrees
   user_id            String               @unique @map("user_id")
-  user               Users                @relation(fields: [user_id], references: [id])
+  user               users                @relation(fields: [user_id], references: [id])
   created_at         DateTime             @default(now())
   updated_at         DateTime             @updatedAt
-  activitiesTeachers ActivitiesTeachers[]
+  activitiesTeachers activitiesTeachers[]
 
   @@map(name: "teachers")
 }
 
-model Status {
+model status {
   id         String     @id @default(uuid())
   name       String
-  Forms      Forms?
-  Workflows  Workflows?
+  forms      forms?
+  workflows  workflows?
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt
 
@@ -80,30 +81,35 @@ enum step_types {
   swap_workflow
 }
 
-model Steps {
+model steps {
   id                    String                  @id @default(uuid())
+  identifier            String
   name                  String
   type                  step_types
   content               Json                    @default("{}")
   workflow_id           String                  @map("workflow_id")
-  workflow              Workflows               @relation(fields: [workflow_id], references: [id])
-  next_step_id          String                  @unique @map("next_step_id")
+  workflow              workflows               @relation(fields: [workflow_id], references: [id])
+  next_step_id          String?                 @unique @map("next_step_id")
   created_at            DateTime                @default(now())
   updated_at            DateTime                @updatedAt
-  ActivityWorkflowSteps ActivityWorkflowSteps[]
+  activityworkflowSteps activityworkflowSteps[]
 
+  @@unique([workflow_id, identifier])
+  @@index([workflow_id, identifier])
   @@map(name: "steps")
 }
 
-model Workflows {
+model workflows {
   id               String             @id @default(uuid())
   name             String
   status_id        String             @unique @map("status_id")
-  status           Status             @relation(fields: [status_id], references: [id])
+  status           status             @relation(fields: [status_id], references: [id])
+  deleted          Boolean            @default(false)
   created_at       DateTime           @default(now())
   updated_at       DateTime           @updatedAt
-  Steps            Steps[]
-  ActivityWorkflow ActivityWorkflow[]
+  deleted_at       DateTime?
+  steps            steps[]
+  activityWorkflow activityWorkflow[]
 
   @@map(name: "workflows")
 }
@@ -113,54 +119,54 @@ enum form_types {
   private
 }
 
-model Forms {
-  id                String              @id @default(uuid())
-  form_type         form_types          @default(public)
-  slug              String              @unique
-  status_id         String?             @unique @map("status_id")
-  status            Status?             @relation(fields: [status_id], references: [id])
-  content           Json                @default("{}")
-  created_at        DateTime            @default(now())
-  updated_at        DateTime            @updatedAt
-  FormOpeningPeriod FormOpeningPeriod[]
-  RequestAnswers    RequestAnswers?
-  Answers           Answers[]
+model forms {
+  id             String           @id @default(uuid())
+  form_type      form_types       @default(public)
+  slug           String           @unique
+  status_id      String?          @unique @map("status_id")
+  status         status?          @relation(fields: [status_id], references: [id])
+  content        Json             @default("{}")
+  created_at     DateTime         @default(now())
+  updated_at     DateTime         @updatedAt
+  formOpenPeriod formOpenPeriod[]
+  requestAnswers requestAnswers?
+  answers        answers[]
 
   @@map(name: "forms")
 }
 
-model FormOpeningPeriod {
+model formOpenPeriod {
   id         String   @id @default(uuid())
   start_date DateTime
   end_date   DateTime
   form_id    String   @map("form_id")
-  form       Forms    @relation(fields: [form_id], references: [id])
+  form       forms    @relation(fields: [form_id], references: [id])
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
   @@map(name: "form_opening_period")
 }
 
-model Activities {
+model activities {
   id               String               @id @default(uuid())
   matriculation    Int                  @unique @default(autoincrement())
   created_at       DateTime             @default(now())
   updated_at       DateTime             @updatedAt
   user_id          String               @map("user_id")
-  users            Users                @relation(fields: [user_id], references: [id])
-  masterminds      ActivitiesTeachers[]
-  ActivityWorkflow ActivityWorkflow[]
-  Answers          Answers[]
-  RequestAnswers   RequestAnswers[]
+  users            users                @relation(fields: [user_id], references: [id])
+  masterminds      activitiesTeachers[]
+  activityWorkflow activityWorkflow[]
+  answers          answers[]
+  requestAnswers   requestAnswers[]
 
   @@map(name: "activities")
 }
 
-model ActivitiesTeachers {
+model activitiesTeachers {
   activity_id String     @map("activity_id")
-  activity    Activities @relation(fields: [activity_id], references: [id])
+  activity    activities @relation(fields: [activity_id], references: [id])
   teacher_id  String     @map("teacher_id")
-  teacher     Teachers   @relation(fields: [teacher_id], references: [id])
+  teacher     teachers   @relation(fields: [teacher_id], references: [id])
   assigned_at DateTime   @default(now())
   created_at  DateTime   @default(now())
   updated_at  DateTime   @updatedAt
@@ -176,46 +182,46 @@ enum activity_workflow_status {
   in_progress
 }
 
-model ActivityWorkflow {
+model activityWorkflow {
   id                    String                   @id @default(uuid())
   status                activity_workflow_status
   activity_id           String                   @map("activity_id")
-  activity              Activities               @relation(fields: [activity_id], references: [id])
+  activity              activities               @relation(fields: [activity_id], references: [id])
   workflow_id           String                   @map("workflow_id")
-  workflow              Workflows                @relation(fields: [workflow_id], references: [id])
+  workflow              workflows                @relation(fields: [workflow_id], references: [id])
   created_at            DateTime                 @default(now())
   updated_at            DateTime                 @updatedAt
-  ActivityWorkflowSteps ActivityWorkflowSteps[]
+  activityworkflowSteps activityworkflowSteps[]
 
   @@map(name: "activity_workflow")
 }
 
-model ActivityWorkflowSteps {
+model activityworkflowSteps {
   id                 String           @id @default(uuid())
   active_workflow_id String           @map("active_workflow_id")
-  active_workflow    ActivityWorkflow @relation(fields: [active_workflow_id], references: [id])
+  active_workflow    activityWorkflow @relation(fields: [active_workflow_id], references: [id])
   step_id            String           @map("step_id")
-  step               Steps            @relation(fields: [step_id], references: [id])
+  step               steps            @relation(fields: [step_id], references: [id])
   response           Json?
   created_at         DateTime         @default(now())
   updated_at         DateTime         @updatedAt
-  RequestAnswers     RequestAnswers[]
+  requestAnswers     requestAnswers[]
 
   @@map(name: "activity_workflow_steps")
 }
 
-model Answers {
+model answers {
   id                 String               @id @default(uuid())
   content            Json                 @default("{}")
   user_id            String               @map("user_id")
-  user               Users                @relation(fields: [user_id], references: [id])
+  user               users                @relation(fields: [user_id], references: [id])
   activity_id        String               @map("activity_id")
-  activity           Activities           @relation(fields: [activity_id], references: [id])
+  activity           activities           @relation(fields: [activity_id], references: [id])
   form_id            String               @map("form_id")
-  form               Forms                @relation(fields: [form_id], references: [id])
+  form               forms                @relation(fields: [form_id], references: [id])
   created_at         DateTime             @default(now())
   updated_at         DateTime             @updatedAt
-  UserRequestAnswers UserRequestAnswers[]
+  userRequestAnswers userRequestAnswers[]
 
   @@map(name: "answers")
 }
@@ -226,27 +232,27 @@ enum request_answer_status {
   evaluated
 }
 
-model RequestAnswers {
+model requestAnswers {
   id                        String                @id @default(uuid())
   status                    request_answer_status @default(pending)
   form_id                   String                @unique @map("form_id")
-  form                      Forms                 @relation(fields: [form_id], references: [id])
+  form                      forms                 @relation(fields: [form_id], references: [id])
   activity_id               String                @map("activity_id")
-  activity                  Activities            @relation(fields: [activity_id], references: [id])
+  activity                  activities            @relation(fields: [activity_id], references: [id])
   activity_workflow_step_id String                @map("activity_workflow_step_id")
-  activity_workflow_step    ActivityWorkflowSteps @relation(fields: [activity_workflow_step_id], references: [id])
+  activity_workflow_step    activityworkflowSteps @relation(fields: [activity_workflow_step_id], references: [id])
   created_at                DateTime              @default(now())
   updated_at                DateTime              @updatedAt
-  UserRequestAnswers        UserRequestAnswers[]
+  userRequestAnswers        userRequestAnswers[]
 
   @@map(name: "request_answers")
 }
 
-model UserRequestAnswers {
+model userRequestAnswers {
   request_answer_id String         @map("request_answer_id")
-  request_answer    RequestAnswers @relation(fields: [request_answer_id], references: [id])
+  request_answer    requestAnswers @relation(fields: [request_answer_id], references: [id])
   answer_id         String         @unique @map("answer_id")
-  answer            Answers        @relation(fields: [answer_id], references: [id])
+  answer            answers        @relation(fields: [answer_id], references: [id])
   created_at        DateTime       @default(now())
   updated_at        DateTime       @updatedAt
 
