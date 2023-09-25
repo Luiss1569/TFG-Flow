@@ -1,5 +1,10 @@
 import { HttpResponseInit } from "@azure/functions";
-import { ReasonPhrases, StatusCodes, getReasonPhrase, getStatusCode } from "http-status-codes";
+import {
+  ReasonPhrases,
+  StatusCodes,
+  getReasonPhrase,
+  getStatusCode,
+} from "http-status-codes";
 
 const response = (
   status: StatusCodes,
@@ -21,20 +26,23 @@ const response = (
 export const success = (body: any): HttpResponseInit =>
   response(StatusCodes.OK, body);
 
-export const badRequest = (body: any): HttpResponseInit =>
-  response(StatusCodes.BAD_REQUEST, body);
+export const created = (body: any): HttpResponseInit =>
+  response(StatusCodes.CREATED, body);
 
-export const unauthorized = (body: any): HttpResponseInit =>
-  response(StatusCodes.UNAUTHORIZED, body);
+export const badRequest = (message: string): HttpResponseInit =>
+  response(StatusCodes.BAD_REQUEST, null, message);
 
-export const forbidden = (body: any): HttpResponseInit =>
-  response(StatusCodes.FORBIDDEN, body);
+export const unauthorized = (message: string): HttpResponseInit =>
+  response(StatusCodes.UNAUTHORIZED, null, message);
 
-export const notFound = (body: any): HttpResponseInit =>
-  response(StatusCodes.NOT_FOUND, body);
+export const forbidden = (message: string): HttpResponseInit =>
+  response(StatusCodes.FORBIDDEN, null, message);
 
-export const internalServerError = (body: any): HttpResponseInit =>
-  response(StatusCodes.INTERNAL_SERVER_ERROR, body);
+export const notFound = (message: string): HttpResponseInit =>
+  response(StatusCodes.NOT_FOUND, null, message);
+
+export const internalServerError = (message: string): HttpResponseInit =>
+  response(StatusCodes.INTERNAL_SERVER_ERROR, null, message);
 
 export const error = (
   status: number,
@@ -50,4 +58,5 @@ export default {
   notFound,
   internalServerError,
   error,
+  created,
 };

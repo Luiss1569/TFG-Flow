@@ -11,6 +11,15 @@ import jwt from "../../services/jwt";
 import * as prisma from "../../services/prisma";
 import * as res from "./apiResponse";
 
+type User = {
+  id: string;
+  name: string;
+  matriculation: string;
+  email: string;
+  cpf: string;
+  role: string;
+};
+
 interface THttpRequest {
   body: Object;
   query: Object;
@@ -18,7 +27,7 @@ interface THttpRequest {
   headers: Object;
   method: string;
   url: string;
-  user: Object | null;
+  user: User | null;
   bodyUsed: boolean;
 }
 
@@ -59,7 +68,7 @@ export default class ApiWrapper {
       const query = Object.fromEntries(request.query.entries());
       const headers = Object.fromEntries(request.headers.entries());
       const params = request.params;
-      let user = null;
+      let user: User = null;
 
       await this.schemaValidator
         .validate({
@@ -94,7 +103,7 @@ export default class ApiWrapper {
         context
       );
     } catch (error) {
-      context.error(error);
+      context.error(JSON.stringify(error, null, 2));
       return res.error(error.status ?? 500, null, error.message ?? error);
     }
   };
