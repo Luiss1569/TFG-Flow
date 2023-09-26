@@ -11,15 +11,6 @@ import jwt from "../../services/jwt";
 import * as prisma from "../../services/prisma";
 import * as res from "./apiResponse";
 
-type User = {
-  id: string;
-  name: string;
-  matriculation: string;
-  email: string;
-  cpf: string;
-  role: string;
-};
-
 interface THttpRequest {
   body: Object;
   query: Object;
@@ -29,6 +20,14 @@ interface THttpRequest {
   url: string;
   user: User | null;
   bodyUsed: boolean;
+}
+
+interface User {
+  id: string;
+  name: string;
+  matriculation: string;
+  email: string;
+  role: "student" | "admin" | "teacher" | "coordinator";
 }
 
 export type ApiWrapperHandler = (
@@ -53,21 +52,23 @@ export default class ApiWrapper {
   private handler: ApiWrapperHandler;
   private isPublic: boolean = false;
   private schemaValidator = yup.object().shape({
-    body: yup.object().shape({}),
-    query: yup.object().shape({}),
-    params: yup.object().shape({}),
-    headers: yup.object().shape({}),
+    body: yup.object().shape({}).nullable(),
+    query: yup.object().shape({}).nullable(),
+    params: yup.object().shape({}).nullable(),
+    headers: yup.object().shape({}).nullable(),
   });
+
+
 
   constructor(handler: typeof ApiWrapper.prototype.handler) {
     this.handler = handler;
   }
   private run: AzureFunctionHandler = async (request, context) => {
     try {
-      const body = await request.json();
+      const body = request.method === "GET" ? {} : request.json();
       const query = Object.fromEntries(request.query.entries());
       const headers = Object.fromEntries(request.headers.entries());
-      const params = request.params;
+      const params = request.params
       let user: User = null;
 
       await this.schemaValidator
@@ -75,6 +76,7 @@ export default class ApiWrapper {
           body,
           query,
           headers,
+          params,
         })
         .catch((error) => {
           const err = {

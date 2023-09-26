@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "tfg-flow",
   "version": "1.0.0",
   "description": "",
   "main": "dist/src/functions/*/*.js",
@@ -7,9 +7,10 @@
     "build": "tsc",
     "watch": "tsc -w",
     "clean": "rimraf dist",
+    "studio": "prisma studio",
     "prestart": "npm run clean && npm run build",
     "start": "func start",
-    "dev": " npm run start && npm run watch",
+    "dev": "npm-run-all --parallel start watch",
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
@@ -24,6 +25,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/node": "18.x",
     "azure-functions-core-tools": "^4.x",
+    "npm-run-all": "^4.1.5",
     "prisma": "^5.3.1",
     "rimraf": "^5.0.0",
     "typescript": "^4.0.0"
