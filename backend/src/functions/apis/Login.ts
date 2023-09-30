@@ -1,7 +1,7 @@
 import ApiWrapper, {
   ApiWrapperHandler,
-} from "../../utils/type-functions/apiWrapper";
-import res from "../../utils/type-functions/apiResponse";
+} from "../../utils/wrappers/apiWrapper";
+import res from "../../utils/wrappers/apiResponse";
 import * as bcrypt from "bcrypt";
 import jwt from "../../services/jwt";
 
