@@ -1,8 +1,8 @@
 import ApiWrapper, {
   ApiWrapperHandler,
-} from "../../utils/type-functions/apiWrapper";
-import res from "../../utils/type-functions/apiResponse";
-import { StringSchema, AnyObject } from "yup";
+} from "../../utils/wrappers/apiWrapper";
+import res from "../../utils/wrappers/apiResponse";
+import { StepContent } from "../../interfaces/steps";
 
 interface Body {
   name: string;
@@ -11,7 +11,7 @@ interface Body {
     id: string;
     name: string;
     type: "send_email" | "swap_workflow" | "conditional" | "request_answer";
-    content: string;
+    content: StepContent;
     nextStepId?: string;
   }>;
 }
@@ -63,7 +63,7 @@ const handler: ApiWrapperHandler = async (conn, req) => {
       identifier: step.id,
       name: step.name,
       type: step.type,
-      content: step.content,
+      content: JSON.stringify(step.content),
       next_step_id: step.nextStepId,
       workflow_id: workflow.id,
     })),
@@ -133,7 +133,9 @@ export default new ApiWrapper(handler)
               "request_answer",
             ])
             .required(),
-          content: schema.object().when("type", ([type]) => stepValidator(type, schema)),
+          content: schema
+            .object()
+            .when("type", ([type]) => stepValidator(type, schema)),
           nextStepId: schema.string().optional(),
         })
       ),
