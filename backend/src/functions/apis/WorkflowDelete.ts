@@ -1,7 +1,7 @@
 import ApiWrapper, {
   ApiWrapperHandler,
-} from "../../utils/type-functions/apiWrapper";
-import res from "../../utils/type-functions/apiResponse";
+} from "../../utils/wrappers/apiWrapper";
+import res from "../../utils/wrappers/apiResponse";
 
 const handler: ApiWrapperHandler = async (conn, req) => {
   const { workflow_id } = req.params;

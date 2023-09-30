@@ -3,8 +3,8 @@ import {
   HttpRequest,
   HttpResponseInit,
   InvocationContext,
-  HttpTriggerOptions,
   HttpRequestParams,
+  HttpFunctionOptions,
 } from "@azure/functions";
 import * as yup from "yup";
 import jwt from "../../services/jwt";
@@ -57,18 +57,21 @@ export default class ApiWrapper {
     params: yup.object().shape({}).nullable(),
     headers: yup.object().shape({}).nullable(),
   });
-
-
+  private name: string;
+  private conn: ReturnType<typeof prisma.connect>;
 
   constructor(handler: typeof ApiWrapper.prototype.handler) {
     this.handler = handler;
   }
   private run: AzureFunctionHandler = async (request, context) => {
+    let conn: ReturnType<typeof prisma.connect>;
+    const invocationId = context.invocationId;
+
     try {
       const body = request.method === "GET" ? {} : request.json();
       const query = Object.fromEntries(request.query.entries());
       const headers = Object.fromEntries(request.headers.entries());
-      const params = request.params
+      const params = request.params;
       let user: User = null;
 
       await this.schemaValidator
@@ -90,7 +93,19 @@ export default class ApiWrapper {
         user = jwt.verify(headers);
       }
 
-      const conn = prisma.connect();
+      conn = prisma.connect();
+
+      conn.logs.create({
+        data: {
+          function: this.name,
+          user_id: user?.id,
+          content: JSON.stringify({
+            body,
+            query,
+            params,
+          }),
+        },
+      });
 
       return await this.handler(
         conn,
@@ -107,14 +122,18 @@ export default class ApiWrapper {
     } catch (error) {
       context.error(JSON.stringify(error, null, 2));
       return res.error(error.status ?? 500, null, error.message ?? error);
+    } finally {
+      if (conn) await conn.$disconnect();
     }
   };
 
   public configure = (configs: {
     name: string;
-    options: HttpTriggerOptions;
+    options: Omit<HttpFunctionOptions, "handler">;
   }): this => {
     const { name, options } = configs;
+    this.name = name;
+
     app.http(name, {
       ...options,
       route: options.route ?? name.toLowerCase().replace(/\s/g, "-"),
