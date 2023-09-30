@@ -49,7 +49,7 @@ function Login() {
                 <VStack>
                     
                     <FormControl isRequired>
-                        <FormLabel >CPF</FormLabel>
+                        <FormLabel htmlFor="cpf">CPF</FormLabel>
                         <Input
                             id="cpf"
                             placeholder="Digite sua senha"
@@ -59,7 +59,7 @@ function Login() {
                         />
                     </FormControl>
                     <FormControl isRequired>
-                        <FormLabel >Password</FormLabel>
+                        <FormLabel  htmlFor="password" >Password</FormLabel>
                         <InputGroup size='md'>
                             <Input
                                 variant='outline'
