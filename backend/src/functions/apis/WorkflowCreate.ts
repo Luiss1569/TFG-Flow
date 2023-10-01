@@ -1,18 +1,17 @@
-import ApiWrapper, {
-  ApiWrapperHandler,
-} from "../../utils/wrappers/apiWrapper";
+import ApiWrapper, { ApiWrapperHandler } from "../../utils/wrappers/apiWrapper";
 import res from "../../utils/wrappers/apiResponse";
 import { StepContent } from "../../interfaces/steps";
 
 interface Body {
   name: string;
   status_id: string;
+  first_step_id: string;
   steps: Array<{
     id: string;
     name: string;
     type: "send_email" | "swap_workflow" | "conditional" | "request_answer";
     content: StepContent;
-    nextStepId?: string;
+    next_step_id?: string;
   }>;
 }
 
@@ -33,10 +32,10 @@ function validateFlowSteps(steps: Body["steps"]) {
   }
 
   for (const step of steps) {
-    if (step.nextStepId && !ids.has(step.nextStepId)) {
+    if (step.next_step_id && !ids.has(step.next_step_id)) {
       const err = {
         statusCode: 400,
-        message: `Step ${step.id} has a next step id ${step.nextStepId} that does not exist`,
+        message: `Step ${step.id} has a next step id ${step.next_step_id} that does not exist`,
       };
 
       throw err;
@@ -55,6 +54,7 @@ const handler: ApiWrapperHandler = async (conn, req) => {
     data: {
       name,
       status_id,
+      first_step_id: body.first_step_id,
     },
   });
 
@@ -63,8 +63,8 @@ const handler: ApiWrapperHandler = async (conn, req) => {
       identifier: step.id,
       name: step.name,
       type: step.type,
-      content: JSON.stringify(step.content),
-      next_step_id: step.nextStepId,
+      content: step.content,
+      next_step_id: step.next_step_id,
       workflow_id: workflow.id,
     })),
   });
@@ -101,8 +101,8 @@ const stepValidator = (type: string, schema: typeof import("yup")) => {
   if (type === "conditional") {
     return schema.object().shape({
       condition: schema.string().required(),
-      trueStepId: schema.string().required(),
-      falseStepId: schema.string().required(),
+      true_step_id: schema.string().required(),
+      false_step_id: schema.string().required(),
     });
   }
 
@@ -119,7 +119,7 @@ export default new ApiWrapper(handler)
     body: schema.object().shape({
       name: schema.string().required(),
       status_id: schema.string().uuid().required(),
-      firstStepId: schema.string().required(),
+      first_step_id: schema.string().required(),
       steps: schema.array().of(
         schema.object().shape({
           id: schema.string().required(),
