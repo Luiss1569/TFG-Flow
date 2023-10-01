@@ -68,11 +68,15 @@ export default class ApiWrapper {
     const invocationId = context.invocationId;
 
     try {
-      const body = request.method === "GET" ? {} : request.json();
+      const body = request.method === "GET" ? {} : await request.json();
       const query = Object.fromEntries(request.query.entries());
       const headers = Object.fromEntries(request.headers.entries());
       const params = request.params;
       let user: User = null;
+
+      if (!this.isPublic) {
+        user = jwt.verify(headers);
+      }
 
       await this.schemaValidator
         .validate({
@@ -89,14 +93,11 @@ export default class ApiWrapper {
           throw err;
         });
 
-      if (!this.isPublic) {
-        user = jwt.verify(headers);
-      }
-
       conn = prisma.connect();
 
       conn.logs.create({
         data: {
+          invocation_id: invocationId,
           function: this.name,
           user_id: user?.id,
           content: JSON.stringify({
@@ -121,6 +122,14 @@ export default class ApiWrapper {
       );
     } catch (error) {
       context.error(JSON.stringify(error, null, 2));
+      await conn?.logs.create({
+        data: {
+          invocation_id: invocationId,
+          function: this.name,
+          user_id: "",
+          content: JSON.stringify(error, null, 2),
+        },
+      });
       return res.error(error.status ?? 500, null, error.message ?? error);
     } finally {
       if (conn) await conn.$disconnect();
