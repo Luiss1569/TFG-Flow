@@ -39,6 +39,11 @@ const handler: ApiWrapperHandler = async (conn, req, context) => {
               id: user.id,
             },
           },
+          status: {
+            connect: {
+              id: form.status_id,
+            },
+          },
         },
       });
 
@@ -98,9 +103,10 @@ const handler: ApiWrapperHandler = async (conn, req, context) => {
         },
       });
 
-      const thereAreMoreUsers = await thereAreMoreUsersToAnswer(conn, request_answer_id);
-
-      context.log(thereAreMoreUsers);
+      const thereAreMoreUsers = await thereAreMoreUsersToAnswer(
+        conn,
+        request_answer_id
+      );
 
       if (!thereAreMoreUsers) {
         const requestAnswer = await conn.requestAnswers.findFirstOrThrow({
@@ -116,6 +122,15 @@ const handler: ApiWrapperHandler = async (conn, req, context) => {
           },
         });
 
+        await conn.requestAnswers.update({
+          where: {
+            id: request_answer_id,
+          },
+          data: {
+            status: "proccess",
+          },
+        });
+
         const nextStep = await conn.steps.findFirstOrThrow({
           where: {
             identifier: requestAnswer.activity_workflow_step.step.next_step_id,
@@ -125,7 +140,8 @@ const handler: ApiWrapperHandler = async (conn, req, context) => {
 
         sendToQueue(context, nextStep.type, {
           step_id: nextStep.id,
-          activity_workflow_id: requestAnswer.activity_workflow_step.active_workflow_id,
+          activity_workflow_id:
+            requestAnswer.activity_workflow_step.active_workflow_id,
         });
       }
     }
@@ -149,9 +165,6 @@ const thereAreMoreUsersToAnswer = async (
       answer_id: null,
     },
   });
-
-  console.log(users);
-
   return users.length > 0;
 };
 
