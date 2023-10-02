@@ -65,12 +65,13 @@ model teachers {
 }
 
 model status {
-  id         String     @id @default(uuid())
+  id         String       @id @default(uuid())
   name       String
   forms      forms?
   workflows  workflows?
-  created_at DateTime   @default(now())
-  updated_at DateTime   @updatedAt
+  created_at DateTime     @default(now())
+  updated_at DateTime     @updatedAt
+  activities activities[]
 
   @@map(name: "status")
 }
@@ -152,6 +153,8 @@ model formOpenPeriod {
 model activities {
   id               String               @id @default(uuid())
   matriculation    Int                  @unique @default(autoincrement())
+  status_id        String               @map("status_id")
+  status           status               @relation(fields: [status_id], references: [id])
   created_at       DateTime             @default(now())
   updated_at       DateTime             @updatedAt
   user_id          String               @map("user_id")
