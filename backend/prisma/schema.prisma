@@ -37,7 +37,7 @@ model users {
 
 model institutes {
   id         String   @id @default(uuid())
-  acronym    String?
+  acronym    String?  @unique
   name       String?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
