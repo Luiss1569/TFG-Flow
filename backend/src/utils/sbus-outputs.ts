@@ -16,7 +16,7 @@ const extraOutputsSendEmail = output.serviceBusQueue({
 });
 
 const extraOutputsRequestAnswer = output.serviceBusQueue({
-  queueName: "request_answer",
+  queueName: "request_answers",
   connection: "AzureServiceBusConnectionString",
 });
 
@@ -25,7 +25,7 @@ const extraOutputsOrchestrator = output.serviceBusQueue({
   connection: "AzureServiceBusConnectionString",
 });
 
-export const extraOutputs = {
+const extraOutputs = {
   swap_workflow: extraOutputsSwapWorkflow,
   conditional: extraOutputsConditional,
   send_email: extraOutputsSendEmail,
@@ -45,4 +45,6 @@ type SendToQueue = (
 
 export const sendToQueue: SendToQueue = (context, queueName, message) => {
   context.extraOutputs.set(extraOutputs[queueName], message);
+
+  context.info(`Sent to queue ${queueName}`);
 };
