@@ -73,6 +73,12 @@ const handler: QueueWrapperHandler = async (conn, messageQueue, context) => {
     }
 
     await conn.$executeRaw`COMMIT;`;
+
+    return{
+      next_step_id: nextStep?.id,
+      result,
+    }
+
   } catch (error) {
     await conn.$executeRaw`ROLLBACK;`;
     throw error;

@@ -1,9 +1,9 @@
-import ApiWrapper, {
-  ApiWrapperHandler,
-} from "../../utils/wrappers/apiWrapper";
+import ApiWrapper, { ApiWrapperHandler } from "../../utils/wrappers/apiWrapper";
 import res from "../../utils/wrappers/apiResponse";
 
 interface Body {
+  name: string;
+  description?: string;
   formType: "public" | "private";
   slug: string;
   status_id?: string;
@@ -19,6 +19,8 @@ const handler: ApiWrapperHandler = async (conn, req) => {
 
   const form = await conn.forms.create({
     data: {
+      name: body.name,
+      description: body.description,
       slug: body.slug,
       status_id: body.status_id,
       form_type: body.formType,
@@ -38,8 +40,9 @@ const handler: ApiWrapperHandler = async (conn, req) => {
 export default new ApiWrapper(handler)
   .setSchemaValidator((schema) => ({
     body: schema.object().shape({
-      name: schema.string().required(),
+      name: schema.string().required().max(100),
       formType: schema.mixed().oneOf(["public", "private"]).required(),
+      description: schema.string().max(255),
       slug: schema
         .string()
         .required()

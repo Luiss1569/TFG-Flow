@@ -37,6 +37,25 @@ const handler: ApiWrapperHandler = async (conn, req, context) => {
     }
 
     if (form.form_type === "public") {
+      const teachers = await conn.users.findMany({
+        where: {
+          id: {
+            in: content?.masterminds,
+          },
+        },
+        select: {
+          teachers: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      });
+
+      const teachersIds = teachers
+        .map((teacher) => teacher.teachers.map((teacher) => teacher.id))
+        .flat();
+
       const activity = await conn.activities.create({
         data: {
           name: content?.activity_name,
@@ -52,8 +71,8 @@ const handler: ApiWrapperHandler = async (conn, req, context) => {
           },
           masterminds: {
             createMany: {
-              data: content?.masterminds?.map((mastermind) => ({
-                teacher_id: mastermind,
+              data: teachersIds.map((teacher_id) => ({
+                teacher_id: teacher_id,
               })),
             },
           },
@@ -192,7 +211,7 @@ export default new ApiWrapper(handler)
     name: "Form-Response",
     options: {
       methods: ["POST"],
-      route: "/form/{form_id}/responses",
+      route: "/form/{form_id}/response",
       extraOutputs: sbusOutputs,
     },
   });

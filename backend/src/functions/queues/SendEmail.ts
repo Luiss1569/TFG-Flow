@@ -38,6 +38,11 @@ const handler: QueueWrapperHandler = async (conn, messageQueue, context) => {
       activity_workflow_id,
     });
   }
+
+  return {
+    send_email: true,
+    to: mapUser.map((user) => user.id),
+  };
 };
 
 export default new ApiWrapper(handler).configure({

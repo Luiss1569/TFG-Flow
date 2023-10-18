@@ -21,12 +21,13 @@ export interface FormField {
 }
 
 export interface FormContent {
-  name: string;
   fields: FormField[];
 }
 
 export interface Form {
   id: string;
+  name: string;
+  description: string;
   form_type: string;
   slug: string;
   status_id: string;

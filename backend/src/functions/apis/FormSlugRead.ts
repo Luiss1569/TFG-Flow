@@ -23,16 +23,16 @@ const handler: ApiWrapperHandler = async (conn, req) => {
     },
   });
 
+  if (!form) {
+    return res.error(404, null, "Form not found");
+  }
+
   const content = form?.content as unknown as FormContent;
 
   for (const field of content.fields) {
     if (field.especial_type) {
       field.options = await getEspecialTypes(conn, field);
     }
-  }
-
-  if (!form) {
-    return res.error(404, null, "Form not found");
   }
 
   return res.success(form);
@@ -65,7 +65,7 @@ export default new ApiWrapper(handler)
     }),
   }))
   .configure({
-    name: "form",
+    name: "FormSlugRead",
     options: {
       methods: ["GET"],
       route: "/form/slug/{slug}",

@@ -24,15 +24,16 @@ const ResponseForm: React.FC = () => {
   const navigate = useNavigate();
   const toast = useToast();
 
-  const { data: form, isLoading } = useQuery<Form>(
-    ["form-slug", params.slug],
-    async () => {
-      const { data } = await api.get(`/form/slug/${params.slug}`).catch(() => {
-        throw new Error("Form not found");
-      });
-      return data.body;
-    }
-  );
+  const {
+    data: form,
+    isLoading,
+    isError,
+  } = useQuery<Form>(["form-slug", params.slug], async () => {
+    const { data } = await api.get(`/form/slug/${params.slug}`).catch(() => {
+      throw new Error("Form not found");
+    });
+    return data.body;
+  });
 
   const schema = createSchema(form?.content.fields ?? []);
   const {
@@ -46,7 +47,9 @@ const ResponseForm: React.FC = () => {
 
   const { mutateAsync, isLoading: isSubmitting } = useMutation(
     async (data: Record<string, string>) => {
-      await api.post(`/form/${form?.id}/response`, data);
+      await api.post(`/form/${form?.id}/response`, {
+        content: data,
+      });
     },
     {
       onSuccess: () => {
@@ -85,14 +88,25 @@ const ResponseForm: React.FC = () => {
     );
   }
 
+  if (isError) {
+    return (
+      <Center h="100vh">
+        <Text>Formulário não encontrado ou não está mais disponível</Text>
+      </Center>
+    );
+  }
+
   return (
     <Box bg="gray.100" p={4} minH="100vh">
       <Center>
         <Box w="xl" bg="white" p={4} borderRadius="md" boxShadow="md">
-          <Text fontSize="2xl" mb={4}>
-            {form?.content.name}
-            <Divider />
-          </Text>
+          <Box mb={4}>
+            <Text fontSize="2xl" fontWeight="bold">
+              {form?.name}
+            </Text>
+            <Text>{form?.description}</Text>
+            <Divider my={4} />
+          </Box>
 
           <form onSubmit={onSubmit}>
             <Flex direction="column" align="center" justify="center" gap="3">
