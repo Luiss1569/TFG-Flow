@@ -100,9 +100,9 @@ const handler: ApiWrapperHandler = async (conn, req, context) => {
     });
 
     if (form.form_type === "public") {
-      sendToQueue(context, "orchestrator", {
-        answer_id: answer.id,
-      });
+      // sendToQueue(context, "orchestrator", {
+      //   answer_id: answer.id,
+      // });
     } else {
       await conn.userRequestAnswers.update({
         where: {
@@ -192,7 +192,7 @@ export default new ApiWrapper(handler)
     name: "Form-Response",
     options: {
       methods: ["POST"],
-      route: "/forms/{form_id}/responses",
+      route: "/form/{form_id}/responses",
       extraOutputs: sbusOutputs,
     },
   });

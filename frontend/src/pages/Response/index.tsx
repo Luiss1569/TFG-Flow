@@ -11,6 +11,8 @@ import {
   Box,
   Spinner,
   useToast,
+  Divider,
+  Flex,
 } from "@chakra-ui/react";
 import { createSchema } from "../../lib/zod";
 import api from "../../lib/axios";
@@ -44,7 +46,7 @@ const ResponseForm: React.FC = () => {
 
   const { mutateAsync, isLoading: isSubmitting } = useMutation(
     async (data: Record<string, string>) => {
-      await api.post(`/formss/${form?.id}/response`, data);
+      await api.post(`/form/${form?.id}/response`, data);
     },
     {
       onSuccess: () => {
@@ -89,21 +91,28 @@ const ResponseForm: React.FC = () => {
         <Box w="xl" bg="white" p={4} borderRadius="md" boxShadow="md">
           <Text fontSize="2xl" mb={4}>
             {form?.content.name}
+            <Divider />
           </Text>
 
           <form onSubmit={onSubmit}>
-            <RenderInput
-              fields={form?.content.fields ?? []}
-              register={register}
-              errors={errors}
-              control={control}
-            />
+            <Flex direction="column" align="center" justify="center" gap="3">
+              <RenderInput
+                fields={form?.content.fields ?? []}
+                register={register}
+                errors={errors}
+                control={control}
+              />
 
-            <Stack direction="row" justifyContent="flex-end" mt={4}>
-              <Button type="submit" colorScheme="blue" isLoading={isSubmitting}>
-                Enviar
-              </Button>
-            </Stack>
+              <Stack direction="row" justifyContent="flex-end" mt={4}>
+                <Button
+                  type="submit"
+                  colorScheme="blue"
+                  isLoading={isSubmitting}
+                >
+                  Enviar
+                </Button>
+              </Stack>
+            </Flex>
           </form>
         </Box>
       </Center>
