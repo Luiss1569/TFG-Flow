@@ -7,45 +7,45 @@ import { ArrowBackIcon } from '@chakra-ui/icons';
 
 function Sidebar() {
     return (
-        <List>
+        <List >
             <ListItem>
-                <ChakraLink as={ReactRouterLink} to='/'>
+                <ChakraLink as={ReactRouterLink} to='/' _hover={{ textDecor: 'none' }}>
                     Home
+                    <ListIcon as={ArrowBackIcon} />
                 </ChakraLink>
-                <ListIcon as={ArrowBackIcon} />
             </ListItem>
             <ListItem>
-                <ChakraLink as={ReactRouterLink} to='/login'>
+                <ChakraLink as={ReactRouterLink} to='/login' _hover={{ textDecor: 'none' }}>
                     Atividades
                 </ChakraLink>
             </ListItem>
             <ListItem>
-                <ChakraLink as={ReactRouterLink} to='/listusers'>
+                <ChakraLink as={ReactRouterLink} to='/listusers' _hover={{ textDecor: 'none' }}>
                     Usuários
                 </ChakraLink>
             </ListItem>
             <ListItem>
-                <ChakraLink as={ReactRouterLink} to='/institutes'>
+                <ChakraLink as={ReactRouterLink} to='/institutes' _hover={{ textDecor: 'none' }}>
                     Institutos
                 </ChakraLink>
             </ListItem>
             <ListItem>
-                <ChakraLink as={ReactRouterLink} to='/status'>
+                <ChakraLink as={ReactRouterLink} to='/status' _hover={{ textDecor: 'none' }}>
                     Status
                 </ChakraLink>
             </ListItem>
             <ListItem>
-                <ChakraLink as={ReactRouterLink} to='/forms'>
+                <ChakraLink as={ReactRouterLink} to='/forms' _hover={{ textDecor: 'none' }}>
                     Formulários
                 </ChakraLink>
             </ListItem>
             <ListItem>
-                <ChakraLink as={ReactRouterLink} to='/reporting'>
+                <ChakraLink as={ReactRouterLink} to='/reporting' _hover={{ textDecor: 'none'}}>
                     Relatórios
                 </ChakraLink>
             </ListItem>
             <ListItem>
-                <ChakraLink as={ReactRouterLink} to='/activityreports'>
+                <ChakraLink as={ReactRouterLink} to='/activityreports' _hover={{ textDecor: 'none' }}   >
                     Relatório de Atividades
                 </ChakraLink>
             </ListItem>
