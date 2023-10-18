@@ -100,9 +100,9 @@ const handler: ApiWrapperHandler = async (conn, req, context) => {
     });
 
     if (form.form_type === "public") {
-      // sendToQueue(context, "orchestrator", {
-      //   answer_id: answer.id,
-      // });
+      sendToQueue(context, "orchestrator", {
+        answer_id: answer.id,
+      });
     } else {
       await conn.userRequestAnswers.update({
         where: {
