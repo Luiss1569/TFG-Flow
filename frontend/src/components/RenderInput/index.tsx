@@ -8,7 +8,10 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  Radio,
+  RadioGroup,
   Select,
+  Stack,
 } from "@chakra-ui/react";
 import MultiSelect from "react-select";
 import {
@@ -108,6 +111,35 @@ const RenderInput: React.FC<Props> = ({
             >
               <FormLabel>{input.label}</FormLabel>
               <InputFile input={input} register={register} />
+              <ErrorMessage error={errors?.[input.id]} />
+            </FormControl>
+          );
+        case "radio":
+          return (
+            <FormControl
+              id={input.id}
+              isInvalid={!!errors?.[input.id]}
+              isRequired={input.required}
+            >
+              <FormLabel>{input.label}</FormLabel>
+              <Controller
+                name={input.id}
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <RadioGroup onChange={onChange} value={value}>
+                    <Stack direction="row">
+                      {input.options?.map(
+                        (item: { value: string; label: string }) => (
+                          <Radio key={item.value} value={item.value}>
+                            {item.label}
+                          </Radio>
+                        )
+                      )}
+                    </Stack>
+                  </RadioGroup>
+                )}
+                rules={{ required: !!input.required }}
+              />
               <ErrorMessage error={errors?.[input.id]} />
             </FormControl>
           );

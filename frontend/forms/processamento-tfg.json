@@ -1,0 +1,34 @@
+{
+  "name": "Projeto de Matrícula de TFG",
+  "fields": [
+    {
+      "id": "approved",
+      "zod": {
+        "type": "boolean"
+      },
+      "type": "radio",
+      "required": true,
+      "label": "Situação da Matrícula",
+      "value": null,
+      "options": [
+        {
+          "label": "Aprovado",
+          "value": "true"
+        },
+        {
+          "label": "Reprovado",
+          "value": "false"
+        }
+      ]
+    },
+    {
+      "id": "observations",
+      "zod": {
+        "type": "string"
+      },
+      "type": "textarea",
+      "label": "Observações",
+      "value": null
+    }
+  ]
+}
