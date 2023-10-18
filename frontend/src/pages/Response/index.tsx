@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,6 +19,7 @@ import RenderInput from "../../components/RenderInput";
 
 const ResponseForm: React.FC = () => {
   const params = useParams<{ slug: string }>();
+  const navigate = useNavigate();
   const toast = useToast();
 
   const { data: form, isLoading } = useQuery<Form>(
@@ -48,15 +49,16 @@ const ResponseForm: React.FC = () => {
     {
       onSuccess: () => {
         toast({
-          title: "Form submitted",
+          title: "Formulário enviado com sucesso",
           status: "success",
           duration: 3000,
           isClosable: true,
         });
+        navigate(-1);
       },
       onError: () => {
         toast({
-          title: "Form submission failed",
+          title: "Erro ao enviar formulário",
           status: "error",
           duration: 3000,
           isClosable: true,

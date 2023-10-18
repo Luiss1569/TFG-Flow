@@ -199,7 +199,7 @@ const InputFile = ({
   register: UseFormRegister<FieldValues>;
 }) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const { ref, ...rest } = register(input.id) as {
+  const { ref, ...rest } = register(input.id,) as {
     ref: (instance: HTMLInputElement | null) => void;
   };
 
@@ -248,3 +248,4 @@ const InputFile = ({
     </InputGroup>
   );
 };
+

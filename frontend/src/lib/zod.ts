@@ -57,7 +57,7 @@ const mapZodType = (
         )
         .transform(async (files: FileList) => {
           if (!files.length) {
-            return null;
+            return [];
           }
 
           const base64 = await getBase64(files[0]);
