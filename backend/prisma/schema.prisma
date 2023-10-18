@@ -152,6 +152,7 @@ model formOpenPeriod {
 
 model activities {
   id               String               @id @default(uuid())
+  name             String               @default("")
   matriculation    Int                  @unique @default(autoincrement())
   status_id        String               @map("status_id")
   status           status               @relation(fields: [status_id], references: [id])

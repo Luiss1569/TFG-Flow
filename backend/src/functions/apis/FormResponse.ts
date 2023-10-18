@@ -3,8 +3,13 @@ import res from "../../utils/wrappers/apiResponse";
 import sbusOutputs, { sendToQueue } from "../../utils/sbus-outputs";
 import { Prisma } from "@prisma/client";
 
+interface Content extends Prisma.JsonObject {
+  activity_name?: string;
+  masterminds?: Array<string>;
+}
+
 interface Body {
-  content: Prisma.JsonObject;
+  content: Content;
   activity_id?: string;
 }
 
@@ -34,6 +39,7 @@ const handler: ApiWrapperHandler = async (conn, req, context) => {
     if (form.form_type === "public") {
       const activity = await conn.activities.create({
         data: {
+          name: content?.activity_name,
           users: {
             connect: {
               id: user.id,
@@ -42,6 +48,13 @@ const handler: ApiWrapperHandler = async (conn, req, context) => {
           status: {
             connect: {
               id: form.status_id,
+            },
+          },
+          masterminds: {
+            createMany: {
+              data: content?.masterminds?.map((mastermind) => ({
+                teacher_id: mastermind,
+              })),
             },
           },
         },
@@ -179,7 +192,7 @@ export default new ApiWrapper(handler)
     name: "Form-Response",
     options: {
       methods: ["POST"],
-      route: "/form-response/{form_id}",
+      route: "/forms/{form_id}/responses",
       extraOutputs: sbusOutputs,
     },
   });
