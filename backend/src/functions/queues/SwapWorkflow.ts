@@ -12,6 +12,8 @@ const handler: QueueWrapperHandler = async (conn, messageQueue, context) => {
 
     const content = step.content as unknown as SwapWorkflowInterface;
 
+    console.log("content", content);
+
     const nextWorkflow = await conn.workflows.findFirstOrThrow({
       where: {
         status_id: content.status_id,

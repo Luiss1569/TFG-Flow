@@ -56,22 +56,52 @@ export default new ApiWrapper(handler)
         .when("formType", ([formType], schema) =>
           formType === "private" ? schema.required() : schema
         ),
-      content: schema
-        .string()
-        .required()
-        .test({
-          name: "content",
-          message: "content must be an object",
-          test: (value) => {
-            try {
-              JSON.parse(value);
-              return true;
-            } catch (error) {
-              return false;
-            }
-          },
-        })
-        .transform((value) => JSON.parse(value)),
+      content: schema.object().shape({
+        fields: schema
+          .array()
+          .of(
+            schema.object().shape({
+              id: schema.string().required(),
+              zod: schema.object().shape({
+                type: schema
+                  .mixed()
+                  .oneOf([
+                    "string",
+                    "number",
+                    "date",
+                    "select",
+                    "multiselect",
+                    "file",
+                    "email",
+                  ]),
+                validation: schema.object(),
+              }),
+              type: schema
+                .mixed()
+                .oneOf([
+                  "text",
+                  "textarea",
+                  "select",
+                  "radio",
+                  "multiselect",
+                  "checkbox",
+                  "date",
+                  "time",
+                  "datetime",
+                  "file",
+                  "number",
+                  "email",
+                ])
+                .required(),
+              label: schema.string().required(),
+              value: schema.mixed(),
+              required: schema.boolean(),
+              placeholder: schema.string(),
+            })
+          )
+          .min(1)
+          .required(),
+      }),
       openPeriod: schema.object().shape({
         startDate: schema.date().required(),
         endDate: schema.date().required().min(schema.ref("startDate")),

@@ -25,14 +25,14 @@ const handler: QueueWrapperHandler = async (conn, messageQueue, context) => {
     })();
   });
 
-  const nextStep = await conn.steps.findFirst({
-    where: {
-      identifier: step.next_step_id,
-      workflow_id: step.workflow_id,
-    },
-  });
+  if (step.next_step_id) {
+    const nextStep = await conn.steps.findFirst({
+      where: {
+        identifier: step.next_step_id,
+        workflow_id: step.workflow_id,
+      },
+    });
 
-  if (nextStep) {
     sendToQueue(context, nextStep.type, {
       step_id: nextStep.id,
       activity_workflow_id,

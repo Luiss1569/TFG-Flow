@@ -204,7 +204,10 @@ export default new ApiWrapper(handler)
   .setSchemaValidator((schema) => ({
     body: schema.object().shape({
       content: schema.object().unknown().required(),
-      activity_id: schema.string(),
+      activity_id: schema.string().uuid().optional(),
+    }),
+    params: schema.object().shape({
+      form_id: schema.string().uuid(),
     }),
   }))
   .configure({
