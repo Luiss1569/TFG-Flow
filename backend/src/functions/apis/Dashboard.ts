@@ -39,7 +39,7 @@ const handler: ApiWrapperHandler = async (conn, req) => {
     where: {
       form_type: "private",
       formOpenPeriod: {
-        some: {
+        every: {
           start_date: {
             lte: new Date(),
           },
