@@ -18,7 +18,7 @@ enum user_roles {
 model users {
   id                 String               @id @default(uuid())
   name               String
-  cpf                String
+  cpf                String               @unique
   role               user_roles           @default(student)
   email              String
   password           String
@@ -37,7 +37,7 @@ model users {
 
 model institutes {
   id         String   @id @default(uuid())
-  acronym    String?
+  acronym    String?  @unique
   name       String?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
