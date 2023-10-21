@@ -7,6 +7,6 @@
     "FUNCTIONS_WORKER_RUNTIME": "node",
     "AzureWebJobsFeatureFlags": "EnableWorkerIndexing",
     "AzureWebJobsStorage": "",
-    "AzureServiceBusConnectionString": ""
+    "AzureServiceBusConnectionString": "Endpoint=sb://tfgflow.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=gy160/Kkp+3CgNLysFDLYIUZNTvA1Pb3i+ASbDLHtp4="
   }
 }
