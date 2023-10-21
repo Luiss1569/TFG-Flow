@@ -1,10 +1,10 @@
 {
   "name": "Inscrição TFG",
-  "status_id": "70ecba4a-259e-4d00-b366-4ea5ac611adf",
+  "status_id": "017228a6-7814-4f84-b723-c6ee081aaff7",
   "first_step_id": "step1",
   "steps": [
     {
-      "identifier": "step1",
+      "id": "step1",
       "name": "Aviso ao Aluno",
       "type": "send_email",
       "content": {
@@ -17,43 +17,43 @@
       "next_step_id": "step2"
     },
     {
-      "identifier": "step2",
+      "id": "step2",
       "name": "Requisição de aprovação ao coordenador",
       "type": "request_answer",
       "content": {
         "answers": [
           "${coordinator}"
         ],
-        "form_id": "7ffb5adf-537b-4cad-921f-2ccb5c0393dd"
+        "form_id": "a1a8fa70-e59c-48c4-b52e-ad45ca1f60d4"
       },
       "next_step_id": "step3"
     },
     {
-      "identifier": "step3",
+      "id": "step3",
       "name": "Avaliação da aprovação do coordenador",
       "type": "conditional",
       "content": {
-        "condition": "const rq = operations.getReqAnswerByStepId('ALTERE O STEP_ID AQUI');if (rq.at(-1).answers.at(-1).content.approved === 'true'){console.log('Aprovado');return true;}return false;",
+        "condition": "const rq = operations.getReqAnswerByStepId('step2');if (rq.at(-1).answers.at(-1).content.approved === 'true'){console.log('Aprovado');return true;}return false;",
         "true_step_id": "step4",
         "false_step_id": "step5"
       },
       "next_step_id": null
     },
     {
-      "identifier": "step4",
+      "id": "step4",
       "name": "Matrícula aprovada",
       "type": "swap_workflow",
       "content": {
-        "status_id": "292fc3e8-9799-415d-bc67-54d1f77cb057"
+        "status_id": "aef02370-915b-4bce-a90e-5e3e411c207d"
       },
       "next_step_id": null
     },
     {
-      "identifier": "step5",
+      "id": "step5",
       "name": "Matrícula reprovada",
       "type": "swap_workflow",
       "content": {
-        "status_id": "292fc3e8-9799-415d-bc67-54d1f77cb057"
+        "status_id": "1d13abf5-eabb-4c14-a273-1357ec422986"
       },
       "next_step_id": null
     }

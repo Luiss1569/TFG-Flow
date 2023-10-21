@@ -25,7 +25,12 @@ const handler: QueueWrapperHandler = async (conn, messageQueue, context) => {
         activity_workflow_step: {
           select: {
             id: true,
-            step_id: true,
+            step: {
+              select: {
+                id: true,
+                identifier: true,
+              },
+            },
           },
         },
         form: {
@@ -71,7 +76,7 @@ const handler: QueueWrapperHandler = async (conn, messageQueue, context) => {
     const operations = {
       getReqAnswerByStepId: (step_id: string) => {
         return requestAnswersWithAnswers.filter(
-          (r) => r.activity_workflow_step.step_id === step_id
+          (r) => r.activity_workflow_step.step.identifier === step_id
         );
       },
       getActivity() {

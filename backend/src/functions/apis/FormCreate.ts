@@ -8,14 +8,25 @@ interface Body {
   slug: string;
   status_id?: string;
   content: any;
-  openPeriod: {
-    startDate: string;
-    endDate: string;
+  openPeriod?: {
+    startDate?: Date ;
+    endDate?: Date;
   };
 }
 
 const handler: ApiWrapperHandler = async (conn, req) => {
   const body = req.body as Body;
+
+  const haveOpenPeriod = body.openPeriod?.startDate && body.openPeriod?.endDate;
+
+  const objectOpenPeriod = haveOpenPeriod && {
+    formOpenPeriod: {
+      create: {
+        start_date: body.openPeriod?.startDate,
+        end_date: body.openPeriod?.endDate,
+      },
+    },
+  };
 
   const form = await conn.forms.create({
     data: {
@@ -25,12 +36,7 @@ const handler: ApiWrapperHandler = async (conn, req) => {
       status_id: body.status_id,
       form_type: body.formType,
       content: body.content,
-      formOpenPeriod: {
-        create: {
-          start_date: body.openPeriod.startDate,
-          end_date: body.openPeriod.endDate,
-        },
-      },
+      ...(haveOpenPeriod ? objectOpenPeriod : {}),
     },
   });
 
@@ -49,12 +55,12 @@ export default new ApiWrapper(handler)
         .min(3)
         .max(20)
         .trim()
-        .matches(/^[a-z0-9]+$/),
+        .matches(/^[a-z0-9-]+$/),
       status_id: schema
         .string()
         .uuid()
         .when("formType", ([formType], schema) =>
-          formType === "private" ? schema.required() : schema
+          formType === "public" ? schema.required() : schema
         ),
       content: schema.object().shape({
         fields: schema
@@ -94,7 +100,7 @@ export default new ApiWrapper(handler)
                 ])
                 .required(),
               label: schema.string().required(),
-              value: schema.mixed(),
+              value: schema.mixed().optional().nullable(),
               required: schema.boolean(),
               placeholder: schema.string(),
             })
@@ -102,15 +108,12 @@ export default new ApiWrapper(handler)
           .min(1)
           .required(),
       }),
-      openPeriod: schema.object().shape({
-        startDate: schema.date().required(),
-        endDate: schema.date().required().min(schema.ref("startDate")),
-      }),
     }),
   }))
   .configure({
     name: "Form-Create",
     options: {
       methods: ["POST"],
+      route: "/form",
     },
   });

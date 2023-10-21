@@ -1,41 +1,35 @@
 {
   "name": "Inscrição TFG",
-  "fields": [
-    {
-      "id": "activity_name",
-      "zod": {
-        "type": "string",
-        "validation": {}
+  "formType": "public",
+  "description": "Formulário para inscrição do TFG",
+  "slug": "inscricao-tfg",
+  "status_id": "017228a6-7814-4f84-b723-c6ee081aaff7",
+  "content": {
+    "fields": [
+      {
+        "id": "activity_name",
+        "zod": {
+          "type": "string",
+          "validation": {}
+        },
+        "type": "text",
+        "label": "Título do projeto",
+        "value": null,
+        "required": true,
+        "placeholder": "Insira o título do projeto"
       },
-      "type": "text",
-      "label": "Título do projeto",
-      "value": null,
-      "required": true,
-      "placeholder": "Insira o título do projeto"
-    },
-    {
-      "id": "masterminds",
-      "especial_type": "teacher",
-      "zod": {
-        "type": "multiselect"
-      },
-      "type": "multiselect",
-      "label": "Orientador e coorientador",
-      "value": "",
-      "options": [],
-      "placeholder": "Insira seu orientador e coorientador caso haja"
-    },
-    {
-      "id": "project_file",
-      "zod": {
-        "type": "file",
-        "validation": {}
-      },
-      "type": "file",
-      "label": "Arquivo do projeto",
-      "value": null,
-      "required": true,
-      "placeholder": "Insira o arquivo do projeto"
-    }
-  ]
+      {
+        "id": "masterminds",
+        "especial_type": "teacher",
+        "zod": {
+          "type": "multiselect"
+        },
+        "type": "multiselect",
+        "label": "Orientador e coorientador",
+        "value": "",
+        "options": [],
+        "placeholder": "Insira seu orientador e coorientador caso haja"
+      }
+    ]
+  }
 }
