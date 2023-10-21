@@ -1,0 +1,20 @@
+{
+  "name": "Etapa de envio parcial",
+  "status_id": "id do status de aprovação",
+  "first_step_id": "rep-step1",
+  "steps": [
+    {
+      "id": "parcial-step1",
+      "name": "TFG Reprovado",
+      "type": "send_email",
+      "content": {
+        "to": [
+          "${student}"
+        ],
+        "body": "Acesso o portal para mais detalhes",
+        "title": "TFG Reprovado!"
+      },
+      "next_step_id": null
+    }
+  ]
+}

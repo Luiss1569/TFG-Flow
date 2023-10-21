@@ -126,13 +126,15 @@ model forms {
   id             String           @id @default(uuid())
   form_type      form_types       @default(public)
   slug           String           @unique
+  name           String           @default("")
+  description    String           @default("")
   status_id      String?          @unique @map("status_id")
   status         status?          @relation(fields: [status_id], references: [id])
   content        Json             @default("{}")
   created_at     DateTime         @default(now())
   updated_at     DateTime         @updatedAt
   formOpenPeriod formOpenPeriod[]
-  requestAnswers requestAnswers?
+  requestAnswers requestAnswers[]
   answers        answers[]
 
   @@map(name: "forms")
@@ -152,6 +154,7 @@ model formOpenPeriod {
 
 model activities {
   id               String               @id @default(uuid())
+  name             String               @default("")
   matriculation    Int                  @unique @default(autoincrement())
   status_id        String               @map("status_id")
   status           status               @relation(fields: [status_id], references: [id])
@@ -241,7 +244,7 @@ enum request_answer_status {
 model requestAnswers {
   id                        String                @id @default(uuid())
   status                    request_answer_status @default(pending)
-  form_id                   String                @unique @map("form_id")
+  form_id                   String                @map("form_id")
   form                      forms                 @relation(fields: [form_id], references: [id])
   activity_id               String                @map("activity_id")
   activity                  activities            @relation(fields: [activity_id], references: [id])

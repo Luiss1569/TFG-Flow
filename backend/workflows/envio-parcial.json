@@ -1,0 +1,18 @@
+{
+  "name": "Etapa de envio parcial",
+  "status_id": "721fb03d-57a7-46ac-990f-97ca1ac87a48",
+  "first_step_id": "parcial-step1",
+  "steps": [
+    {
+      "id": "parcial-step1",
+      "name": "Aviso ao Aluno",
+      "type": "send_email",
+      "content": {
+        "to": ["${student}"],
+        "title": "Solicitação Aprovada",
+        "body": "Inscrição aprovada! Abra o portal para ver os proximos passos!"
+      },
+      "next_step_id": null
+    }
+  ]
+}
