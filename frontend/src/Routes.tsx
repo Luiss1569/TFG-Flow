@@ -5,13 +5,16 @@ import {
 } from 'react-router-dom';
 
 import Login from './pages/Login';
-import Response from './pages/Response';
+import Response from './pages/Response';import Dashboard from './pages/Dashboard';
+import ListUsers from './components/ListUsers';
 
 export function AppRoutes() {
     return (
         <Router>
             <Routes>
-                <Route path='/' element= {<Login/>}/>
+                <Route path='/login' element= {<Login/>}/> 
+                <Route path='/' element= {<Dashboard/>}>
+                <Route path='listusers' element= {<ListUsers/>}/>
                 <Route path='/response/:slug' element= {<Response/>}/>
                 <Route path='*' element= {<Login/>}/>
             </Routes>
