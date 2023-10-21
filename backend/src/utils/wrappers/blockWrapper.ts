@@ -25,7 +25,7 @@ export type QueueWrapperHandler = (
   conn: ReturnType<typeof prisma.connect>,
   message: QueueWrapperInterface,
   context: InvocationContext
-) => Promise<void>;
+) => Promise<Object>;
 
 type AzureFunctionHandler = (
   message: Pick<QueueWrapperInterface, "step_id" | "activity_workflow_id">,
@@ -83,7 +83,7 @@ export default class BlockWrapper {
 
       id = activityWorkflowStep.id;
 
-      return await this.handler(
+      const result = await this.handler(
         conn,
         {
           ...message,
@@ -93,23 +93,18 @@ export default class BlockWrapper {
           activity_workflow_step: activityWorkflowStep,
         },
         context
-      )
-        .then(async () => {
-          if (id) {
-            await conn.activityworkflowSteps.update({
-              where: {
-                id,
-              },
-              data: {
-                status: "done",
-                response: "success",
-              },
-            });
-          }
-        })
-        .catch((error) => {
-          throw error;
+      );
+      if (id) {
+        await conn.activityworkflowSteps.update({
+          where: {
+            id,
+          },
+          data: {
+            status: "done",
+            response: result as string,
+          },
         });
+      }
     } catch (error) {
       context.error(error);
 
@@ -120,7 +115,7 @@ export default class BlockWrapper {
           },
           data: {
             status: "error",
-            response: error.message,
+            response: JSON.stringify({ error: error.message }),
           },
         });
       }

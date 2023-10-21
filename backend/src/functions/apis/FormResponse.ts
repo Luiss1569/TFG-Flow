@@ -3,8 +3,13 @@ import res from "../../utils/wrappers/apiResponse";
 import sbusOutputs, { sendToQueue } from "../../utils/sbus-outputs";
 import { Prisma } from "@prisma/client";
 
+interface Content extends Prisma.JsonObject {
+  activity_name?: string;
+  masterminds?: Array<string>;
+}
+
 interface Body {
-  content: Prisma.JsonObject;
+  content: Content;
   activity_id?: string;
 }
 
@@ -32,8 +37,28 @@ const handler: ApiWrapperHandler = async (conn, req, context) => {
     }
 
     if (form.form_type === "public") {
+      const teachers = await conn.users.findMany({
+        where: {
+          id: {
+            in: content?.masterminds,
+          },
+        },
+        select: {
+          teachers: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      });
+
+      const teachersIds = teachers
+        .map((teacher) => teacher.teachers.map((teacher) => teacher.id))
+        .flat();
+
       const activity = await conn.activities.create({
         data: {
+          name: content?.activity_name,
           users: {
             connect: {
               id: user.id,
@@ -42,6 +67,13 @@ const handler: ApiWrapperHandler = async (conn, req, context) => {
           status: {
             connect: {
               id: form.status_id,
+            },
+          },
+          masterminds: {
+            createMany: {
+              data: teachersIds.map((teacher_id) => ({
+                teacher_id: teacher_id,
+              })),
             },
           },
         },
@@ -172,14 +204,17 @@ export default new ApiWrapper(handler)
   .setSchemaValidator((schema) => ({
     body: schema.object().shape({
       content: schema.object().unknown().required(),
-      activity_id: schema.string(),
+      activity_id: schema.string().uuid().optional(),
+    }),
+    params: schema.object().shape({
+      form_id: schema.string().uuid(),
     }),
   }))
   .configure({
     name: "Form-Response",
     options: {
       methods: ["POST"],
-      route: "/form-response/{form_id}",
+      route: "/form/{form_id}/response",
       extraOutputs: sbusOutputs,
     },
   });

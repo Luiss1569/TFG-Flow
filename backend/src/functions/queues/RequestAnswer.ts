@@ -41,6 +41,11 @@ const handler: QueueWrapperHandler = async (conn, messageQueue, context) => {
     });
 
     await conn.$executeRaw`COMMIT;`;
+
+    return {
+      request_answer_id: requestAnswer.id,
+      requesters: mapUser.map((user) => user.id),
+    };
   } catch (error) {
     await conn.$executeRaw`ROLLBACK;`;
     throw error;

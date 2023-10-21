@@ -19,12 +19,41 @@ const handler: QueueWrapperHandler = async (conn, messageQueue, context) => {
     const content = step.content as unknown as ConditionalInterface;
 
     const requestAnswers = await conn.requestAnswers.findMany({
+      select: {
+        id: true,
+        form_id: true,
+        activity_workflow_step: {
+          select: {
+            id: true,
+            step: {
+              select: {
+                id: true,
+                identifier: true,
+              },
+            },
+          },
+        },
+        form: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
       where: {
         activity_id: activity.id,
+      },
+      orderBy: {
+        created_at: "asc",
       },
     });
 
     const answers = await conn.answers.findMany({
+      select: {
+        form_id: true,
+        content: true,
+        id: true,
+      },
       where: {
         userRequestAnswers: {
           some: {
@@ -37,21 +66,27 @@ const handler: QueueWrapperHandler = async (conn, messageQueue, context) => {
     });
 
     const requestAnswersWithAnswers = requestAnswers.map((r) => {
-      const answer = answers.find((a) => a.form_id === r.form_id);
+      const req_answers = answers.filter((a) => a.form_id === r.form_id);
       return {
         ...r,
-        answer,
+        answers: req_answers,
       };
     });
 
+    const operations = {
+      getReqAnswerByStepId: (step_id: string) => {
+        return requestAnswersWithAnswers.filter(
+          (r) => r.activity_workflow_step.step.identifier === step_id
+        );
+      },
+      getActivity() {
+        return activity;
+      },
+    };
+
     const result = (() => {
       try {
-        return new Function(
-          "requestAnswers",
-          "activity",
-          "answers",
-          content.condition
-        )(requestAnswersWithAnswers, activity, answers);
+        return new Function("operations", content.condition)(operations);
       } catch (error) {
         context.log("Error on condition: ", error);
         return false;
@@ -73,6 +108,11 @@ const handler: QueueWrapperHandler = async (conn, messageQueue, context) => {
     }
 
     await conn.$executeRaw`COMMIT;`;
+
+    return {
+      next_step_id: nextStep?.id,
+      result,
+    };
   } catch (error) {
     await conn.$executeRaw`ROLLBACK;`;
     throw error;

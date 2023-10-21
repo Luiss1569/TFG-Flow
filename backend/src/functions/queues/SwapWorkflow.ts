@@ -12,6 +12,8 @@ const handler: QueueWrapperHandler = async (conn, messageQueue, context) => {
 
     const content = step.content as unknown as SwapWorkflowInterface;
 
+    console.log("content", content);
+
     const nextWorkflow = await conn.workflows.findFirstOrThrow({
       where: {
         status_id: content.status_id,
@@ -63,6 +65,14 @@ const handler: QueueWrapperHandler = async (conn, messageQueue, context) => {
         activity_workflow_id: workflowActivity.id,
       });
     }
+
+    await conn.$executeRaw`COMMIT;`;
+
+    return {
+      workflow_activity_id: workflowActivity.id,
+      next_workflow_id: nextWorkflow.id,
+      status_id: content.status_id,
+    };
   } catch (error) {
     await conn.$executeRaw`ROLLBACK;`;
     throw error;
