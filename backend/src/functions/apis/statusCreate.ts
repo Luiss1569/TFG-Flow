@@ -35,4 +35,5 @@ export default new ApiWrapper(handler)
             methods: ["POST"],
             route: "status",
         },
-    });
+    }); 
+    
