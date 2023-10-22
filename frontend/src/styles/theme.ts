@@ -51,7 +51,7 @@ const customTheme = {
         default: '#F5F5F5',
         _dark: '#29292E',
       },
-      green_btn: '#3CB371'
+      green_light: '#3CB371'
     },
   },
 };

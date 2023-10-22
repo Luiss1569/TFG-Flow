@@ -111,10 +111,10 @@ function Login() {
 
                                                 <InputRightElement width='4.5rem'>
                                                     {show && (
-                                                        <ViewIcon onClick={handleClick} color='green_btn' />
+                                                        <ViewIcon onClick={handleClick} color='green_light' />
                                                     )}
                                                     {!show && (
-                                                        <ViewOffIcon onClick={handleClick} color='green_btn'></ViewOffIcon>
+                                                        <ViewOffIcon onClick={handleClick} color='green_light'></ViewOffIcon>
                                                     )}
                                                 </InputRightElement>
 
@@ -128,7 +128,7 @@ function Login() {
                                             variant="solid" w="100%">Entrar</Button>
                                     </form>
 
-                                    <Text align='center' pt='20px'>Ainda não possuí uma conta? <Link color='green_btn'>Cadastre-se</Link></Text>
+                                    <Text align='center' pt='20px'>Ainda não possuí uma conta? <Link color='green_light'>Cadastre-se</Link></Text>
                                 </CardBody>
                             </Card>
 
