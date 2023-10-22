@@ -1,13 +1,13 @@
 import React, { SyntheticEvent, useState } from 'react';
 import './style.css';
 import api from "../../lib/axios";
-import { IconButton, Link, InputLeftElement, FormControl, FormHelperText, Show, HStack, Button, Flex, Text, FormLabel, VStack, Input, Alert, AlertIcon, InputGroup, InputRightElement, useColorMode, Box, Center, Stack, Card, CardBody } from '@chakra-ui/react';
-import { SunIcon, MoonIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { useToast, IconButton, Link, InputLeftElement, FormControl, FormHelperText, Show, HStack, Button, Flex, Text, FormLabel, VStack, Input, Alert, AlertIcon, InputGroup, InputRightElement, useColorMode, Box, Center, Stack, Card, CardBody } from '@chakra-ui/react';
+import { SunIcon, MoonIcon, ViewIcon, ViewOffIcon, UnlockIcon } from '@chakra-ui/icons';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { LockIcon, AtSignIcon } from '@chakra-ui/icons'
-
+import { LockIcon, AtSignIcon } from '@chakra-ui/icons';
+import { useNavigate } from "react-router-dom";
 
 const loginUserFormSchema = z.object({
     cpf: z.string()
@@ -20,7 +20,10 @@ const loginUserFormSchema = z.object({
 type CreateUserFormData = z.infer<typeof loginUserFormSchema>
 
 function Login() {
+    let navigate = useNavigate();
+
     const { colorMode, toggleColorMode } = useColorMode();
+    const toast = useToast();
 
     const { register,
         handleSubmit,
@@ -32,6 +35,33 @@ function Login() {
     const [errorText, setErrorText] = useState<string | null>(null);
     const [show, setShow] = useState(false)
 
+    const handleToastClose =()=>{
+        return navigate("/");
+    }
+    const showToastSuccess = () =>{
+        toast({
+            title:'login sucesso',
+            description: 'Sucesso',
+            duration: 2500,
+            isClosable: true,
+            status: 'success',
+            position: 'top-right',
+            icon: <UnlockIcon/>,
+            onCloseComplete: handleToastClose
+        });
+    }
+    const showToastError = (message: string) =>{
+        toast({
+            title:'Erro no login',
+            description: `${message}`,
+            duration: 2500,
+            isClosable: true,
+            status: 'error',
+            position: 'top-right',
+            icon: <LockIcon/>
+        });
+    }
+
     const handleClick = () => setShow(!show)
     const loginUser = async (data: any) => {
         try {
@@ -41,11 +71,14 @@ function Login() {
             await api.post("login", {
                 cpf,
                 password
-            })
+            });
+            showToastSuccess();
         } catch (error: any) {
-            setErrorText(error.message);
+            showToastError(error.message);
         }
     };
+
+   
     return (
         <Box bg='primary'>
             <Center>
@@ -125,6 +158,7 @@ function Login() {
                                         <Button isLoading={isSubmitting}
                                             mt='1rem'
                                             type='submit'
+                                            // _hover={{ bg: 'green_dark' }}
                                             variant="solid" w="100%">Entrar</Button>
                                     </form>
 
