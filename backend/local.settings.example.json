@@ -8,5 +8,5 @@
     "AzureWebJobsFeatureFlags": "EnableWorkerIndexing",
     "AzureWebJobsStorage": "",
     "AzureServiceBusConnectionString": ""
-  }
+    }
 }
