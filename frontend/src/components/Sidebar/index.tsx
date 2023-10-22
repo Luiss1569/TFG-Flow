@@ -7,7 +7,7 @@ import { ArrowBackIcon } from '@chakra-ui/icons';
 
 function Sidebar() {
     return (
-        <List >
+        <List fontSize='1.2em' spacing={4}>
             <ListItem>
                 <ChakraLink as={ReactRouterLink} to='/' _hover={{ textDecor: 'none' }}>
                     Home
