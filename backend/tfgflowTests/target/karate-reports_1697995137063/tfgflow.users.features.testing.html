@@ -38,8 +38,8 @@ posthog.init('phc_M6fKk3dSX9HjglkqPSybauGas45NINb7EgsPGU8N9g1',{
       <img src="karate-labs-logo-ring.svg" alt="Karate Labs"/>
     </a>
     <div class="nav-count">
-      <div id="nav-pass" class="bg-success">1</div>
-      <div id="nav-fail" class="bg-danger">0</div>
+      <div id="nav-pass" class="bg-success">0</div>
+      <div id="nav-fail" class="bg-danger">1</div>
     </div>
   </div>
   <div id="nav-env">
@@ -49,12 +49,12 @@ posthog.init('phc_M6fKk3dSX9HjglkqPSybauGas45NINb7EgsPGU8N9g1',{
     <div>Scenarios</div>
   </div>
   <div id="nav-date">
-    <div>2023-10-22 02:18:58 PM</div>
+    <div>2023-10-22 02:17:31 PM</div>
   </div>
 </div>
 
         <div class="nav-container">
-          <div class="nav-item passed">
+          <div class="nav-item failed">
             <a href="#[1:3]"><span>[1:3]</span> <span>Unautorized access</span></a>
           </div>
         </div>
@@ -80,8 +80,8 @@ posthog.init('phc_M6fKk3dSX9HjglkqPSybauGas45NINb7EgsPGU8N9g1',{
                 <span></span>
               </div>
             </div>
-            <div class="scenario-time passed">
-              <span>ms:</span>&nbsp;<span>717</span>
+            <div class="scenario-time failed">
+              <span>ms:</span>&nbsp;<span>342</span>
             </div>
           </div>
           
@@ -107,7 +107,7 @@ posthog.init('phc_M6fKk3dSX9HjglkqPSybauGas45NINb7EgsPGU8N9g1',{
 
   
 
-  <div class="preformatted" data-parent="0.4">14:18:58.087 karate.env system property was: null 
+  <div class="preformatted" data-parent="0.4">14:17:30.988 karate.env system property was: null 
 </div>   
 
   
@@ -121,13 +121,13 @@ posthog.init('phc_M6fKk3dSX9HjglkqPSybauGas45NINb7EgsPGU8N9g1',{
 
   <div class="step-row">
     <div class="step-container" id="0.5">
-      <div class="step-ref passed">5</div>
+      <div class="step-ref failed">5</div>
       
-      <div class="step-cell passed">
+      <div class="step-cell failed">
         <span>When</span>&nbsp;<span>method Get</span>
       </div>
     </div>
-    <div class="time-cell passed">714</div>
+    <div class="time-cell failed">341</div>
   </div>
 
    
@@ -136,7 +136,7 @@ posthog.init('phc_M6fKk3dSX9HjglkqPSybauGas45NINb7EgsPGU8N9g1',{
 
   
 
-  <div class="preformatted" data-parent="0.5">14:18:58.327 request:
+  <div class="preformatted" data-parent="0.5">14:17:31.330 request:
 1 &gt; GET http://localhost:7071/institute/
 1 &gt; Host: localhost:7071
 1 &gt; Connection: Keep-Alive
@@ -144,18 +144,12 @@ posthog.init('phc_M6fKk3dSX9HjglkqPSybauGas45NINb7EgsPGU8N9g1',{
 1 &gt; Accept-Encoding: gzip,deflate
 
 
-14:18:58.805 response time in milliseconds: 475
-1 &lt; 401
-1 &lt; Content-Type: text/plain;charset=UTF-8
-1 &lt; Date: Sun, 22 Oct 2023 17:18:58 GMT
-1 &lt; Server: Kestrel
-1 &lt; Transfer-Encoding: chunked
-{
-  &quot;status&quot;: 401,
-  &quot;message&quot;: &quot;Unauthorized&quot;,
-  &quot;body&quot;: null
-}
-
+14:17:31.360 org.apache.http.conn.HttpHostConnectException: Connect to localhost:7071 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused: no further information, http call failed after 334 milliseconds for url: http://localhost:7071/institute/
+14:17:31.362 classpath:tfgflow/users/features/testing.feature:5
+When method Get
+http call failed after 334 milliseconds for url: http://localhost:7071/institute/
+org.apache.http.conn.HttpHostConnectException: Connect to localhost:7071 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused: no further information
+classpath:tfgflow/users/features/testing.feature:5
 </div>   
 
   
@@ -169,13 +163,13 @@ posthog.init('phc_M6fKk3dSX9HjglkqPSybauGas45NINb7EgsPGU8N9g1',{
 
   <div class="step-row">
     <div class="step-container" id="0.6">
-      <div class="step-ref passed">6</div>
+      <div class="step-ref skipped">6</div>
       
-      <div class="step-cell passed">
+      <div class="step-cell skipped">
         <span>Then</span>&nbsp;<span>status 401</span>
       </div>
     </div>
-    <div class="time-cell passed">2</div>
+    <div class="time-cell skipped">0</div>
   </div>
 
    
