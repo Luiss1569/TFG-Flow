@@ -28,6 +28,6 @@ export default new ApiWrapper(handler)
         name: "Institute-Read",
         options: {
             methods: ["GET"],
-            route: "/institute/{institute_id?}",
+            route: "institute/{institute_id?}",
         },
     });

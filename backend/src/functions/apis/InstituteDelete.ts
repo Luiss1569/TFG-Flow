@@ -33,6 +33,6 @@ export default new ApiWrapper(handler)
         name: "Institute-Delete",
         options: {
             methods: ["DELETE"],
-            route: "/institute/{institute_id}",
+            route: "institute/{institute_id}",
         },
     });

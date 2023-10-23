@@ -27,7 +27,7 @@ export default new ApiWrapper(handler)
         name: "StatusRead",
         options: {
             methods: ["GET"],
-            route: "/status/{status_id?}",
+            route: "status/{status_id?}",
         },
     });
     

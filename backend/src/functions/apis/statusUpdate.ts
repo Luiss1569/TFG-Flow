@@ -50,7 +50,7 @@ export default new ApiWrapper(handler)
         name: "Status-Update",
         options: {
             methods: ["PUT"],
-            route: "/status/{status_id}",
+            route: "status/{status_id}",
         },
     });
     

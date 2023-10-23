@@ -93,6 +93,6 @@ export default new ApiWrapper(handler)
     name: "Activity-Read",
     options: {
       methods: ["GET"],
-      route: "/activity/{activity_id}",
+      route: "activity/{activity_id}",
     },
   });
