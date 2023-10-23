@@ -145,6 +145,6 @@ export default new ApiWrapper(handler)
     name: "Workflow-Create",
     options: {
       methods: ["POST"],
-      route: "/workflow",
+      route: "workflow",
     },
   });

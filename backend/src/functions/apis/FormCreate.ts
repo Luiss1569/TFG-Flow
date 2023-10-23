@@ -114,6 +114,6 @@ export default new ApiWrapper(handler)
     name: "Form-Create",
     options: {
       methods: ["POST"],
-      route: "/form",
+      route: "form",
     },
   });

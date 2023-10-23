@@ -68,7 +68,7 @@ export default new ApiWrapper(handler)
     name: "FormSlugRead",
     options: {
       methods: ["GET"],
-      route: "/form/slug/{slug}",
+      route: "form/slug/{slug}",
     },
   })
   .setPublic();

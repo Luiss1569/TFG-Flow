@@ -94,6 +94,6 @@ export default new ApiWrapper(handler).configure({
   name: "Dashboard",
   options: {
     methods: ["GET"],
-    route: "/dashboard",
+    route: "dashboard",
   },
 });

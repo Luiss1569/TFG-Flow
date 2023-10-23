@@ -33,6 +33,6 @@ export default new ApiWrapper(handler)
     name: "Workflow-Read",
     options: {
       methods: ["GET"],
-      route: "/workflow/{workflow_id}",
+      route: "workflow/{workflow_id}",
     },
   });

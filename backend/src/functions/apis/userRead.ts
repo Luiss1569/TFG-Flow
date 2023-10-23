@@ -24,6 +24,6 @@ export default new ApiWrapper(handler)
         name: "User-Read",
         options: {
             methods: ["GET"],
-            route: "/user/{user_id?}",
+            route: "user/{user_id?}",
         },
     });

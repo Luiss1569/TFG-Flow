@@ -214,7 +214,7 @@ export default new ApiWrapper(handler)
     name: "Form-Response",
     options: {
       methods: ["POST"],
-      route: "/form/{form_id}/response",
+      route: "form/{form_id}/response",
       extraOutputs: sbusOutputs,
     },
   });

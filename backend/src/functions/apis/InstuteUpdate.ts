@@ -51,6 +51,6 @@ export default new ApiWrapper(handler)
         name: "Institute-Upadate",
         options: {
             methods: ["PUT"],
-            route: "/institute/{institute_id}",
+            route: "institute/{institute_id}",
         },
     });
