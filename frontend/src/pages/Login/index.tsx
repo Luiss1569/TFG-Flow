@@ -1,7 +1,7 @@
 import React, { SyntheticEvent, useState } from 'react';
 import './style.css';
 import api from "../../lib/axios";
-import { useToast, IconButton, Link, InputLeftElement, FormControl, FormHelperText, Show, HStack, Button, Flex, Text, FormLabel, VStack, Input, Alert, AlertIcon, InputGroup, InputRightElement, useColorMode, Box, Center, Stack, Card, CardBody } from '@chakra-ui/react';
+import { useToast, IconButton, Link, InputLeftElement, FormControl, FormHelperText, Show, Hide, HStack, Button, Flex, Text, FormLabel, VStack, Input, Alert, AlertIcon, InputGroup, InputRightElement, useColorMode, Box, Center, Stack, Card, CardBody } from '@chakra-ui/react';
 import { SunIcon, MoonIcon, ViewIcon, ViewOffIcon, UnlockIcon } from '@chakra-ui/icons';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -84,12 +84,6 @@ function Login() {
             <Center>
                 <Stack >
                     <HStack h="100vh" justifyContent='center'>
-                        {errorText && (
-                            <Alert status='error' color='error' pos="fixed" top="0" left="0" >
-                                <AlertIcon />
-                                {errorText}
-                            </Alert>
-                        )}
                         <IconButton
                             aria-label="toggle theme"
                             rounded="full"
@@ -99,9 +93,10 @@ function Login() {
                             left={4}
                             onClick={toggleColorMode} icon={colorMode === "dark" ? <SunIcon/> : <MoonIcon />}
                         />
-                            {/* <Show breakpoint='(min-width: 800px)' > */}
-                                <Text variant='title' w={{ base: '10%', xl: '40%' }} fontSize='5xl' >Faça o login para acessar sua conta</Text>
-                            {/* </Show> */}
+                            <Hide below='md'>
+                                <Text variant='title' w={{ base: '30%', xl: '40%' }} fontSize='5xl' >Faça o login para acessar sua conta</Text>
+                            </Hide>
+
                             <Card bg='secondary' p='10'>
                                 <CardBody>
                                     <form onSubmit={handleSubmit(loginUser)}>
@@ -122,10 +117,10 @@ function Login() {
                                                 />
                                             </InputGroup>
 
-                                            {errors.cpf && <FormHelperText >{errors.cpf.message}</FormHelperText>}
+                                            {errors.cpf && <FormHelperText color='red'>{errors.cpf.message}</FormHelperText>}
 
                                         </FormControl>
-                                        <FormControl isInvalid={errors.password != null}>
+                                        <FormControl isInvalid={errors.password != null} pt='10px'>
                                             <FormLabel htmlFor="password" >Senha</FormLabel>
 
                                             <InputGroup size='md'>
@@ -135,6 +130,7 @@ function Login() {
                                                 <Input
                                                     bg='primary'
                                                     focusBorderColor='#3CB371'
+                                                    errorBorderColor='red.300'
                                                     variant='outline'
                                                     id="password"
                                                     placeholder="Digite sua senha"
@@ -152,13 +148,12 @@ function Login() {
                                                 </InputRightElement>
 
                                             </InputGroup>
-                                            {errors.password && <FormHelperText >{errors.password.message}</FormHelperText>}
+                                            {errors.password && <FormHelperText color='red'>{errors.password.message}</FormHelperText>}
 
                                         </FormControl>
                                         <Button isLoading={isSubmitting}
                                             mt='1rem'
                                             type='submit'
-                                            // _hover={{ bg: 'green_dark' }}
                                             variant="solid" w="100%">Entrar</Button>
                                     </form>
 
