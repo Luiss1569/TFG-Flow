@@ -15,6 +15,14 @@ const handler: ApiWrapperHandler = async (conn, req) => {
           name: true,
         },
       },
+      users: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          matriculation: true,
+        },
+      },
       masterminds: {
         select: {
           assigned_at: true,
