@@ -8,7 +8,7 @@ export function PrivateRoutes() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Dashboard />} >
+        <Route path="/dashboard" element={<Dashboard />} >
           <Route path="listusers" element={<ListUsers />} />
         </Route>
         <Route path="/response/:slug" element={<Response />} />
