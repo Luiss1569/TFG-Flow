@@ -36,6 +36,6 @@ export default new ApiWrapper(handler)
         name: "InstituteCreate",
         options: {
             methods: ["POST"],
-            route: "institutes",
+            route: "institute",
         },
     });

@@ -15,6 +15,14 @@ const handler: ApiWrapperHandler = async (conn, req) => {
           name: true,
         },
       },
+      users: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          matriculation: true,
+        },
+      },
       masterminds: {
         select: {
           assigned_at: true,
@@ -93,6 +101,6 @@ export default new ApiWrapper(handler)
     name: "Activity-Read",
     options: {
       methods: ["GET"],
-      route: "/activity/{activity_id}",
+      route: "activity/{activity_id}",
     },
   });

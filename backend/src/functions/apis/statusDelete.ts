@@ -33,7 +33,7 @@ export default new ApiWrapper(handler)
         name: "StatusDelete",
         options: {
             methods: ["DELETE"],
-            route: "/status/{status_id}",
+            route: "status/{status_id}",
         },
     }); 
     

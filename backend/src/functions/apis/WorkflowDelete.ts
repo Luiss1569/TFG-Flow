@@ -39,6 +39,6 @@ export default new ApiWrapper(handler)
     name: "Workflow-Delete",
     options: {
       methods: ["DELETE"],
-      route: "/workflow/{workflow_id}",
+      route: "workflow/{workflow_id}",
     },
   });

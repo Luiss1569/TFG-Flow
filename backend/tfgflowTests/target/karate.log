@@ -3903,3 +3903,45 @@ classpath:tfgflow/users/features/testing.feature:6
 
 20:01:34.330 [pool-3-thread-1] INFO  com.intuit.karate.Suite - <<pass>> feature 1 of 2 (1 remaining) classpath:tfgflow/users/users.feature
 20:01:34.413 [pool-3-thread-1] INFO  com.intuit.karate.Suite - <<pass>> feature 2 of 2 (0 remaining) classpath:tfgflow/users/features/testing.feature
+14:17:29.761 [main] DEBUG com.intuit.karate.Suite - [config] classpath:karate-config.js
+14:17:29.768 [main] INFO  com.intuit.karate.Suite - backed up existing 'target\karate-reports' dir to: target\karate-reports_1697995049766
+14:17:30.986 [pool-2-thread-1] INFO  com.intuit.karate - karate.env system property was: null 
+14:17:31.330 [pool-2-thread-1] DEBUG com.intuit.karate - request:
+1 > GET http://localhost:7071/institute/
+1 > Host: localhost:7071
+1 > Connection: Keep-Alive
+1 > User-Agent: Apache-HttpClient/4.5.14 (Java/20.0.2)
+1 > Accept-Encoding: gzip,deflate
+
+
+14:17:31.360 [pool-2-thread-1] ERROR com.intuit.karate - org.apache.http.conn.HttpHostConnectException: Connect to localhost:7071 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused: no further information, http call failed after 334 milliseconds for url: http://localhost:7071/institute/
+14:17:31.362 [pool-2-thread-1] ERROR com.intuit.karate - classpath:tfgflow/users/features/testing.feature:5
+When method Get
+http call failed after 334 milliseconds for url: http://localhost:7071/institute/
+org.apache.http.conn.HttpHostConnectException: Connect to localhost:7071 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused: no further information
+classpath:tfgflow/users/features/testing.feature:5
+14:17:31.903 [pool-3-thread-1] INFO  com.intuit.karate.Suite - <<fail>> feature 1 of 1 (0 remaining) classpath:tfgflow/users/features/testing.feature
+14:18:57.059 [main] DEBUG com.intuit.karate.Suite - [config] classpath:karate-config.js
+14:18:57.065 [main] INFO  com.intuit.karate.Suite - backed up existing 'target\karate-reports' dir to: target\karate-reports_1697995137063
+14:18:58.085 [pool-2-thread-1] INFO  com.intuit.karate - karate.env system property was: null 
+14:18:58.327 [pool-2-thread-1] DEBUG com.intuit.karate - request:
+1 > GET http://localhost:7071/institute/
+1 > Host: localhost:7071
+1 > Connection: Keep-Alive
+1 > User-Agent: Apache-HttpClient/4.5.14 (Java/20.0.2)
+1 > Accept-Encoding: gzip,deflate
+
+
+14:18:58.805 [pool-2-thread-1] DEBUG com.intuit.karate - response time in milliseconds: 475
+1 < 401
+1 < Content-Type: text/plain;charset=UTF-8
+1 < Date: Sun, 22 Oct 2023 17:18:58 GMT
+1 < Server: Kestrel
+1 < Transfer-Encoding: chunked
+{
+  "status": 401,
+  "message": "Unauthorized",
+  "body": null
+}
+
+14:18:59.309 [pool-3-thread-1] INFO  com.intuit.karate.Suite - <<pass>> feature 1 of 1 (0 remaining) classpath:tfgflow/users/features/testing.feature
