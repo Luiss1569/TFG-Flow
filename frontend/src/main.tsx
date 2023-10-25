@@ -4,6 +4,7 @@ import App from "./App.tsx";
 import { ChakraProvider } from "@chakra-ui/react";
 import Theme from './styles/theme.ts';;
 import { QueryClient, QueryClientProvider } from "react-query";
+import Provider from './contexts/AuthContext'
 
 const queryClient = new QueryClient();
 
@@ -11,7 +12,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ChakraProvider theme={Theme}>
       <QueryClientProvider client={queryClient}>
-        <App/>
+        <Provider>
+          <App />
+        </Provider>
       </QueryClientProvider>
     </ChakraProvider>
   </React.StrictMode>

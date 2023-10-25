@@ -11,7 +11,6 @@ function Dashboard() {
     <Grid
       templateColumns='repeat(6,1fr)'
       bg='primary'
-      
     >
 
       <GridItem
@@ -20,7 +19,9 @@ function Dashboard() {
         as='aside'
         colSpan={{ base: 6, lg: 2, xl: 1 }}
         p={{ base: '20px', lg: '30px' }}
+        
         minHeight={{ lg: '100vh' }}
+        minWidth={{ lg: '19vw' }}
       >
         <Sidebar />
       </GridItem>

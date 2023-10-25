@@ -8,11 +8,11 @@ const Button = defineStyleConfig({
       border: '2px solid',
       borderColor: '#3CB371',
       color: '#3CB371',
-
     },
     solid: {
       bg: '#3CB371',
       color: 'white',
+      _hover: {bg: 'green_dark'},
     },
   },
   // The default size and variant values
@@ -51,7 +51,8 @@ const customTheme = {
         default: '#F5F5F5',
         _dark: '#29292E',
       },
-      green_btn: '#3CB371'
+      green_light: '#3CB371',
+      green_dark:'#329961'
     },
   },
 };

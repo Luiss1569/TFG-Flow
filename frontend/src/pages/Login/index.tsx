@@ -1,13 +1,14 @@
-import React, { SyntheticEvent, useState } from 'react';
+import React, { SyntheticEvent, useState, useContext } from 'react';
 import './style.css';
 import api from "../../lib/axios";
-import { IconButton, Link, InputLeftElement, FormControl, FormHelperText, Show, HStack, Button, Flex, Text, FormLabel, VStack, Input, Alert, AlertIcon, InputGroup, InputRightElement, useColorMode, Box, Center, Stack, Card, CardBody } from '@chakra-ui/react';
-import { SunIcon, MoonIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { useToast, IconButton, Link, InputLeftElement, FormControl, FormHelperText, Show, Hide, HStack, Button, Flex, Text, FormLabel, VStack, Input, Alert, AlertIcon, InputGroup, InputRightElement, useColorMode, Box, Center, Stack, Card, CardBody } from '@chakra-ui/react';
+import { SunIcon, MoonIcon, ViewIcon, ViewOffIcon, UnlockIcon } from '@chakra-ui/icons';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { LockIcon, AtSignIcon } from '@chakra-ui/icons'
-
+import { LockIcon, AtSignIcon } from '@chakra-ui/icons';
+import { useNavigate } from "react-router-dom";
+import AuthProvider, { AuthContext } from '../../contexts/AuthContext';
 
 const loginUserFormSchema = z.object({
     cpf: z.string()
@@ -20,7 +21,11 @@ const loginUserFormSchema = z.object({
 type CreateUserFormData = z.infer<typeof loginUserFormSchema>
 
 function Login() {
+    let navigate = useNavigate();
+    const authContext = useContext(AuthContext);
+
     const { colorMode, toggleColorMode } = useColorMode();
+    const toast = useToast();
 
     const { register,
         handleSubmit,
@@ -32,8 +37,36 @@ function Login() {
     const [errorText, setErrorText] = useState<string | null>(null);
     const [show, setShow] = useState(false)
 
+    const handleToastClose = () => {
+        return navigate("/");
+    }
+    const showToastSuccess = () => {
+        toast({
+            title: 'login sucesso',
+            description: 'Sucesso',
+            duration: 2500,
+            isClosable: true,
+            status: 'success',
+            position: 'top-right',
+            icon: <UnlockIcon />,
+            onCloseComplete: handleToastClose
+        });
+    }
+    const showToastError = (message: string) => {
+        toast({
+            title: 'Erro no login',
+            description: `${message}`,
+            duration: 2500,
+            isClosable: true,
+            status: 'error',
+            position: 'top-right',
+            icon: <LockIcon />
+        });
+    }
+
     const handleClick = () => setShow(!show)
     const loginUser = async (data: any) => {
+
         try {
             const cpf = data.cpf;
             const password = data.password;
@@ -41,22 +74,21 @@ function Login() {
             await api.post("login", {
                 cpf,
                 password
-            })
+            });
+            showToastSuccess();
+            authContext?.setToken('euu');
+            navigate('/dashboard');
         } catch (error: any) {
-            setErrorText(error.message);
+            showToastError(error.message);
         }
     };
+
+
     return (
         <Box bg='primary'>
             <Center>
                 <Stack >
                     <HStack h="100vh" justifyContent='center'>
-                        {errorText && (
-                            <Alert status='error' color='error' pos="fixed" top="0" left="0" >
-                                <AlertIcon />
-                                {errorText}
-                            </Alert>
-                        )}
                         <IconButton
                             aria-label="toggle theme"
                             rounded="full"
@@ -64,73 +96,75 @@ function Login() {
                             position="absolute"
                             bottom={4}
                             left={4}
-                            onClick={toggleColorMode} icon={colorMode === "dark" ? <SunIcon/> : <MoonIcon />}
+                            onClick={toggleColorMode} icon={colorMode === "dark" ? <SunIcon /> : <MoonIcon />}
                         />
-                            {/* <Show breakpoint='(min-width: 800px)' > */}
-                                <Text variant='title' w={{ base: '10%', xl: '40%' }} fontSize='5xl' >Faça o login para acessar sua conta</Text>
-                            {/* </Show> */}
-                            <Card bg='secondary' p='10'>
-                                <CardBody>
-                                    <form onSubmit={handleSubmit(loginUser)}>
-                                        <FormControl isInvalid={errors.cpf != null}>
-                                            <FormLabel htmlFor="cpf" >CPF</FormLabel>
-                                            <InputGroup>
-                                                <InputLeftElement pointerEvents='none'>
-                                                    <AtSignIcon />
-                                                </InputLeftElement>
-                                                <Input
-                                                    focusBorderColor='#3CB371'
-                                                    errorBorderColor='red.300'
-                                                    bg='primary'
-                                                    id="cpf"
-                                                    placeholder="Digite seu CPF"
-                                                    type='text'
-                                                    {...register('cpf')}
-                                                />
-                                            </InputGroup>
+                        <Hide below='md'>
+                            <Text variant='title' w={{ base: '30%', xl: '40%' }} fontSize='5xl' >Faça o login para acessar sua conta</Text>
+                        </Hide>
 
-                                            {errors.cpf && <FormHelperText >{errors.cpf.message}</FormHelperText>}
+                        <Card bg='secondary' p='10'>
+                            <CardBody>
+                                <form onSubmit={handleSubmit(loginUser)}>
+                                    <FormControl isInvalid={errors.cpf != null}>
+                                        <FormLabel htmlFor="cpf" >CPF</FormLabel>
+                                        <InputGroup>
+                                            <InputLeftElement pointerEvents='none'>
+                                                <AtSignIcon />
+                                            </InputLeftElement>
+                                            <Input
+                                                focusBorderColor='#3CB371'
+                                                errorBorderColor='red.300'
+                                                bg='primary'
+                                                id="cpf"
+                                                placeholder="Digite seu CPF"
+                                                type='text'
+                                                {...register('cpf')}
+                                            />
+                                        </InputGroup>
 
-                                        </FormControl>
-                                        <FormControl isInvalid={errors.password != null}>
-                                            <FormLabel htmlFor="password" >Senha</FormLabel>
+                                        {errors.cpf && <FormHelperText color='red'>{errors.cpf.message}</FormHelperText>}
 
-                                            <InputGroup size='md'>
-                                                <InputLeftElement pointerEvents='none'>
-                                                    <LockIcon />
-                                                </InputLeftElement>
-                                                <Input
-                                                    bg='primary'
-                                                    focusBorderColor='#3CB371'
-                                                    variant='outline'
-                                                    id="password"
-                                                    placeholder="Digite sua senha"
-                                                    type={show ? 'text' : 'password'}
-                                                    {...register('password')}
-                                                />
+                                    </FormControl>
+                                    <FormControl isInvalid={errors.password != null} pt='10px'>
+                                        <FormLabel htmlFor="password" >Senha</FormLabel>
 
-                                                <InputRightElement width='4.5rem'>
-                                                    {show && (
-                                                        <ViewIcon onClick={handleClick} color='green_btn' />
-                                                    )}
-                                                    {!show && (
-                                                        <ViewOffIcon onClick={handleClick} color='green_btn'></ViewOffIcon>
-                                                    )}
-                                                </InputRightElement>
+                                        <InputGroup size='md'>
+                                            <InputLeftElement pointerEvents='none'>
+                                                <LockIcon />
+                                            </InputLeftElement>
+                                            <Input
+                                                bg='primary'
+                                                focusBorderColor='#3CB371'
+                                                errorBorderColor='red.300'
+                                                variant='outline'
+                                                id="password"
+                                                placeholder="Digite sua senha"
+                                                type={show ? 'text' : 'password'}
+                                                {...register('password')}
+                                            />
 
-                                            </InputGroup>
-                                            {errors.password && <FormHelperText >{errors.password.message}</FormHelperText>}
+                                            <InputRightElement width='4.5rem'>
+                                                {show && (
+                                                    <ViewIcon onClick={handleClick} color='green_light' />
+                                                )}
+                                                {!show && (
+                                                    <ViewOffIcon onClick={handleClick} color='green_light'></ViewOffIcon>
+                                                )}
+                                            </InputRightElement>
 
-                                        </FormControl>
-                                        <Button isLoading={isSubmitting}
-                                            mt='1rem'
-                                            type='submit'
-                                            variant="solid" w="100%">Entrar</Button>
-                                    </form>
+                                        </InputGroup>
+                                        {errors.password && <FormHelperText color='red'>{errors.password.message}</FormHelperText>}
 
-                                    <Text align='center' pt='20px'>Ainda não possuí uma conta? <Link color='green_btn'>Cadastre-se</Link></Text>
-                                </CardBody>
-                            </Card>
+                                    </FormControl>
+                                    <Button isLoading={isSubmitting}
+                                        mt='1rem'
+                                        type='submit'
+                                        variant="solid" w="100%">Entrar</Button>
+                                </form>
+
+                                <Text align='center' pt='20px'>Ainda não possuí uma conta? <Link color='green_light'>Cadastre-se</Link></Text>
+                            </CardBody>
+                        </Card>
 
                     </HStack>
                 </Stack>
