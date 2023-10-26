@@ -50,24 +50,27 @@ const ActivityDetailsComponent: React.FC = () => {
 
   if (isLoading) {
     return (
-      <Center h="100vh">
+      <Center h="100vh" w="100%">
         <Spinner size="xl" />
       </Center>
     );
   }
 
   if (isError) {
-    return <Center h="100vh">Erro ao carregar atividade</Center>;
+    return (
+      <Center h="100vh" w="100%">
+        Erro ao carregar atividade
+      </Center>
+    );
   }
   return (
-    <Box p={4} minH="100vh">
+    <Box p={4} minH="100vh" w="100%">
       <Center>
         <Box
           p={4}
           bg="white"
           borderRadius="2xl"
           minWidth={"40%"}
-          maxWidth={"80%"}
           boxShadow={"lg"}
         >
           <Box mb={4} borderWidth="1px" borderRadius="lg" p={4}>

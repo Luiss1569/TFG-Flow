@@ -27,8 +27,8 @@ function Dashboard() {
         />
       </Flex>
 
-      <Flex flexDir={"column"} h="100%" w="100%" bg="gray.100">
-        <Outlet />d
+      <Flex bg="gray.100" minH={"100vh"} w={"100%"} ml={12} p={5}>
+        <Outlet />
       </Flex>
     </Flex>
   );

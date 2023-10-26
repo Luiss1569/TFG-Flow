@@ -1,5 +1,6 @@
 import Response from "../pages/Response";
-import Dashboard from "../pages/Portal";
+import Portal from "../pages/Portal";
+import Dashboard from "../pages/Portal/Dashboard";
 import ListUsers from "../components/ListUsers";
 import ActivityDetails from "../pages/Portal/ActivityDetails";
 
@@ -7,7 +8,7 @@ type RouteType = {
   path: string;
   element: JSX.Element;
   children?: {
-    path: string;
+    path?: string;
     element: JSX.Element;
     index?: boolean;
   }[];
@@ -16,8 +17,12 @@ type RouteType = {
 const routes: RouteType = [
   {
     path: "/portal",
-    element: <Dashboard />,
+    element: <Portal />,
     children: [
+      {
+        element: <Dashboard />,
+        index: true,
+      },
       {
         path: "users",
         element: <ListUsers />,
