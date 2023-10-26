@@ -111,9 +111,7 @@ function Login() {
         showToastSuccess();
         authContext?.setToken(response.data?.body?.token);
         navigate("/portal");
-      }
-
-      throw new Error(response.data.message);
+      } else throw new Error(response.data.message);
     } catch (error: any) {
       showToastError(error.message);
     }

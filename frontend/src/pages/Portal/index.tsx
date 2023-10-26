@@ -1,10 +1,35 @@
-import { Flex, IconButton, useColorMode } from "@chakra-ui/react";
+import {
+  Avatar,
+  Button,
+  Flex,
+  IconButton,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
+  useColorMode,
+} from "@chakra-ui/react";
 import Sidebar from "../../components/Sidebar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
+import { useAuth } from "../../contexts/AuthContext";
+import { useCallback } from "react";
 
 function Dashboard() {
   const { colorMode, toggleColorMode } = useColorMode();
+  const navigate = useNavigate();
+
+  const [auth, setAuth] = useAuth();
+
+  const userName = auth?.name;
+
+  const handleLogout = useCallback(() => {
+    setAuth(null);
+    navigate("/");
+  }, [setAuth, navigate]);
 
   return (
     <Flex flexDir={"row"} position="relative">
@@ -17,14 +42,36 @@ function Dashboard() {
         position="fixed"
       >
         <Sidebar />
-        <IconButton
-          mb={4}
-          aria-label="toggle theme"
-          rounded="full"
-          size="xs"
-          onClick={toggleColorMode}
-          icon={colorMode === "dark" ? <SunIcon /> : <MoonIcon />}
-        />
+        <Flex direction={"column"} mb="4">
+          <IconButton
+            mb={4}
+            aria-label="toggle theme"
+            rounded="full"
+            size="xs"
+            onClick={toggleColorMode}
+            icon={colorMode === "dark" ? <SunIcon /> : <MoonIcon />}
+          />
+
+          <Popover placement="right">
+            <PopoverTrigger>
+              <Avatar
+                name={userName ?? "Usuário"}
+                src="https://bit.ly/broken-link"
+                size="sm"
+              />
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverCloseButton />
+              <PopoverHeader>Configurações</PopoverHeader>
+              <PopoverBody>
+                <Button colorScheme="red" size="sm" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+        </Flex>
       </Flex>
 
       <Flex bg="gray.100" minH={"100vh"} w={"100%"} ml={12} p={5}>
