@@ -1,13 +1,33 @@
-import React, { useContext } from 'react';
-import { PublicRoutes } from './routes/public.routes';
-import { PrivateRoutes } from './routes/private.routes';
-import AuthProvider, { AuthContext } from './contexts/AuthContext';
+import { useContext } from "react";
+import publicRoutes from "./routes/public.routes";
+import privateRoutes from "./routes/private.routes";
+import { AuthContext } from "./contexts/AuthContext";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   const authContext = useContext(AuthContext);
-  console.log( authContext?.token);
-  return authContext?.token ? <PrivateRoutes /> : <PublicRoutes />;
+  return (
+    <BrowserRouter>
+      <Routes>
+        {publicRoutes.map((route) => (
+          <Route key={route.path} path={route.path} element={route.element} />
+        ))}
+        {authContext?.token &&
+          privateRoutes.map((route) => (
+            <Route key={route.path} path={route.path} element={route.element}>
+              {route.children?.map((child) => (
+                <Route
+                  key={child.path}
+                  path={child.path}
+                  element={child.element}
+                  index={child.index}
+                />
+              ))}
+            </Route>
+          ))}
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;
-

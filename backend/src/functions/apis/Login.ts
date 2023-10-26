@@ -1,6 +1,4 @@
-import ApiWrapper, {
-  ApiWrapperHandler,
-} from "../../utils/wrappers/apiWrapper";
+import ApiWrapper, { ApiWrapperHandler } from "../../utils/wrappers/apiWrapper";
 import res from "../../utils/wrappers/apiResponse";
 import * as bcrypt from "bcrypt";
 import jwt from "../../services/jwt";
@@ -9,7 +7,6 @@ interface Body {
   cpf: string;
   password: string;
 }
-
 const handler: ApiWrapperHandler = async (conn, req, context) => {
   const { cpf, password } = req.body as Body;
 
@@ -37,7 +34,7 @@ const handler: ApiWrapperHandler = async (conn, req, context) => {
   });
 
   return res.success({
-    token: "Bearer " + token,
+    token,
   });
 };
 

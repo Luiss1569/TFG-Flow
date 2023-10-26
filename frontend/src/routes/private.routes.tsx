@@ -1,21 +1,41 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
 import Response from "../pages/Response";
-import Dashboard from "../pages/Dashboard";
+import Dashboard from "../pages/Portal";
 import ListUsers from "../components/ListUsers";
-import ActivityDetails from "../pages/ActivityDetails";
+import ActivityDetails from "../pages/Portal/ActivityDetails";
 
-export function PrivateRoutes() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/dashboard" element={<Dashboard />} >
-          <Route path="listusers" element={<ListUsers />} />
-        </Route>
-        <Route path="/response/:slug" element={<Response />} />
-        <Route path="/activity/:id/details" element={<ActivityDetails />} />
+type RouteType = {
+  path: string;
+  element: JSX.Element;
+  children?: {
+    path: string;
+    element: JSX.Element;
+    index?: boolean;
+  }[];
+}[];
 
-      </Routes>
-    </Router>
-  );
-}
+const routes: RouteType = [
+  {
+    path: "/portal",
+    element: <Dashboard />,
+    children: [
+      {
+        path: "users",
+        element: <ListUsers />,
+      },
+      {
+        path: "activity/:id/details",
+        element: <ActivityDetails />,
+      },
+    ],
+  },
+  {
+    path: "/response",
+    element: <Response />,
+  },
+  {
+    path: "/portal/*",
+    element: <h1>404</h1>,
+  },
+];
+
+export default routes;

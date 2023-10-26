@@ -12,9 +12,9 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import api from "../../lib/axios";
-import { ActivityDetails } from "../../interfaces/Activity";
-import { MilestoneEnd, MilestoneItem } from "../../components/TimeLine";
+import api from "../../../lib/axios";
+import { ActivityDetails } from "../../../interfaces/Activity";
+import { MilestoneEnd, MilestoneItem } from "../../../components/TimeLine";
 
 const stepsTypes = {
   request_answer: "Requisição de resposta",
@@ -60,7 +60,7 @@ const ActivityDetailsComponent: React.FC = () => {
     return <Center h="100vh">Erro ao carregar atividade</Center>;
   }
   return (
-    <Box bg="gray.100" p={4} minH="100vh">
+    <Box p={4} minH="100vh">
       <Center>
         <Box
           p={4}
