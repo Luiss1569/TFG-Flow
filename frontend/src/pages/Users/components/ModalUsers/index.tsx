@@ -13,19 +13,9 @@ import { InputComponent } from "../../../../components/Input";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Button } from "../../../../components/Button";
 import { Grid, Wrapper } from "./styles";
-import { optionsRole } from "../../utils";
+import { defaultValues, optionsRole } from "../../utils";
 import { optionsInstituteMock } from "../../mock";
-
-interface FormData {
-  name: string;
-  cpf: string;
-  role: string;
-  email: string;
-  password: string;
-  confirmarSenha: string;
-  matriculation: string;
-  institute_id: string;
-}
+import { FormDataUsers } from "../../types";
 
 interface ModalUsersProps {
   isModalOpen: boolean;
@@ -33,9 +23,11 @@ interface ModalUsersProps {
 }
 
 export function ModalUsers({ isModalOpen, setModalOpen }: ModalUsersProps) {
-  const { handleSubmit, register } = useForm<FormData>();
+  const { handleSubmit, register } = useForm<FormDataUsers>({
+    defaultValues,
+  });
 
-  const handleCadastrar: SubmitHandler<FormData> = (data) => {
+  const handleCadastrar: SubmitHandler<FormDataUsers> = (data) => {
     console.log("Data submitted:", data);
     handleCloseModal();
   };
@@ -80,6 +72,7 @@ export function ModalUsers({ isModalOpen, setModalOpen }: ModalUsersProps) {
             <InputComponent
               label="CPF"
               placeholder="CPF do usuário"
+              mask="999.999.999-99"
               {...register("cpf")}
             />
           </Grid>

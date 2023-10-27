@@ -29,21 +29,3 @@ export const SelectComponent = forwardRef<HTMLSelectElement, SelectProps>(
     );
   }
 );
-
-// export function SelectComponent({ label, options, ...rest }: SelectProps) {
-//   const { id } = rest;
-
-//   return (
-//     <FormControl isRequired>
-//       <FormLabel htmlFor={id}>{label}</FormLabel>
-
-//       <ChakraSelect {...rest} size="md">
-//         {options.map((option) => (
-//           <option key={option.value} value={option.value}>
-//             {option.label}
-//           </option>
-//         ))}
-//       </ChakraSelect>
-//     </FormControl>
-//   );
-// }
