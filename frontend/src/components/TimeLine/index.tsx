@@ -22,7 +22,6 @@ export const MilestoneItem: React.FC<MilestoneItemProps> = ({
   children,
   ...props
 }) => {
-  const color = useColorModeValue("gray.700", "gray.500");
   return (
     <Flex {...props} minH={"5rem"}>
       <Flex
@@ -41,7 +40,7 @@ export const MilestoneItem: React.FC<MilestoneItemProps> = ({
         <Box
           as={icon}
           size={isStep ? "0.75rem" : "1.25rem"}
-          color={color}
+          color={"icons"}
           pos="absolute"
           left={isStep ? "0.625rem" : "0.875rem"}
           top={isStep ? "0.625rem" : "0.875rem"}

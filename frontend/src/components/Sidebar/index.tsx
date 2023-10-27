@@ -54,7 +54,7 @@ function Sidebar() {
 
   return (
     <List fontSize="xl" spacing={4}>
-      <ListItem py={2}></ListItem>
+      <ListItem py={1}></ListItem>
       {items.map((data) => (
         <NavLink
           key={data.to}
@@ -86,11 +86,13 @@ const NavLink = React.memo(
           hasArrow
           size="md"
           placement="right-end"
+          bg="white"
+          color={"icons"}
         >
           <CustomCard
             _hover={{ textDecor: "none", color: "green_light" }}
             _focus={{ outline: "none" }}
-            color={active ? "green_light" : "gray.600"}
+            color={active ? "green_light" : "icons.500"}
           >
             <Icon size={24} />
           </CustomCard>

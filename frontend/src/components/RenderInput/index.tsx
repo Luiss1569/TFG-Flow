@@ -13,7 +13,7 @@ import {
   Select,
   Stack,
 } from "@chakra-ui/react";
-import MultiSelect from "react-select";
+import MultiSelect from "../MultiSelect";
 import {
   FieldError,
   FieldErrors,
@@ -199,7 +199,7 @@ const InputFile = ({
   register: UseFormRegister<FieldValues>;
 }) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const { ref, ...rest } = register(input.id,) as {
+  const { ref, ...rest } = register(input.id) as {
     ref: (instance: HTMLInputElement | null) => void;
   };
 
@@ -248,4 +248,3 @@ const InputFile = ({
     </InputGroup>
   );
 };
-

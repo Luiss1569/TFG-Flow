@@ -34,7 +34,7 @@ const routes: RouteType = [
     ],
   },
   {
-    path: "/response",
+    path: "/response/:slug",
     element: <Response />,
   },
   {
