@@ -1,5 +1,6 @@
 import ApiWrapper, { ApiWrapperHandler } from "../../utils/wrappers/apiWrapper";
 import res from "../../utils/wrappers/apiResponse";
+import { getAnsweredFields } from "../../services/formatAnswersForms";
 
 const handler: ApiWrapperHandler = async (conn, req) => {
   const { activity_id } = req.params;
@@ -37,6 +38,18 @@ const handler: ApiWrapperHandler = async (conn, req) => {
                   email: true,
                 },
               },
+            },
+          },
+        },
+      },
+      answers: {
+        select: {
+          id: true,
+          content: true,
+          form: {
+            select: {
+              id: true,
+              content: true,
             },
           },
         },
@@ -83,6 +96,14 @@ const handler: ApiWrapperHandler = async (conn, req) => {
       },
     },
   });
+
+  const answeredFields = getAnsweredFields(
+    activity.answers as unknown
+  );
+
+  delete activity.answers;
+
+  activity["answered"] = answeredFields;
 
   if (!activity) {
     return res.error(404, null, "Workflow not found");

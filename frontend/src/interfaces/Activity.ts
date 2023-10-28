@@ -1,3 +1,10 @@
+
+interface AnsweredField {
+  id: string;
+  label: string;
+  value: string;
+}
+
 export interface ActivityDetails {
   id: string;
   name: string;
@@ -6,6 +13,7 @@ export interface ActivityDetails {
   created_at: string;
   updated_at: string;
   user_id: string;
+  answered: AnsweredField[];
   status: {
     id: string;
     name: string;

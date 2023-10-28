@@ -29,6 +29,18 @@
         "value": "",
         "options": [],
         "placeholder": "Insira seu orientador e coorientador caso haja"
+      },
+      {
+        "id": "abstract",
+        "zod": {
+          "type": "string",
+          "validation": {}
+        },
+        "type": "textarea",
+        "label": "Resumo",
+        "value": null,
+        "required": true,
+        "placeholder": "Insira o resumo do projeto"
       }
     ]
   }

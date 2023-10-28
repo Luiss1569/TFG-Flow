@@ -15,6 +15,7 @@ import { useParams } from "react-router-dom";
 import api from "../../../lib/axios";
 import { ActivityDetails } from "../../../interfaces/Activity";
 import { MilestoneEnd, MilestoneItem } from "../../../components/TimeLine";
+import ReturnButton from "../../../components/ReturnButton";
 
 const stepsTypes = {
   request_answer: "Requisição de resposta",
@@ -65,12 +66,13 @@ const ActivityDetailsComponent: React.FC = () => {
   }
   return (
     <Box p={4} minH="100vh" w="100%">
+      <ReturnButton mb={4} />
       <Center>
         <Box
           p={4}
           bg="white"
           borderRadius="2xl"
-          minWidth={"40%"}
+          minWidth={"60%"}
           boxShadow={"lg"}
         >
           <Box mb={4} borderWidth="1px" borderRadius="lg" p={4}>
@@ -101,6 +103,15 @@ const ActivityDetailsComponent: React.FC = () => {
               <Text>Matrícula: {activity?.users.matriculation}</Text>
               <Text size="md">Nome: {activity?.users.name}</Text>
               <Text>Email: {activity?.users.email}</Text>
+              <Divider mb={2} />
+              <Text fontWeight={"bold"} size="lg" mb={1}>
+                Campos extras
+              </Text>
+              {activity?.answered.map((field) => (
+                <Text mb={2}>
+                  {field.label}: {field.value}
+                </Text>
+              ))}
             </VStack>
           </Box>
           <VStack align="start" mb={4}>

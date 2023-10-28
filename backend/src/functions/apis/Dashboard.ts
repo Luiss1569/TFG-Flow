@@ -73,6 +73,17 @@ const handler: ApiWrapperHandler = async (conn, req) => {
           name: true,
         },
       },
+      requestAnswers: {
+        select: {
+          activity: {
+            select: {
+              id: true,
+              matriculation: true,
+              name: true,
+            },
+          },
+        },
+      },
       formOpenPeriod: {
         select: {
           start_date: true,

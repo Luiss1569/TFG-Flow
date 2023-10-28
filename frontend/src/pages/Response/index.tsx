@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,11 +18,15 @@ import { createSchema } from "../../lib/zod";
 import api from "../../lib/axios";
 import Form from "../../interfaces/Form";
 import RenderInput from "../../components/RenderInput";
+import ReturnButton from "../../components/ReturnButton";
 
 const ResponseForm: React.FC = () => {
   const params = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const toast = useToast();
+
+  const activity_id = location.state?.activity_id as string | undefined;
 
   const {
     data: form,
@@ -48,6 +52,7 @@ const ResponseForm: React.FC = () => {
   const { mutateAsync, isLoading: isSubmitting } = useMutation(
     async (data: Record<string, string>) => {
       await api.post(`/form/${form?.id}/response`, {
+        activity_id,
         content: data,
       });
     },
@@ -80,6 +85,19 @@ const ResponseForm: React.FC = () => {
     }
   });
 
+  if (form?.form_type === "private" && !activity_id) {
+    return (
+      <Center h="100vh">
+        <Box>
+          <Text>Formulário sem atividade</Text>
+          <Text>
+            <ReturnButton mt="5" />
+          </Text>
+        </Box>
+      </Center>
+    );
+  }
+
   if (isLoading) {
     return (
       <Center h="100vh">
@@ -98,6 +116,7 @@ const ResponseForm: React.FC = () => {
 
   return (
     <Box bg="gray.100" p={4} minH="100vh">
+      <ReturnButton mb={4} />
       <Center>
         <Box w="xl" bg="white" p={4} borderRadius="md" boxShadow="md">
           <Box mb={4}>
