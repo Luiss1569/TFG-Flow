@@ -93,9 +93,37 @@ const handler: ApiWrapperHandler = async (conn, req) => {
     },
   });
 
+  const activities = await conn.activities.findMany({
+    where: {
+      user_id: req.user.id,
+      masterminds: req.user.role === "teacher" ? { some: { teacher_id: req.user.id } } : undefined,
+    },
+    select: {
+      id: true,
+      name: true,
+      matriculation: true,
+      status: {
+        select: {
+          name: true,
+        },
+      },
+      activityWorkflow: {
+        select: {
+          workflow: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
+    },
+
+  });
+
   const data = {
     public: publicForms,
     request: requestAnswers,
+    activities : activities
   };
 
   return res.success(data);
