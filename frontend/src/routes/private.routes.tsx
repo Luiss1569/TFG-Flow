@@ -37,10 +37,6 @@ const routes: RouteType = [
     path: "/response/:slug",
     element: <Response />,
   },
-  {
-    path: "/portal/*",
-    element: <h1>404</h1>,
-  },
 ];
 
 export default routes;

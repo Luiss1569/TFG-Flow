@@ -1,6 +1,6 @@
 {
   "name": "Inscrição TFG",
-  "status_id": "017228a6-7814-4f84-b723-c6ee081aaff7",
+  "status_id": "a9108535-0fb6-49b0-9426-a4a9a48dc0d9",
   "first_step_id": "step1",
   "steps": [
     {
@@ -44,7 +44,7 @@
       "name": "Matrícula aprovada",
       "type": "swap_workflow",
       "content": {
-        "status_id": "aef02370-915b-4bce-a90e-5e3e411c207d"
+        "status_id": "b8108535-0fb6-49b0-9426-a4a9a48dc0d9"
       },
       "next_step_id": null
     },
@@ -53,7 +53,7 @@
       "name": "Matrícula reprovada",
       "type": "swap_workflow",
       "content": {
-        "status_id": "1d13abf5-eabb-4c14-a273-1357ec422986"
+        "status_id": "g8108535-0fb6-49b0-9426-a4a9a48dc0d9"
       },
       "next_step_id": null
     }

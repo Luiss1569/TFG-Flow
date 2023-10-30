@@ -3,9 +3,23 @@ import publicRoutes from "./routes/public.routes";
 import privateRoutes from "./routes/private.routes";
 import { AuthContext } from "./contexts/AuthContext";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import api from "./lib/axios";
 
 function App() {
   const authContext = useContext(AuthContext);
+
+  api.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      if (error.response.status === 401) {
+        authContext?.setToken("");
+      }
+      return Promise.reject(error);
+    }
+  );
+
   return (
     <BrowserRouter>
       <Routes>

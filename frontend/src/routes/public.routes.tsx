@@ -1,4 +1,5 @@
 import Login from "../pages/Login";
+import { NotFoundPage } from "../pages/NotFound";
 
 type RouteType = {
   path: string;
@@ -14,6 +15,10 @@ const routes: RouteType = [
   {
     path: "/",
     element: <Login />,
+  },
+  {
+    path: "*",
+    element: <NotFoundPage />,
   },
 ];
 
