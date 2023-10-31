@@ -96,8 +96,8 @@ const handler: ApiWrapperHandler = async (conn, req) => {
   const activities = await conn.activities.findMany({
     where: {
       user_id: req.user.id,
-      masterminds: req.user.role === "teacher" ? { some: { teacher_id: req.user.id } } : undefined,
-    },
+      masterminds: undefined
+      },
     select: {
       id: true,
       name: true,
@@ -117,13 +117,42 @@ const handler: ApiWrapperHandler = async (conn, req) => {
         },
       },
     },
-
   });
+
+  let teacher_activities = [];
+  if (req.user.role === "teacher") {
+    teacher_activities = await conn.activities.findMany({
+      where: {
+        masterminds: { some: { teacher_id: req.user.id } },
+      },
+      select: {
+        id: true,
+        name: true,
+        matriculation: true,
+        status: {
+          select: {
+            name: true,
+          },
+        },
+        activityWorkflow: {
+          select: {
+            workflow: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
 
   const data = {
     public: publicForms,
     request: requestAnswers,
-    activities : activities
+    activities : activities,
+    teacher_activities : teacher_activities
   };
 
   return res.success(data);
