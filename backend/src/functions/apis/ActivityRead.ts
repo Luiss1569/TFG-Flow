@@ -53,6 +53,11 @@ const handler: ApiWrapperHandler = async (conn, req) => {
             },
           },
         },
+        where: {
+          form: {
+            form_type: "public",
+          },
+        },
       },
       activityWorkflow: {
         select: {
@@ -97,9 +102,7 @@ const handler: ApiWrapperHandler = async (conn, req) => {
     },
   });
 
-  const answeredFields = getAnsweredFields(
-    activity.answers as unknown
-  );
+  const answeredFields = getAnsweredFields(activity.answers as unknown);
 
   delete activity.answers;
 

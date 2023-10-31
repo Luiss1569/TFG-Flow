@@ -10,58 +10,56 @@ type ReplaceUser = (
 export const replaceUsers: ReplaceUser = async (conn, activity, mapUser) => {
   const users: Array<users> = [];
 
-  mapUser.forEach((user) => {
-    (async () => {
-      switch (user) {
-        case "${coordinator}":
-          users.push(
-            await conn.users.findFirst({
-              where: {
-                role: "coordinator",
-              },
-            })
-          );
-          break;
-        case "${student}":
-          users.push(
-            await conn.users.findFirst({
-              where: {
-                id: activity.user_id,
-              },
-            })
-          );
-          break;
-        case "${masterminds}":
-          users.push(
-            ...(await conn.users.findMany({
-              where: {
-                teachers: {
-                  some: {
-                    activitiesTeachers: {
-                      some: {
-                        activity: {
-                          id: activity.id,
-                        },
+  for (const user of mapUser) {
+    switch (user) {
+      case "${coordinator}":
+        users.push(
+          await conn.users.findFirst({
+            where: {
+              role: "coordinator",
+            },
+          })
+        );
+        break;
+      case "${student}":
+        users.push(
+          await conn.users.findFirst({
+            where: {
+              id: activity.user_id,
+            },
+          })
+        );
+        break;
+      case "${masterminds}":
+        users.push(
+          ...(await conn.users.findMany({
+            where: {
+              teachers: {
+                some: {
+                  activitiesTeachers: {
+                    some: {
+                      activity: {
+                        id: activity.id,
                       },
                     },
                   },
                 },
               },
-            }))
-          );
-          break;
-        default:
-          users.push(
-            await conn.users.findFirst({
-              where: {
-                id: user,
-              },
-            })
-          );
-          break;
-      }
-    })();
-  });
+            },
+          }))
+        );
+        break;
+      default:
+        users.push(
+          await conn.users.findFirst({
+            where: {
+              id: user,
+            },
+          })
+        );
+        break;
+    }
+  }
 
   return users;
 };

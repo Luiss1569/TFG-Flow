@@ -6,7 +6,7 @@ export interface SwapWorkflowInterface extends Prisma.JsonObject {
 
 export interface SendEmailInterface extends Prisma.JsonObject {
   to?: string[];
-  subject: string;
+  title: string;
   body: string;
 }
 

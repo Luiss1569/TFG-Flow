@@ -19,11 +19,12 @@ const handler: QueueWrapperHandler = async (conn, messageQueue, context) => {
 
   const mapUser = await replaceUsers(conn, activity, content.to);
 
-  mapUser.forEach((user) => {
-    (async () => {
-      await sendEmail(user.email, content.subject, content.body);
-    })();
-  });
+
+  await sendEmail(
+    mapUser.map((user) => user.email),
+    content.title,
+    content.body
+  );
 
   if (step.next_step_id) {
     const nextStep = await conn.steps.findFirst({

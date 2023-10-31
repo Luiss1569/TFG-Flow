@@ -59,21 +59,6 @@ const handler: QueueWrapperHandler<TMessage> = async (
       },
     });
 
-    await conn.activityworkflowSteps.create({
-      data: {
-        active_workflow: {
-          connect: {
-            id: workflowActivity.id,
-          },
-        },
-        step: {
-          connect: {
-            id: firstStep.id,
-          },
-        },
-      },
-    });
-
     sendToQueue(context, firstStep.type, {
       step_id: firstStep.id,
       activity_workflow_id: workflowActivity.id,
