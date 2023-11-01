@@ -49,6 +49,7 @@ const handler: ApiWrapperHandler = async (conn, req) => {
           form: {
             select: {
               id: true,
+              form_type: true,
               content: true,
             },
           },
@@ -85,6 +86,44 @@ const handler: ApiWrapperHandler = async (conn, req) => {
               id: true,
               status: true,
               created_at: true,
+              requestAnswers: {
+                select: {
+                  id: true,
+                  userRequestAnswers: {
+                    select: {
+                      answer_id: true,
+                      user: {
+                        select: {
+                          name: true,
+                          email: true,
+                        },
+                      },
+                      answer: {
+                        select: {
+                          id: true,
+                          content: true,
+                          form: {
+                            select: {
+                              id: true,
+                              form_type: true,
+                              content: true,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                where: {
+                  userRequestAnswers: {
+                    some: {
+                      answer_id: {
+                        not: null,
+                      },
+                    },
+                  },
+                },
+              },
               step: {
                 select: {
                   id: true,
@@ -103,10 +142,33 @@ const handler: ApiWrapperHandler = async (conn, req) => {
   });
 
   const answeredFields = getAnsweredFields(activity.answers as unknown);
-
+  activity["answered"] = answeredFields;
   delete activity.answers;
 
-  activity["answered"] = answeredFields;
+  for (const activityWorkflow of activity.activityWorkflow) {
+    const activityWorkflowSteps = activityWorkflow.activityworkflowSteps;
+
+    for (const activityWorkflowStep of activityWorkflowSteps) {
+      const requestAnswers = activityWorkflowStep.requestAnswers;
+
+      if (!requestAnswers) {
+        continue;
+      }
+
+      for (const requestAnswer of requestAnswers) {
+        const userRequestAnswers = requestAnswer.userRequestAnswers;
+
+        for (const userRequestAnswer of userRequestAnswers) {
+          const answer = userRequestAnswer.answer;
+
+          delete userRequestAnswer.answer;
+          userRequestAnswer["answered"] = getAnsweredFields([
+            answer,
+          ] as unknown);
+        }
+      }
+    }
+  }
 
   if (!activity) {
     return res.error(404, null, "Workflow not found");

@@ -121,7 +121,7 @@ export default class ApiWrapper {
         context
       );
     } catch (error) {
-      context.error(JSON.stringify(error, null, 2));
+      context.error(error);
       await conn?.logs.create({
         data: {
           invocation_id: invocationId,
