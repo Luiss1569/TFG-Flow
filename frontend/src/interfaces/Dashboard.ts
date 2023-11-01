@@ -1,3 +1,22 @@
+interface Status {
+  name: string;
+}
+
+export interface Activity {
+  id: string;
+  name: string;
+  matriculation: number;
+  status: Status;
+  created_at: string;
+  masterminds?: {
+    teacher: {
+      user: {
+        name: string;
+      };
+    };
+  }[];
+}
+
 interface RequestAnswer {
   activity: {
     id: string;
@@ -24,4 +43,6 @@ export interface Form {
 export interface Dashboard {
   public: Form[];
   request: Form[];
+  activities: Activity[];
+  teacher_activities: Activity[];
 }

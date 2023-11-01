@@ -103,7 +103,7 @@ export default new ApiWrapper(handler)
               value: schema.mixed().optional().nullable(),
               required: schema.boolean(),
               placeholder: schema.string(),
-            })
+              visible: schema.boolean().optional(),            })
           )
           .min(1)
           .required(),

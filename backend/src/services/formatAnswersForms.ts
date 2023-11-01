@@ -12,6 +12,7 @@ interface AnswerContent {
 
 interface AnswerForm {
   id: string;
+  form_type: "public" | "private";
   content: {
     name: string;
     fields: {
@@ -27,6 +28,7 @@ interface AnswerForm {
       placeholder: string;
       options?: { label: string; value: string }[];
       especial_type?: string;
+      visible?: boolean;
     }[];
   };
 }
@@ -53,11 +55,12 @@ export function getAnsweredFields(
   answers.forEach((answer) => {
     const formFields = answer.form.content.fields;
     const answerContent = answer.content;
+    const isPrivate = answer.form.form_type === "private";
 
     Object.entries(answerContent).forEach(([key, value]) => {
       const field = formFields.find((formField) => formField.id === key);
 
-      if (ignoredFields.includes(key)) {
+      if (ignoredFields.includes(key) || (!field?.visible && isPrivate)) {
         return;
       }
 

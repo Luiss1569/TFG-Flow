@@ -13,16 +13,9 @@ import {
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import api from "../../../lib/axios";
-import { ActivityDetails } from "../../../interfaces/Activity";
+import { ActivityDetails, RequestAnswer } from "../../../interfaces/Activity";
 import { MilestoneEnd, MilestoneItem } from "../../../components/TimeLine";
 import ReturnButton from "../../../components/ReturnButton";
-
-const stepsTypes = {
-  request_answer: "Requisição de resposta",
-  send_email: "Envio de e-mail",
-  swap_workflow: "Troca de Status",
-  conditional: "Condicional",
-};
 
 const formatDate = (date: string | undefined) => {
   if (!date) {
@@ -162,13 +155,11 @@ const ActivityDetailsComponent: React.FC = () => {
                         <Text fontWeight={"bold"} size="md" mb={2}>
                           {step.step.name}
                         </Text>
-                        <Text fontWeight={"200"} size="md" mb={2}>
-                          {
-                            stepsTypes[
-                              step.step.type as keyof typeof stepsTypes
-                            ]
-                          }
-                        </Text>
+                        {!!step.requestAnswers?.length && (
+                          <RequestAnswerItem
+                            requestAnswers={step.requestAnswers}
+                          />
+                        )}
                       </Box>
                     </MilestoneItem>
                   ))}
@@ -186,3 +177,34 @@ const ActivityDetailsComponent: React.FC = () => {
 const ActivityDetailsMemo = memo(ActivityDetailsComponent);
 
 export default ActivityDetailsMemo;
+
+interface RequestAnswerProps {
+  requestAnswers: RequestAnswer[];
+}
+
+const RequestAnswerItem = memo(({ requestAnswers }: RequestAnswerProps) => {
+  return (
+    <Box p={4} bg="gray.100" borderRadius="lg" mb={4}>
+      {requestAnswers.map((requestAnswer) => (
+        <Box key={requestAnswer.id}>
+          {requestAnswer.userRequestAnswers.map((userRequestAnswer) => (
+            <Box key={userRequestAnswer.answer_id}>
+              {userRequestAnswer.answered.map((answeredField) => (
+                <Flex key={answeredField.id} mb={2}>
+                  <Text fontWeight={"bold"} size="sm" mr={2}>
+                    {answeredField.label}:
+                  </Text>
+                  <Text size="sm">{answeredField.value}</Text>
+                </Flex>
+              ))}
+              <Divider mb={2} mt={2} />
+              <Badge colorScheme="gray.100" p={1} borderRadius="sm" textTransform={"none"}>
+                {userRequestAnswer.user.name} - {userRequestAnswer.user.email}
+              </Badge>
+            </Box>
+          ))}
+        </Box>
+      ))}
+    </Box>
+  );
+});

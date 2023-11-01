@@ -1,8 +1,19 @@
-
 interface AnsweredField {
   id: string;
   label: string;
   value: string;
+}
+
+export interface RequestAnswer {
+  id: string;
+  userRequestAnswers: {
+    answer_id: string;
+    user: {
+      name: string;
+      email: string;
+    };
+    answered: AnsweredField[];
+  }[];
 }
 
 export interface ActivityDetails {
@@ -48,6 +59,7 @@ export interface ActivityDetails {
       id: string;
       status: string;
       created_at: string;
+      requestAnswers: RequestAnswer[];
       step: {
         id: string;
         name: string;
