@@ -2,6 +2,7 @@ import ApiWrapper, { ApiWrapperHandler } from "../../utils/wrappers/apiWrapper";
 import res from "../../utils/wrappers/apiResponse";
 import sbusOutputs, { sendToQueue } from "../../utils/sbus-outputs";
 import { Prisma } from "@prisma/client";
+import uploadFileToBlob from "../../services/storageFiles";
 
 interface Content extends Prisma.JsonObject {
   activity_name?: string;
@@ -95,6 +96,22 @@ const handler: ApiWrapperHandler = async (conn, req, context) => {
       });
 
       request_answer_id = request_answer.id;
+    }
+
+    for (const cont of Object.keys(content)) {
+      const field = content[cont] as any;
+
+      if (typeof field === "object" && field?.file) {
+        const uploaded = await uploadFileToBlob(
+          field.name,
+          field.type,
+          field.file
+        ).catch((err) => {
+          throw err;
+        });
+
+        content[cont] = uploaded as any;
+      }
     }
 
     const answer = await conn.answers.create({

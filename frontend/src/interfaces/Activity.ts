@@ -1,7 +1,14 @@
+interface AnswerFile {
+  url: string;
+  name: string;
+  mimeType: string;
+  type: string;
+}
+
 interface AnsweredField {
   id: string;
   label: string;
-  value: string;
+  value: string | AnswerFile;
 }
 
 export interface RequestAnswer {
@@ -19,7 +26,7 @@ export interface RequestAnswer {
 export interface ActivityDetails {
   id: string;
   name: string;
-  matriculation: number;
+  matriculation: string;
   status_id: string;
   created_at: string;
   updated_at: string;

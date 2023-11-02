@@ -141,7 +141,7 @@ const handler: ApiWrapperHandler = async (conn, req) => {
     },
   });
 
-  const answeredFields = getAnsweredFields(activity.answers as unknown);
+  const answeredFields = await getAnsweredFields(activity.answers as unknown);
   activity["answered"] = answeredFields;
   delete activity.answers;
 
@@ -162,7 +162,7 @@ const handler: ApiWrapperHandler = async (conn, req) => {
           const answer = userRequestAnswer.answer;
 
           delete userRequestAnswer.answer;
-          userRequestAnswer["answered"] = getAnsweredFields([
+          userRequestAnswer["answered"] = await getAnsweredFields([
             answer,
           ] as unknown);
         }

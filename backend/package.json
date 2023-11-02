@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@azure/functions": "^4.0.0-alpha.9",
+    "@azure/storage-blob": "^12.16.0",
     "@prisma/client": "^5.4.2",
     "bcrypt": "^5.1.1",
     "http-status-codes": "^2.3.0",

@@ -16,11 +16,15 @@ import {
   Flex,
   Divider,
   Tag,
+  TagLabel,
+  TagLeftIcon,
 } from "@chakra-ui/react";
 import { Dashboard, Form, Activity } from "../../../interfaces/Dashboard";
 import { BiLinkExternal } from "react-icons/bi";
 import { FaEye } from "react-icons/fa";
 import { Link as RouterLink } from "react-router-dom";
+import { formatDate } from "../../../lib/utils";
+import { BsCalendarX } from "react-icons/bs";
 
 const DashboardPage: React.FC = () => {
   const { data: dashboard, isLoading } = useQuery<Dashboard>(
@@ -41,18 +45,12 @@ const DashboardPage: React.FC = () => {
 
   return (
     <Box w="100%">
-      <Text fontSize="4xl" fontWeight="bold">
-        Dashboard
-      </Text>
-
       <Accordion allowToggle defaultIndex={[0, 1]} mt={5}>
         <AccordionItem>
           <h2>
             <AccordionButton>
               <Box flex="1" textAlign="left">
-                <Text fontSize="2xl" fontWeight="bold">
-                  Formulários Abertos
-                </Text>
+                <Text fontSize="xl">Formulários Abertos</Text>
               </Box>
               <AccordionIcon />
             </AccordionButton>
@@ -72,9 +70,7 @@ const DashboardPage: React.FC = () => {
           <h2>
             <AccordionButton>
               <Box flex="1" textAlign="left">
-                <Text fontSize="2xl" fontWeight="bold">
-                  Requisições de Interação
-                </Text>
+                <Text fontSize="xl">Requisições de Interação</Text>
               </Box>
               <AccordionIcon />
             </AccordionButton>
@@ -94,9 +90,7 @@ const DashboardPage: React.FC = () => {
           <h2>
             <AccordionButton>
               <Box flex="1" textAlign="left">
-                <Text fontSize="2xl" fontWeight="bold">
-                  Minhas Atividades
-                </Text>
+                <Text fontSize="xl">Minhas Atividades</Text>
               </Box>
               <AccordionIcon />
             </AccordionButton>
@@ -128,7 +122,7 @@ const FormBox = memo(({ form }: FormBoxProps) => {
       key={form.id}
       py={3}
       px={5}
-      shadow="sm"
+      shadow="md"
       borderWidth="1px"
       borderRadius="lg"
       display="flex"
@@ -137,15 +131,22 @@ const FormBox = memo(({ form }: FormBoxProps) => {
     >
       <Flex w="100%" justifyContent="space-between">
         <div>
-          <Text fontSize="xl">{form.name}</Text>
+          <Text fontSize="lg" fontWeight="bold">
+            {form.name}
+          </Text>
           <Text mt={4}>{form.description}</Text>
           {!!form.requestAnswers?.length && (
             <>
               <Divider my={4} w="100%" />
-              <Text>Nome: {form.requestAnswers.at(-1)?.activity.name}</Text>
-              <Text>
-                Matricula: {form.requestAnswers.at(-1)?.activity.matriculation}
-              </Text>
+              <Flex direction="row" mt={4} gap={1} alignItems="baseline">
+                <Text fontSize="md">Atividade:</Text>
+                <Text fontSize="md" fontWeight="bolder">
+                  {form.requestAnswers.at(-1)?.activity.name}
+                </Text>
+                <Text fontSize="md">
+                  #{form.requestAnswers.at(-1)?.activity.matriculation}
+                </Text>
+              </Flex>
             </>
           )}
         </div>
@@ -162,6 +163,14 @@ const FormBox = memo(({ form }: FormBoxProps) => {
             >
               <Icon as={FaEye} />
             </Link>
+          )}
+          {!!form.formOpenPeriod.length && (
+            <Tag colorScheme="gray.100" mr={4}>
+              <TagLeftIcon boxSize="12px" as={BsCalendarX} />
+              <TagLabel>
+                {formatDate(form.formOpenPeriod.at(-1)?.end_date)}
+              </TagLabel>
+            </Tag>
           )}
           <Link
             as={RouterLink}
@@ -197,8 +206,10 @@ const ActivityBox = memo(({ activity }: ActivityBoxProps) => (
   >
     <Flex w="100%" justifyContent="space-between" direction="row">
       <Flex direction="row" justifyContent="center" align="baseline" gap="2">
-        <Text fontSize="xl">{activity.name}</Text>
-        <Text mt={4} opacity=".7">
+        <Text fontSize="lg" fontWeight="bolder">
+          {activity.name}
+        </Text>
+        <Text mt={4} opacity=".7" fontSize="md">
           #{activity.matriculation}
         </Text>
       </Flex>
@@ -218,6 +229,6 @@ const ActivityBox = memo(({ activity }: ActivityBoxProps) => (
       </Flex>
     </Flex>
     <Divider my={4} w="100%" />
-    <Text size="sm">Criado em: {activity.created_at}</Text>
+    <Text fontSize="sm">Criado em: {formatDate(activity.created_at)}</Text>
   </Box>
 ));

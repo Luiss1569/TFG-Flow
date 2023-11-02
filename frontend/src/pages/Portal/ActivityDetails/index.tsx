@@ -16,19 +16,8 @@ import api from "../../../lib/axios";
 import { ActivityDetails, RequestAnswer } from "../../../interfaces/Activity";
 import { MilestoneEnd, MilestoneItem } from "../../../components/TimeLine";
 import ReturnButton from "../../../components/ReturnButton";
-
-const formatDate = (date: string | undefined) => {
-  if (!date) {
-    return "";
-  }
-
-  const dateObj = new Date(date);
-  return dateObj.toLocaleTimeString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-};
+import { formatDate } from "../../../lib/utils";
+import FileItem from "../../../components/FileItem";
 
 const ActivityDetailsComponent: React.FC = () => {
   const params = useParams<{ id: string }>();
@@ -65,7 +54,7 @@ const ActivityDetailsComponent: React.FC = () => {
           p={4}
           bg="white"
           borderRadius="2xl"
-          minWidth={"60%"}
+          minWidth={"80%"}
           boxShadow={"lg"}
         >
           <Box mb={4} borderWidth="1px" borderRadius="lg" p={4}>
@@ -76,39 +65,61 @@ const ActivityDetailsComponent: React.FC = () => {
               alignItems={"center"}
               justifyContent={"space-between"}
             >
-              <Heading as="h1" size="lg">
-                {activity?.name}
-              </Heading>
+              <Flex wrap={"wrap"} gap={2} alignItems={"center"}>
+                <Heading as="h1" fontSize="2xl">
+                  {activity?.name}
+                </Heading>
+                <Text fontSize="xl">#{activity?.matriculation}</Text>
+              </Flex>
               <Badge colorScheme="green" p={2} borderRadius="sm">
                 {activity?.status.name}
               </Badge>
             </Flex>
             <VStack mb={4} align="start">
-              <Text>Nª de Matrícula: {activity?.matriculation}</Text>
-              <Text>Criação: {formatDate(activity?.created_at)}</Text>
-              <Text>
-                Última Atualização: {formatDate(activity?.updated_at)}
-              </Text>
+              <LabelText
+                label={"Data de Criação"}
+                text={formatDate(activity?.created_at)}
+              />
+              <LabelText
+                label={"Última Atualização"}
+                text={formatDate(activity?.updated_at)}
+              />
               <Divider mb={2} />
-              <Text fontWeight={"bold"} size="lg" mb={1}>
+              <Text fontWeight={"bold"} fontSize="md">
                 Aluno
               </Text>
-              <Text>Matrícula: {activity?.users.matriculation}</Text>
-              <Text size="md">Nome: {activity?.users.name}</Text>
-              <Text>Email: {activity?.users.email}</Text>
-              <Divider mb={2} />
-              <Text fontWeight={"bold"} size="lg" mb={1}>
+              <LabelText label={"Nome"} text={activity?.users.name ?? ""} />
+              <LabelText label={"Email"} text={activity?.users.email ?? ""} />
+              <LabelText
+                label={"Matrícula"}
+                text={activity?.matriculation ?? ""}
+              />
+              <Divider />
+              <Text fontWeight={"bold"} fontSize="md" mb={1}>
                 Campos extras
               </Text>
               {activity?.answered.map((field) => (
-                <Text mb={2}>
-                  {field.label}: {field.value}
-                </Text>
+                <>
+                  {typeof field.value === "object" ? (
+                    <FileItem
+                      name={field.value.name}
+                      mimeType={field.value.mimeType}
+                      url={field.value.url}
+                      label={field.label}
+                    />
+                  ) : (
+                    <LabelText
+                      key={field.id}
+                      label={field.label}
+                      text={field.value}
+                    />
+                  )}
+                </>
               ))}
             </VStack>
           </Box>
           <VStack align="start" mb={4}>
-            <Heading fontWeight={"bold"} size="lg" mb={2}>
+            <Heading fontWeight={"bold"} fontSize="xl" mb={2}>
               Orientadores
             </Heading>
             <Flex flexWrap="wrap" gap={4}>
@@ -121,24 +132,26 @@ const ActivityDetailsComponent: React.FC = () => {
                   p={4}
                   mb={4}
                 >
-                  <Text fontWeight={"bold"} size="md" mb={2}>
+                  <Text fontWeight={"bold"} fontSize="md" mb={2}>
                     {mastermind.teacher.user.name}
                   </Text>
-                  <Text mb={2}>{mastermind.teacher.user.email}</Text>
+                  <Text fontSize="sm" mb={2}>
+                    {mastermind.teacher.user.email}
+                  </Text>
                 </Box>
               ))}
             </Flex>
           </VStack>
           <Divider mb={4} />
           <VStack align="start">
-            <Heading as="h2" size="lg" mb={4}>
+            <Heading as="h2" fontSize="xl" mb={4}>
               Fluxo de atividades
             </Heading>
             <Box>
               {activity?.activityWorkflow?.map((workflow) => (
                 <>
                   <MilestoneItem key={workflow.id}>
-                    <Heading as="h6" size={"md"} mb={2} mt={3}>
+                    <Heading as="h6" fontSize={"lg"} mb={2} mt={3}>
                       {workflow.workflow.status.name}
                     </Heading>
                   </MilestoneItem>
@@ -152,7 +165,7 @@ const ActivityDetailsComponent: React.FC = () => {
                         py={3}
                         borderRadius="lg"
                       >
-                        <Text fontWeight={"bold"} size="md" mb={2}>
+                        <Text fontSize="md" mb={2}>
                           {step.step.name}
                         </Text>
                         {!!step.requestAnswers?.length && (
@@ -190,15 +203,31 @@ const RequestAnswerItem = memo(({ requestAnswers }: RequestAnswerProps) => {
           {requestAnswer.userRequestAnswers.map((userRequestAnswer) => (
             <Box key={userRequestAnswer.answer_id}>
               {userRequestAnswer.answered.map((answeredField) => (
-                <Flex key={answeredField.id} mb={2}>
-                  <Text fontWeight={"bold"} size="sm" mr={2}>
+                <Flex key={answeredField.id} mb={2} direction={"column"}>
+                  <Text fontSize="sm" mr={2}>
                     {answeredField.label}:
                   </Text>
-                  <Text size="sm">{answeredField.value}</Text>
+
+                  {typeof answeredField.value === "object" ? (
+                    <FileItem
+                      name={answeredField.value.name}
+                      mimeType={answeredField.value.mimeType}
+                      url={answeredField.value.url}
+                    />
+                  ) : (
+                    <Text fontSize="sm" fontWeight={"bold"}>
+                      {answeredField.value}
+                    </Text>
+                  )}
                 </Flex>
               ))}
               <Divider mb={2} mt={2} />
-              <Badge colorScheme="gray.100" p={1} borderRadius="sm" textTransform={"none"}>
+              <Badge
+                colorScheme="gray.100"
+                p={1}
+                borderRadius="sm"
+                textTransform={"none"}
+              >
                 {userRequestAnswer.user.name} - {userRequestAnswer.user.email}
               </Badge>
             </Box>
@@ -206,5 +235,18 @@ const RequestAnswerItem = memo(({ requestAnswers }: RequestAnswerProps) => {
         </Box>
       ))}
     </Box>
+  );
+});
+
+const LabelText = memo(({ label, text }: { label: string; text: string }) => {
+  return (
+    <Flex direction={"column"}>
+      <Text fontSize="sm" mr={2}>
+        {label}:
+      </Text>
+      <Text fontSize="sm" fontWeight={"bold"}>
+        {text}
+      </Text>
+    </Flex>
   );
 });

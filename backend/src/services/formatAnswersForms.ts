@@ -1,3 +1,5 @@
+import { FileUploaded, updateSas } from "./storageFiles";
+
 interface AnsweredField {
   id: string;
   label: string;
@@ -41,9 +43,9 @@ interface Answer {
 
 const ignoredFields = ["masterminds", "activity_name"];
 
-export function getAnsweredFields(
+export async function getAnsweredFields(
   answers: Answer[] | unknown
-): AnsweredField[] {
+): Promise<AnsweredField[]> {
   if (!Array.isArray(answers)) {
     throw new Error(
       "Invalid argument: answers must be an array of Answer objects"
@@ -52,16 +54,20 @@ export function getAnsweredFields(
 
   const answeredFields: AnsweredField[] = [];
 
-  answers.forEach((answer) => {
+  for (const answer of answers) {
     const formFields = answer.form.content.fields;
     const answerContent = answer.content;
     const isPrivate = answer.form.form_type === "private";
 
-    Object.entries(answerContent).forEach(([key, value]) => {
+    for (let [key, value] of Object.entries(answerContent)) {
       const field = formFields.find((formField) => formField.id === key);
 
       if (ignoredFields.includes(key) || (!field?.visible && isPrivate)) {
-        return;
+        continue;
+      }
+
+      if (typeof value === "object" && "mimeType" in value) {
+        value = await updateSas(value as FileUploaded);
       }
 
       if (field) {
@@ -72,8 +78,8 @@ export function getAnsweredFields(
         };
         answeredFields.push(answeredField);
       }
-    });
-  });
+    }
+  }
 
   return answeredFields;
 }
