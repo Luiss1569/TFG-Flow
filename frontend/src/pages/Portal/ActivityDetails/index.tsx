@@ -92,7 +92,7 @@ const ActivityDetailsComponent: React.FC = () => {
               <LabelText label={"Email"} text={activity?.users.email ?? ""} />
               <LabelText
                 label={"Matrícula"}
-                text={activity?.matriculation ?? ""}
+                text={activity?.users.matriculation ?? ""}
               />
               <Divider />
               <Text fontWeight={"bold"} fontSize="md" mb={1}>

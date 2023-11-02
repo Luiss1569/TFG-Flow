@@ -103,6 +103,7 @@ const handler: ApiWrapperHandler = async (conn, req, context) => {
 
       if (typeof field === "object" && field?.file) {
         const uploaded = await uploadFileToBlob(
+          user.id,
           field.name,
           field.type,
           field.file

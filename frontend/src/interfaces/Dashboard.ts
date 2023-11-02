@@ -34,7 +34,7 @@ export interface Form {
     name: string | null;
   } | null;
   requestAnswers?: RequestAnswer[];
-  formOpenPeriod: {
+  formOpenPeriod?: {
     start_date: string;
     end_date: string;
   }[];

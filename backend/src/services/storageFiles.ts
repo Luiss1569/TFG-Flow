@@ -15,16 +15,20 @@ export interface FileUploaded {
   url: string;
   mimeType: string;
   size: string;
+  containerName: string;
 }
 
 export default async function uploadFileToBlob(
+  containerName: string,
   name: string,
   mimeType: string,
   base64: string
 ): Promise<FileUploaded> {
-  const containerName = "files";
   name = `${Date.now()}@${name}`;
   const containerClient = blobServiceClient.getContainerClient(containerName);
+  await containerClient.createIfNotExists({
+    access: "blob",
+  });
   const buffer = Buffer.from(base64.split(",")[1], "base64");
 
   const blockBlobClient = containerClient.getBlockBlobClient(name);
@@ -39,14 +43,16 @@ export default async function uploadFileToBlob(
     url: blockBlobClient.url,
     mimeType: mimeType,
     size: Buffer.byteLength(base64).toString(),
+    containerName,
   };
 
   return fileUploaded;
 }
 
 export async function updateSas(file: FileUploaded) {
-  const containerName = "files";
-  const containerClient = blobServiceClient.getContainerClient(containerName);
+  const containerClient = blobServiceClient.getContainerClient(
+    file.containerName
+  );
   const blockBlobClient = containerClient.getBlockBlobClient(file.name);
   const sas = await blockBlobClient.generateSasUrl({
     expiresOn: new Date(new Date().valueOf() + 86400),

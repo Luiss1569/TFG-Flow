@@ -5,16 +5,25 @@ const handler: ApiWrapperHandler = async (conn, req) => {
   const publicForms = await conn.forms.findMany({
     where: {
       form_type: "public",
-      formOpenPeriod: {
-        some: {
-          start_date: {
-            lte: new Date(),
-          },
-          end_date: {
-            gte: new Date(),
+      OR: [
+        {
+          formOpenPeriod: {
+            some: {
+              start_date: {
+                lte: new Date(),
+              },
+              end_date: {
+                gte: new Date(),
+              },
+            },
           },
         },
-      },
+        {
+          formOpenPeriod: {
+            none: {},
+          },
+        },
+      ],
     },
     select: {
       id: true,
@@ -24,12 +33,6 @@ const handler: ApiWrapperHandler = async (conn, req) => {
       status: {
         select: {
           name: true,
-        },
-      },
-      formOpenPeriod: {
-        select: {
-          start_date: true,
-          end_date: true,
         },
       },
     },

@@ -4,6 +4,11 @@ import ApiWrapper, {
   QueueWrapperHandler,
 } from "../../utils/wrappers/blockWrapper";
 
+interface Result {
+  result: boolean;
+  body: { [key: string]: any };
+}
+
 const handler: QueueWrapperHandler = async (conn, messageQueue, context) => {
   const { step_id, workflow, activity_workflow_id, activity } = messageQueue;
 
@@ -84,7 +89,7 @@ const handler: QueueWrapperHandler = async (conn, messageQueue, context) => {
       },
     };
 
-    const result = (() => {
+    const result: Result = (() => {
       try {
         return new Function("operations", content.condition)(operations);
       } catch (error) {
@@ -96,7 +101,9 @@ const handler: QueueWrapperHandler = async (conn, messageQueue, context) => {
     const nextStep = await conn.steps.findFirst({
       where: {
         workflow_id: workflow.id,
-        identifier: result ? content.true_step_id : content.false_step_id,
+        identifier: result.result
+          ? content.true_step_id
+          : content.false_step_id,
       },
     });
 

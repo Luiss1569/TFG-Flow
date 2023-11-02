@@ -39,7 +39,7 @@ const forms = [
     formType: "public",
     description: "Formulário para inscrição do TFG",
     slug: "inscricao-tfg",
-    status_id: "g8108535-0fb6-49b0-9426-a4a9a48dc0d9",
+    status_id: "a8108535-0fb6-49b0-9426-a4a9a48dc0d9",
     content: {
       fields: [
         {
@@ -78,6 +78,18 @@ const forms = [
           required: true,
           placeholder: "Insira o resumo do projeto",
         },
+        {
+          id: "plan",
+          zod: {
+            type: "file",
+            validation: {},
+          },
+          type: "file",
+          label: "Plano de TFG",
+          value: null,
+          required: true,
+          placeholder: "Insira o plano do projeto",
+        },
       ],
     },
   },
@@ -102,11 +114,11 @@ const forms = [
           options: [
             {
               label: "Aprovado",
-              value: "true",
+              value: "Aprovado",
             },
             {
               label: "Reprovado",
-              value: "false",
+              value: "Reprovado",
             },
           ],
         },
@@ -119,6 +131,7 @@ const forms = [
           type: "textarea",
           label: "Observações",
           value: null,
+          visible: true,
         },
       ],
     },
@@ -215,7 +228,7 @@ const forms = [
           value: null,
         },
         {
-          id: "approved",
+          id: "fate",
           zod: {
             type: "string",
             validation: {},
@@ -228,13 +241,14 @@ const forms = [
           options: [
             {
               label: "Não houve atraso",
-              value: "true",
+              value: "Sem Atraso",
             },
             {
               label: "Houve atraso",
-              value: "false",
+              value: "Atrasado",
             },
           ],
+          visible: true,
         },
         {
           id: "observations",
@@ -245,6 +259,7 @@ const forms = [
           type: "textarea",
           label: "Observações",
           value: null,
+          visible: true,
         },
       ],
     },
@@ -258,7 +273,7 @@ const forms = [
     content: {
       fields: [
         {
-          id: "p1",
+          id: "parcial",
           zod: {
             type: "file",
             validation: {},
@@ -267,6 +282,18 @@ const forms = [
           required: true,
           label: "Primeira versão do TFG",
           value: null,
+          placeholder: "Insira a primeira versão do TFG",
+          visible: true,
+        },
+        {
+          id: "observations",
+          label: "Observações",
+          placeholder: "Insira as observações",
+          zod: {
+            type: "string",
+            validation: {},
+          },
+          visible: true,
         },
       ],
     },
@@ -297,7 +324,7 @@ const workflows = [
         type: "request_answer",
         content: {
           answers: ["${coordinator}"],
-          form_id: "a1a8fa70-e59c-48c4-b52e-ad45ca1f60d4",
+          form_id: "b9108535-0fb6-49b0-9426-a4a9a48dc0d9",
         },
         next_step_id: "step3",
       },
@@ -306,8 +333,14 @@ const workflows = [
         name: "Avaliação da aprovação do coordenador",
         type: "conditional",
         content: {
-          condition:
-            "const rq = operations.getReqAnswerByStepId('step2');if (rq.at(-1).answers.at(-1).content.approved === 'true'){console.log('Aprovado');return true;}return false;",
+          condition: `
+            const answers = operations.getReqAnswerByStepId('step2').at(-1).answers.at(-1).content;
+            
+            return {
+              result: answers.approved === 'Aprovado',
+              body: answers.approved === 'Aprovado' ? 'Inscrição aprovada' : 'Inscrição reprovada',
+            }
+          `,
           true_step_id: "step4",
           false_step_id: "step5",
         },
@@ -335,7 +368,7 @@ const workflows = [
   },
   {
     name: "Entrega Parcial",
-    status_id: "292fc3e8-9799-415d-bc67-54d1f77cb057",
+    status_id: "b8108535-0fb6-49b0-9426-a4a9a48dc0d9",
     first_step_id: "p-step1",
     steps: [
       {
@@ -374,8 +407,24 @@ const workflows = [
         name: "Avaliação da aprovação do coordenador",
         type: "conditional",
         content: {
-          condition:
-            "const rq = operations.getReqAnswerByStepId('p-step3');if (rq.at(-1).answers.at(-1).content.approved === 'true'){console.log('Aprovado');return true;}return false;",
+          condition: ` const keys = ["p1", "p2", "p3", "p4", "p5", "p6", "p7"];
+              const resps = operations.getReqAnswerByStepId('p-step3').at(-1).answers.at(-1).content;
+              const notes = keys.map((key) => resps[key]);
+              const isFate = resps.fate === "Atrasado";
+
+              const sum = notes.reduce((a, b) => a + b, 0);
+              const note = isFate ? sum * 0.9 : sum;
+              const avg = note / notes.length;
+
+              return {
+                result: avg >= 6,
+                body: {
+                  avg,
+                  sum,
+                  fate: isFate,
+                }
+              }
+            `,
           true_step_id: "p-step5",
           false_step_id: "p-step6",
         },
@@ -395,7 +444,43 @@ const workflows = [
         name: "Matrícula reprovada",
         type: "swap_workflow",
         content: {
-          status_id: "916cc0a5-f0fb-4ad6-948b-0398a4a718ad",
+          status_id: "g8108535-0fb6-49b0-9426-a4a9a48dc0d9",
+        },
+        next_step_id: null,
+      },
+    ],
+  },
+  {
+    name: "Solicitação de banca",
+    status_id: "c8108535-0fb6-49b0-9426-a4a9a48dc0d9",
+    first_step_id: "s-step1",
+    steps: [
+      {
+        id: "s-step1",
+        name: "Aviso ao Aluno",
+        type: "send_email",
+        content: {
+          to: ["${student}"],
+          body: "Sua inscrição do TFG foi aprovado!",
+          title: "Inscrição realizada com sucesso!",
+        },
+        next_step_id: null,
+      },
+    ],
+  },
+  {
+    name: "Reprovado",
+    status_id: "g8108535-0fb6-49b0-9426-a4a9a48dc0d9",
+    first_step_id: "r-step1",
+    steps: [
+      {
+        id: "r-step1",
+        name: "Aviso ao Aluno",
+        type: "send_email",
+        content: {
+          to: ["${student}"],
+          body: "Seu do TFG foi reprovado!",
+          title: "TFG reprovada!",
         },
         next_step_id: null,
       },
@@ -404,7 +489,14 @@ const workflows = [
 ];
 
 async function main() {
-  for (let i = 0; i < 5; i++) {
+
+  await prisma.$executeRaw`TRUNCATE TABLE "answers" CASCADE;`;
+  await prisma.$executeRaw`TRUNCATE TABLE "activities" CASCADE;`;
+  await prisma.$executeRaw`TRUNCATE TABLE "workflows" CASCADE;`;
+  await prisma.$executeRaw`TRUNCATE TABLE "status" CASCADE;`;
+  await prisma.$executeRaw`TRUNCATE TABLE "forms" CASCADE;`;
+
+  for (const i in status) {
     await prisma.status.upsert({
       where: { id: status[i].id },
       update: {},

@@ -164,11 +164,11 @@ const FormBox = memo(({ form }: FormBoxProps) => {
               <Icon as={FaEye} />
             </Link>
           )}
-          {!!form.formOpenPeriod.length && (
+          {!!form.formOpenPeriod?.length && (
             <Tag colorScheme="gray.100" mr={4}>
               <TagLeftIcon boxSize="12px" as={BsCalendarX} />
               <TagLabel>
-                {formatDate(form.formOpenPeriod.at(-1)?.end_date)}
+                {formatDate(form.formOpenPeriod?.at(-1)?.end_date)}
               </TagLabel>
             </Tag>
           )}
