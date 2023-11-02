@@ -1,0 +1,72 @@
+import ApiWrapper, {
+    ApiWrapperHandler,
+} from "../../utils/wrappers/apiWrapper";
+import res from "../../utils/wrappers/apiResponse";
+import { activities, forms, workflows } from "@prisma/client";
+import { institutes, university_degrees, user_roles } from "@prisma/client";
+import { stat } from "fs";
+import * as bcrypt from "bcrypt";
+
+interface Body {
+    name: string;
+    cpf: string;
+    role: user_roles;
+    email: string;
+    password: string;
+    matriculation: string;
+    institute_id: institutes["id"];
+    university_degree: university_degrees;
+}
+
+/**
+ * 
+ * Function that updates a user
+ */
+const handler: ApiWrapperHandler = async (conn, req) => {
+    const body = req.body as Body;
+    const { user_id } = req.params
+
+    const { name, cpf, role, email, password, matriculation, institute_id, university_degree } = body;
+
+    const user = await conn.users.findUnique({
+        where: {
+            id: user_id,
+        },
+    });
+    if (!user) {
+        return res.error(404, null, "User not found");
+    }
+
+    const user_update = await conn.users.update({
+        where: {
+            id: user_id,
+        },
+        data: {
+            name: name ? name : user.name,
+            cpf: cpf ? cpf : user.cpf,
+            role: role ? role : user.role,
+            email: email ? email : user.email,
+            password: password ? bcrypt.hashSync(password, 10) : user.password,
+            matriculation: matriculation ? matriculation : user.matriculation,
+            institute: {
+                connect: {
+                    id: institute_id ? institute_id : user.institute_id,
+                },
+            },
+            ...(role === "teacher"
+                ? {
+                    teachers: {
+                        create: {
+                            matriculation: matriculation ? matriculation : user.matriculation,
+                            university_degree: university_degree ? university_degree : user.teachers.university_degree,
+                        },
+                    },
+                }
+                : {}),
+        },
+    });
+
+    return res.success({
+        user,
+    });
+}
