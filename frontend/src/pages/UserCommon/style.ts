@@ -10,11 +10,7 @@ export const Wrapper = styled.div`
   align-items: center;
 `;
 
-export const Title = styled.h1`
-  font-weight: 700;
-  font-size: 32px;
-`;
-
-export const WrapperTable = styled.div`
-  margin-top: 20px;
+export const Title = styled.h2`
+  font-weight: 400;
+  font-size: 22px;
 `;

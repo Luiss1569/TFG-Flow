@@ -1,10 +1,11 @@
 export interface ITableUsers {
   id: number;
-  perfil: string;
+  role: string;
   name: string;
   email: string;
   cpf: string;
-  register: string;
+  matriculation: string;
+  institute: string;
 }
 
 export interface FormDataUsers {
@@ -13,7 +14,12 @@ export interface FormDataUsers {
   role: string;
   email: string;
   password: string;
-  confirmarSenha: string;
+  confirmPassword: string;
   matriculation: string;
   institute_id: string;
+}
+
+export interface FormDataTable {
+  nameColunm: string;
+  search: string;
 }

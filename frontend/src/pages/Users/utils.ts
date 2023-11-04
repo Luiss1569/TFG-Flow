@@ -1,4 +1,4 @@
-import { FormDataUsers } from "./types";
+import { FormDataTable, FormDataUsers } from "./types";
 
 export const optionsRole: Array<{ value: string; label: string }> = [
   { value: "estudante", label: "Estudante" },
@@ -9,11 +9,25 @@ export const optionsRole: Array<{ value: string; label: string }> = [
 
 export const defaultValues: FormDataUsers = {
   cpf: "",
-  confirmarSenha: "",
+  confirmPassword: "",
   email: "",
   institute_id: "",
   matriculation: "",
   name: "",
   password: "",
   role: "",
+};
+
+export const optionsColunmTable: Array<{ value: string; label: string }> = [
+  { label: "Perfil", value: "Perfil" },
+  { label: "Nome", value: "Nome" },
+  { label: "Email", value: "Email" },
+  { label: "CPF", value: "CPF" },
+  { label: "Matricula", value: "Matrícula" },
+  { label: "Instituto", value: "Instituto" },
+];
+
+export const defaultValuesTable: FormDataTable = {
+  nameColunm: "",
+  search: "",
 };
