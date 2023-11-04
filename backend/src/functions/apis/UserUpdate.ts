@@ -19,7 +19,8 @@ interface Body {
 }
 
 /**
- * 
+ * @param conn - Database connection object
+ * @param req - Request object
  * Function that updates a user
  */
 const handler: ApiWrapperHandler = async (conn, req) => {
@@ -31,6 +32,21 @@ const handler: ApiWrapperHandler = async (conn, req) => {
     const user = await conn.users.findUnique({
         where: {
             id: user_id,
+        },
+        select: {
+            id: true,
+            name: true,
+            cpf: true,
+            role: true,
+            email: true,
+            password: true,
+            matriculation: true,
+            institute_id: true,
+            teachers: {
+                select: {
+                    university_degree: true,
+                },
+            },
         },
     });
     if (!user) {
@@ -58,7 +74,7 @@ const handler: ApiWrapperHandler = async (conn, req) => {
                     teachers: {
                         create: {
                             matriculation: matriculation ? matriculation : user.matriculation,
-                            university_degree: university_degree ? university_degree : user.teachers.university_degree,
+                            university_degree: university_degree ? university_degree : user.teachers.at(0).university_degree,
                         },
                     },
                 }
@@ -67,6 +83,29 @@ const handler: ApiWrapperHandler = async (conn, req) => {
     });
 
     return res.success({
-        user,
+        user_update,
     });
 }
+
+export default new ApiWrapper(handler)
+    .setSchemaValidator((schema) => ({
+        params: schema.object().shape({
+            user_id: schema.string().required(),
+        }),
+        body: schema.object().shape({
+            name: schema.string().optional(),
+            cpf: schema.string().optional(),
+            role: schema.string().optional(),
+            email: schema.string().optional(),
+            password: schema.string().optional(),
+            matriculation: schema.string().optional(),
+            institute_id: schema.string().optional(),
+            university_degree: schema.string().optional(),
+        }),
+    })).configure({
+        name: "User-Update",
+        options: {
+            methods: ["PUT"],
+            route: "user/{user_id}",
+        },
+    });
