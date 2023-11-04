@@ -87,7 +87,7 @@ const handler: ApiWrapperHandler = async (conn, req) => {
 const stepValidator = (type: string, schema: typeof import("yup")) => {
   if (type === "send_email") {
     return schema.object().shape({
-      subject: schema.string().required(),
+      to: schema.array().of(schema.string()).required(),
       title: schema.string().required(),
       body: schema.string().required(),
     });
@@ -145,6 +145,6 @@ export default new ApiWrapper(handler)
     name: "Workflow-Create",
     options: {
       methods: ["POST"],
-      route: "/workflow",
+      route: "workflow",
     },
   });

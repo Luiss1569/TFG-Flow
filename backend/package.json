@@ -13,21 +13,29 @@
     "dev": "npm-run-all --parallel start watch",
     "test": "echo \"No tests yet...\""
   },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
   "dependencies": {
     "@azure/functions": "^4.0.0-alpha.9",
-    "@prisma/client": "^5.3.1",
+    "@azure/storage-blob": "^12.16.0",
+    "@prisma/client": "^5.4.2",
     "bcrypt": "^5.1.1",
     "http-status-codes": "^2.3.0",
     "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.5",
     "yup": "^1.2.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
-    "@types/node": "18.x",
+    "@types/node": "^18.18.7",
+    "@types/nodemailer": "^6.4.13",
     "azure-functions-core-tools": "^4.x",
     "npm-run-all": "^4.1.5",
-    "prisma": "^5.3.1",
+    "prisma": "^5.4.2",
+    "prisma-dbml-generator": "^0.10.0",
     "rimraf": "^5.0.0",
-    "typescript": "^4.0.0"
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
   }
 }

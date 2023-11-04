@@ -2,9 +2,12 @@
   "IsEncrypted": false,
   "Values": {
     "JWT_SECRET": "",
+    "EMAIL_ACCOUNT": "",
+    "EMAIL_PASSWORD": "",
     "FUNCTIONS_WORKER_RUNTIME": "node",
     "AzureWebJobsFeatureFlags": "EnableWorkerIndexing",
+    "AzureStorageAccountFiles": "",
     "AzureWebJobsStorage": "",
     "AzureServiceBusConnectionString": ""
-  }
+    }
 }

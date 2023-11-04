@@ -1,0 +1,41 @@
+{
+  "name": "Processamento de Matrícula TFG",
+  "formType": "private",
+  "description": "Formulário para processamento de matrícula do TFG",
+  "slug": "processamento-tfg",
+  "content": {
+    "fields": [
+      {
+        "id": "approved",
+        "zod": {
+          "type": "string",
+          "validation": {}
+        },
+        "type": "radio",
+        "required": true,
+        "label": "Situação da Matrícula",
+        "value": null,
+        "options": [
+          {
+            "label": "Aprovado",
+            "value": "true"
+          },
+          {
+            "label": "Reprovado",
+            "value": "false"
+          }
+        ]
+      },
+      {
+        "id": "observations",
+        "zod": {
+          "type": "string",
+          "validation": {}
+        },
+        "type": "textarea",
+        "label": "Observações",
+        "value": null
+      }
+    ]
+  }
+}

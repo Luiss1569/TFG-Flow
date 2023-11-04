@@ -121,7 +121,7 @@ export default class ApiWrapper {
         context
       );
     } catch (error) {
-      context.error(JSON.stringify(error, null, 2));
+      context.error(error);
       await conn?.logs.create({
         data: {
           invocation_id: invocationId,
@@ -130,6 +130,11 @@ export default class ApiWrapper {
           content: JSON.stringify(error, null, 2),
         },
       });
+
+      if (error.name === "TokenExpiredError") {
+        return res.unauthorized("Token expired in " + error.expiredAt);
+      }
+
       return res.error(error.status ?? 500, null, error.message ?? error);
     } finally {
       if (conn) await conn.$disconnect();

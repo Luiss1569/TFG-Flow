@@ -1,0 +1,61 @@
+{
+  "name": "Inscrição TFG",
+  "status_id": "a9108535-0fb6-49b0-9426-a4a9a48dc0d9",
+  "first_step_id": "step1",
+  "steps": [
+    {
+      "id": "step1",
+      "name": "Aviso ao Aluno",
+      "type": "send_email",
+      "content": {
+        "to": [
+          "${student}"
+        ],
+        "body": "Inscrição realizada, aguardando processamento",
+        "title": "Inscrição realizada"
+      },
+      "next_step_id": "step2"
+    },
+    {
+      "id": "step2",
+      "name": "Requisição de aprovação ao coordenador",
+      "type": "request_answer",
+      "content": {
+        "answers": [
+          "${coordinator}"
+        ],
+        "form_id": "a1a8fa70-e59c-48c4-b52e-ad45ca1f60d4"
+      },
+      "next_step_id": "step3"
+    },
+    {
+      "id": "step3",
+      "name": "Avaliação da aprovação do coordenador",
+      "type": "conditional",
+      "content": {
+        "condition": "const rq = operations.getReqAnswerByStepId('step2');if (rq.at(-1).answers.at(-1).content.approved === 'true'){console.log('Aprovado');return true;}return false;",
+        "true_step_id": "step4",
+        "false_step_id": "step5"
+      },
+      "next_step_id": null
+    },
+    {
+      "id": "step4",
+      "name": "Matrícula aprovada",
+      "type": "swap_workflow",
+      "content": {
+        "status_id": "b8108535-0fb6-49b0-9426-a4a9a48dc0d9"
+      },
+      "next_step_id": null
+    },
+    {
+      "id": "step5",
+      "name": "Matrícula reprovada",
+      "type": "swap_workflow",
+      "content": {
+        "status_id": "g8108535-0fb6-49b0-9426-a4a9a48dc0d9"
+      },
+      "next_step_id": null
+    }
+  ]
+}

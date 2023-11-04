@@ -21,6 +21,9 @@ const response = (
     null,
     2
   ),
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 export const success = (body: any): HttpResponseInit =>

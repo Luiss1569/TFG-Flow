@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    volumes:
+      - ..:/home/TFG-Flow:cached
+    depends_on:
+      - postgres
+    network_mode: service:postgres
+
+  postgres:
+    image: postgres:latest
+    restart: unless-stopped
+    volumes:
+      - tfg-flow-postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: 1234
+      POSTGRES_DB: tfgflow
+
+volumes:
+  tfg-flow-postgres:

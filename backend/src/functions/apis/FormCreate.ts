@@ -1,34 +1,42 @@
-import ApiWrapper, {
-  ApiWrapperHandler,
-} from "../../utils/wrappers/apiWrapper";
+import ApiWrapper, { ApiWrapperHandler } from "../../utils/wrappers/apiWrapper";
 import res from "../../utils/wrappers/apiResponse";
 
 interface Body {
+  name: string;
+  description?: string;
   formType: "public" | "private";
   slug: string;
   status_id?: string;
   content: any;
-  openPeriod: {
-    startDate: string;
-    endDate: string;
+  openPeriod?: {
+    startDate?: Date ;
+    endDate?: Date;
   };
 }
 
 const handler: ApiWrapperHandler = async (conn, req) => {
   const body = req.body as Body;
 
+  const haveOpenPeriod = body.openPeriod?.startDate && body.openPeriod?.endDate;
+
+  const objectOpenPeriod = haveOpenPeriod && {
+    formOpenPeriod: {
+      create: {
+        start_date: body.openPeriod?.startDate,
+        end_date: body.openPeriod?.endDate,
+      },
+    },
+  };
+
   const form = await conn.forms.create({
     data: {
+      name: body.name,
+      description: body.description,
       slug: body.slug,
       status_id: body.status_id,
       form_type: body.formType,
       content: body.content,
-      formOpenPeriod: {
-        create: {
-          start_date: body.openPeriod.startDate,
-          end_date: body.openPeriod.endDate,
-        },
-      },
+      ...(haveOpenPeriod ? objectOpenPeriod : {}),
     },
   });
 
@@ -38,40 +46,67 @@ const handler: ApiWrapperHandler = async (conn, req) => {
 export default new ApiWrapper(handler)
   .setSchemaValidator((schema) => ({
     body: schema.object().shape({
-      name: schema.string().required(),
+      name: schema.string().required().max(100),
       formType: schema.mixed().oneOf(["public", "private"]).required(),
+      description: schema.string().max(255),
       slug: schema
         .string()
         .required()
         .min(3)
         .max(20)
         .trim()
-        .matches(/^[a-z0-9]+$/),
+        .matches(/^[a-z0-9-]+$/),
       status_id: schema
         .string()
         .uuid()
         .when("formType", ([formType], schema) =>
-          formType === "private" ? schema.required() : schema
+          formType === "public" ? schema.required() : schema
         ),
-      content: schema
-        .string()
-        .required()
-        .test({
-          name: "content",
-          message: "content must be an object",
-          test: (value) => {
-            try {
-              JSON.parse(value);
-              return true;
-            } catch (error) {
-              return false;
-            }
-          },
-        })
-        .transform((value) => JSON.parse(value)),
-      openPeriod: schema.object().shape({
-        startDate: schema.date().required(),
-        endDate: schema.date().required().min(schema.ref("startDate")),
+      content: schema.object().shape({
+        fields: schema
+          .array()
+          .of(
+            schema.object().shape({
+              id: schema.string().required(),
+              zod: schema.object().shape({
+                type: schema
+                  .mixed()
+                  .oneOf([
+                    "string",
+                    "number",
+                    "date",
+                    "select",
+                    "multiselect",
+                    "file",
+                    "email",
+                  ]),
+                validation: schema.object(),
+              }),
+              type: schema
+                .mixed()
+                .oneOf([
+                  "text",
+                  "textarea",
+                  "select",
+                  "radio",
+                  "multiselect",
+                  "checkbox",
+                  "date",
+                  "time",
+                  "datetime",
+                  "file",
+                  "number",
+                  "email",
+                ])
+                .required(),
+              label: schema.string().required(),
+              value: schema.mixed().optional().nullable(),
+              required: schema.boolean(),
+              placeholder: schema.string(),
+              visible: schema.boolean().optional(),            })
+          )
+          .min(1)
+          .required(),
       }),
     }),
   }))
@@ -79,5 +114,6 @@ export default new ApiWrapper(handler)
     name: "Form-Create",
     options: {
       methods: ["POST"],
+      route: "form",
     },
   });

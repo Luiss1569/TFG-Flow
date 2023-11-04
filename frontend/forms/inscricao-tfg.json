@@ -1,0 +1,47 @@
+{
+  "name": "Inscrição TFG",
+  "formType": "public",
+  "description": "Formulário para inscrição do TFG",
+  "slug": "inscricao-tfg",
+  "status_id": "g8108535-0fb6-49b0-9426-a4a9a48dc0d9",
+  "content": {
+    "fields": [
+      {
+        "id": "activity_name",
+        "zod": {
+          "type": "string",
+          "validation": {}
+        },
+        "type": "text",
+        "label": "Título do projeto",
+        "value": null,
+        "required": true,
+        "placeholder": "Insira o título do projeto"
+      },
+      {
+        "id": "masterminds",
+        "especial_type": "teacher",
+        "zod": {
+          "type": "multiselect"
+        },
+        "type": "multiselect",
+        "label": "Orientador e coorientador",
+        "value": "",
+        "options": [],
+        "placeholder": "Insira seu orientador e coorientador caso haja"
+      },
+      {
+        "id": "abstract",
+        "zod": {
+          "type": "string",
+          "validation": {}
+        },
+        "type": "textarea",
+        "label": "Resumo",
+        "value": null,
+        "required": true,
+        "placeholder": "Insira o resumo do projeto"
+      }
+    ]
+  }
+}
