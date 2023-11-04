@@ -1,8 +1,9 @@
 import Response from "../pages/Response";
 import Portal from "../pages/Portal";
 import Dashboard from "../pages/Portal/Dashboard";
-import ListUsers from "../components/ListUsers";
 import ActivityDetails from "../pages/Portal/ActivityDetails";
+import { Users } from "../pages/Users";
+import { Institutes } from "../pages/Institutes";
 
 type RouteType = {
   path: string;
@@ -25,11 +26,15 @@ const routes: RouteType = [
       },
       {
         path: "users",
-        element: <ListUsers />,
+        element: <Users />,
       },
       {
         path: "activity/:id/details",
         element: <ActivityDetails />,
+      },
+      {
+        path: "institutes",
+        element: <Institutes />,
       },
     ],
   },
