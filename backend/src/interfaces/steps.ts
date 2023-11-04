@@ -12,7 +12,11 @@ export interface SendEmailInterface extends Prisma.JsonObject {
 
 export interface RequestAnswerInterface extends Prisma.JsonObject {
   form_id: string;
-  answers: string[];
+  answers?: string[];
+  fieldForm?: {
+    form_id: string;
+    field_id: string;
+  }[];
 }
 
 export interface ConditionalInterface extends Prisma.JsonObject {

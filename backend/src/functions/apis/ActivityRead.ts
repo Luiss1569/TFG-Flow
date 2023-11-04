@@ -86,6 +86,7 @@ const handler: ApiWrapperHandler = async (conn, req) => {
               id: true,
               status: true,
               created_at: true,
+              response: true,
               requestAnswers: {
                 select: {
                   id: true,
@@ -116,7 +117,7 @@ const handler: ApiWrapperHandler = async (conn, req) => {
                 },
                 where: {
                   userRequestAnswers: {
-                    some: {
+                    every: {
                       answer_id: {
                         not: null,
                       },
@@ -150,6 +151,13 @@ const handler: ApiWrapperHandler = async (conn, req) => {
 
     for (const activityWorkflowStep of activityWorkflowSteps) {
       const requestAnswers = activityWorkflowStep.requestAnswers;
+      const response = activityWorkflowStep.response as { [key: string]: any };
+
+      if (response?.result?.body) {
+        activityWorkflowStep["data"] = response.result.body;
+      }
+
+      delete activityWorkflowStep.response;
 
       if (!requestAnswers) {
         continue;
@@ -165,6 +173,7 @@ const handler: ApiWrapperHandler = async (conn, req) => {
           userRequestAnswer["answered"] = await getAnsweredFields([
             answer,
           ] as unknown);
+         
         }
       }
     }

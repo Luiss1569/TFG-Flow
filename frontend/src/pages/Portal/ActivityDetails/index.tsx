@@ -173,6 +173,29 @@ const ActivityDetailsComponent: React.FC = () => {
                             requestAnswers={step.requestAnswers}
                           />
                         )}
+                        {!!step.data && (
+                          <Box p={4} bg="gray.100" borderRadius="lg" mb={4}>
+                            {typeof step.data === "object" ? (
+                              <>
+                                {Object.keys(step.data).map((key: string) => (
+                                  <LabelText
+                                    key={key}
+                                    label={key}
+                                    text={
+                                      (step.data as { [key: string]: string })[
+                                        key
+                                      ]
+                                    }
+                                  />
+                                ))}
+                              </>
+                            ) : (
+                              <Text fontSize="sm" fontWeight={"bold"}>
+                                {step.data}
+                              </Text>
+                            )}
+                          </Box>
+                        )}
                       </Box>
                     </MilestoneItem>
                   ))}
@@ -239,6 +262,9 @@ const RequestAnswerItem = memo(({ requestAnswers }: RequestAnswerProps) => {
 });
 
 const LabelText = memo(({ label, text }: { label: string; text: string }) => {
+
+  if (!text) return null;
+
   return (
     <Flex direction={"column"}>
       <Text fontSize="sm" mr={2}>
