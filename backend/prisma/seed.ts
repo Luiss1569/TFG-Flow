@@ -62,6 +62,7 @@ const forms = [
           },
           type: "multiselect",
           label: "Orientador e coorientador",
+          required: true,
           value: "",
           options: [],
           placeholder: "Insira seu orientador e coorientador caso haja",
@@ -744,18 +745,67 @@ const forms = [
           visible: true,
         },
         {
-          id: "publish",
+          id: "software",
           label:
-            "Marque caso concorde que o trabalho tem potencial de publicação",
+            "Marque caso concorde que o trabalho tem potencial de registro de software",
           type: "checkbox",
+          value: null,
+          zod: {
+            type: "boolean",
+            validation: {},
+          },
+        },
+        {
+          id: "events",
+          label:
+            "Marque caso concorde que o trabalho tem potencial de publicação em periódicos ou eventos",
+          type: "checkbox",
+          value: null,
+          zod: {
+            type: "boolean",
+            validation: {},
+          },
+        },
+        {
+          id: "observations",
+          zod: {
+            type: "string",
+            validation: {},
+          },
+          type: "textarea",
+          label: "Observações",
+          value: null,
+          visible: true,
+        },
+      ],
+    },
+  },
+  {
+    id: "f9208535-0fb6-49b0-9426-a4a9a48dc0d9",
+    name: "Aprovação do orientador sobre as correções",
+    formType: "private",
+    description: "Formulário de aprovação do orientador sobre as correções",
+    slug: "aprovacao-correcoes",
+    content: {
+      fields: [
+        {
+          id: "approved",
+          zod: {
+            type: "string",
+            validation: {},
+          },
+          type: "radio",
+          required: true,
+          label: "Correções aprovadas?",
+          value: null,
           options: [
             {
-              label: "Registro de Software",
-              value: "Registro de Software",
+              label: "Aprovado",
+              value: "Aprovado",
             },
             {
-              label: "Periódico ou Evento",
-              value: "Periódico ou Evento",
+              label: "Reprovado",
+              value: "Reprovado",
             },
           ],
         },
@@ -1140,6 +1190,84 @@ const workflows = [
           to: ["${student}"],
           body: "Seu do TFG foi reprovado!",
           title: "TFG reprovada!",
+        },
+        next_step_id: null,
+      },
+    ],
+  },
+  {
+    name: "Envio Final com correções",
+    status_id: "e8108535-0fb6-49b0-9426-a4a9a48dc0d9",
+    first_step_id: "h-step1",
+    steps: [
+      {
+        id: "h-step1",
+        name: "Requisição de Envio Final com correções",
+        type: "request_answer",
+        content: {
+          answers: ["${student}"],
+          form_id: "e9108535-0fb6-49b0-9426-a4a9a48dc0d9",
+        },
+        next_step_id: "h-step2",
+      },
+      {
+        id: "h-step2",
+        name: "Requisição do Orientador",
+        type: "request_answer",
+        content: {
+          answers: ["${masterminds}"],
+          form_id: "f9208535-0fb6-49b0-9426-a4a9a48dc0d9",
+        },
+        next_step_id: "h-step3",
+      },
+      {
+        id: "h-step3",
+        name: "Analise da Requisição do Orientador",
+        type: "conditional",
+        content: {
+          condition: `
+            const answers = operations.getReqAnswerByStepId('h-step2').at(-1).answers.at(-1).content;
+            
+            return {
+              result: answers.approved === 'Aprovado',
+              body: null
+            }
+          `,
+          true_step_id: "h-step4",
+          false_step_id: "h-step5",
+        },
+      },
+      {
+        id: "h-step4",
+        name: "Entrega Final Aprovada",
+        type: "swap_workflow",
+        content: {
+          status_id: "f8108535-0fb6-49b0-9426-a4a9a48dc0d9",
+        },
+      },
+      {
+        id: "h-step5",
+        name: "Entrega Final Reprovada",
+        type: "swap_workflow",
+        content: {
+          status_id: "g8108535-0fb6-49b0-9426-a4a9a48dc0d9",
+        },
+      },
+    ],
+  },
+  {
+    name: "Aprovado",
+    status_id: "e8108535-0fb6-49b0-9426-a4a9a48dc0d9",
+    first_step_id: "a-step1",
+    steps: [
+      {
+        id: "a-step1",
+        name: "Aviso ao Aluno",
+        type: "send_email",
+        content: {
+          to: ["${student}"],
+          body: "Seu do TFG foi aprovado!",
+          title: "TFG aprovada!",
         },
         next_step_id: null,
       },
