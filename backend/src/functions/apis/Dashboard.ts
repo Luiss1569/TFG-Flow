@@ -130,11 +130,17 @@ const handler: ApiWrapperHandler = async (conn, req) => {
     },
   });
 
-  let teacher_activities = [];
+  let teacher_activities = null;
   if (req.user.role === "teacher") {
+    const teacher = await conn.teachers.findFirst({
+      where: {
+        user_id: req.user.id,
+      },
+    });
+
     teacher_activities = await conn.activities.findMany({
       where: {
-        masterminds: { some: { teacher_id: req.user.id } },
+        masterminds: { some: { teacher_id: teacher.id } },
       },
       select: {
         id: true,

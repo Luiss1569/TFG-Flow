@@ -105,6 +105,28 @@ const DashboardPage: React.FC = () => {
             )}
           </AccordionPanel>
         </AccordionItem>
+
+        {!!dashboard?.teacher_activities && (
+          <AccordionItem>
+            <h2>
+              <AccordionButton>
+                <Box flex="1" textAlign="left">
+                  <Text fontSize="xl">Minhas Orientações</Text>
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+            </h2>
+            <AccordionPanel>
+              {dashboard?.teacher_activities.map((activity: Activity) => (
+                <ActivityBox key={activity.id} activity={activity} />
+              ))}
+
+              {dashboard?.teacher_activities.length === 0 && (
+                <Text fontSize="md">Nenhuma atividade encontrada</Text>
+              )}
+            </AccordionPanel>
+          </AccordionItem>
+        )}
       </Accordion>
     </Box>
   );

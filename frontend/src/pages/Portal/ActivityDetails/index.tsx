@@ -220,11 +220,17 @@ interface RequestAnswerProps {
 
 const RequestAnswerItem = memo(({ requestAnswers }: RequestAnswerProps) => {
   return (
-    <Box p={4} bg="gray.100" borderRadius="lg" mb={4}>
+    <Box p={4}>
       {requestAnswers.map((requestAnswer) => (
         <Box key={requestAnswer.id}>
           {requestAnswer.userRequestAnswers.map((userRequestAnswer) => (
-            <Box key={userRequestAnswer.answer_id}>
+            <Box
+              key={userRequestAnswer.answer_id}
+              bg="gray.100"
+              borderRadius="lg"
+              mb={4}
+              p={4}
+            >
               {userRequestAnswer.answered.map((answeredField) => (
                 <Flex key={answeredField.id} mb={2} direction={"column"}>
                   <Text fontSize="sm" mr={2}>
@@ -262,7 +268,6 @@ const RequestAnswerItem = memo(({ requestAnswers }: RequestAnswerProps) => {
 });
 
 const LabelText = memo(({ label, text }: { label: string; text: string }) => {
-
   if (!text) return null;
 
   return (

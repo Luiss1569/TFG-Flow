@@ -299,7 +299,7 @@ const forms = [
     },
   },
   {
-    id: "c9108535-0fb6-49b0-9426-a4a9a48dc0d9",
+    id: "2132053b-2f16-4214-ba7b-d1150c5dbd31",
     name: "Solicitação de Banca",
     formType: "private",
     description: "Formulário de solicitação de banca",
@@ -774,7 +774,7 @@ const forms = [
     },
   },
   {
-    id: "g9108535-0fb6-49b0-9426-a4a9a48dc0d9",
+    id: "f2108535-0fb6-49b0-9426-a4a9a48dc0d9",
     name: "Definição do local da banca",
     formType: "private",
     description: "Formulário de definição do local da banca",
@@ -981,7 +981,7 @@ const workflows = [
         type: "request_answer",
         content: {
           answers: ["${student}"],
-          form_id: "c9108535-0fb6-49b0-9426-a4a9a48dc0d9",
+          form_id: "2132053b-2f16-4214-ba7b-d1150c5dbd31",
         },
         next_step_id: "s-step3",
       },
@@ -1008,7 +1008,7 @@ const workflows = [
         type: "request_answer",
         content: {
           answers: ["${coordinator}"],
-          form_id: "g9108535-0fb6-49b0-9426-a4a9a48dc0d9",
+          form_id: "f2108535-0fb6-49b0-9426-a4a9a48dc0d9",
         },
         next_step_id: "s-step5",
       },
@@ -1056,7 +1056,7 @@ const workflows = [
           answers: ["${masterminds}"],
           fieldForm: [
             {
-              form_id: "c9108535-0fb6-49b0-9426-a4a9a48dc0d9",
+              form_id: "2132053b-2f16-4214-ba7b-d1150c5dbd31",
               field_id: "members",
             },
           ],
