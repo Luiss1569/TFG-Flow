@@ -1,10 +1,10 @@
-import React, {
+import {
   createContext,
   useState,
   ReactNode,
-  useEffect,
   useCallback,
   useMemo,
+  useLayoutEffect,
 } from "react";
 import JwtData from "../interfaces/JwtData";
 import jwtDecode from "jwt-decode";
@@ -19,11 +19,11 @@ export const AuthContext = createContext<AuthContextType | undefined>(
   undefined
 );
 
-type AuthProviderProps = {
+interface AuthProviderProps {
   children: ReactNode;
-};
+}
 
-function AuthProvider({ children }: AuthProviderProps) {
+function AuthProvider({ children }: Readonly<AuthProviderProps>) {
   const [token, setToken] = useState<JwtData | null>(null);
 
   const setTokenValue = useCallback((token: string | null) => {
@@ -43,7 +43,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     setToken(decodedToken as JwtData);
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       setTokenValue(token);
@@ -63,13 +63,3 @@ function AuthProvider({ children }: AuthProviderProps) {
 }
 
 export default AuthProvider;
-
-
-
-export function useAuth(): [JwtData | null, (token: string | null) => void] {
-  const context = React.useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within a AuthProvider");
-  }
-  return [context.token, context.setToken];
-}

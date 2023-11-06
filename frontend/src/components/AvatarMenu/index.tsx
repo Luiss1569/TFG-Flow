@@ -1,5 +1,4 @@
 import React, { useCallback } from "react";
-import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -13,6 +12,7 @@ import {
   PopoverHeader,
   PopoverTrigger,
 } from "@chakra-ui/react";
+import useAuth from "../../hooks/useAuth";
 
 const AvatarMenu: React.FC = () => {
   const navigate = useNavigate();

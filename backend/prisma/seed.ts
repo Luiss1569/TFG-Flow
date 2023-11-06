@@ -156,6 +156,7 @@ const forms = [
           label:
             "O documento contextualiza o assunto, descreve objetivos e justificativa para realização do trabalho?",
           value: null,
+          placeholder: "Insira a nota de 0 a 10"
         },
         {
           id: "p2",
@@ -168,6 +169,7 @@ const forms = [
           label:
             "A qualidade da Revisão Bibliográfica ou do Trabalho Prático desenvolvido (ex. protótipo) está satisfatória?",
           value: null,
+          placeholder: "Insira a nota de 0 a 10"
         },
         {
           id: "p3",
@@ -180,6 +182,7 @@ const forms = [
           label:
             "O trabalho apresenta coerência entre objetivos, método científico e desenvolvimento?",
           value: null,
+          placeholder: "Insira a nota de 0 a 10"
         },
         {
           id: "p4",
@@ -191,6 +194,7 @@ const forms = [
           required: true,
           label: "No geral, o conteúdo entregue está satisfatório?",
           value: null,
+          placeholder: "Insira a nota de 0 a 10"
         },
         {
           id: "p5",
@@ -203,6 +207,7 @@ const forms = [
           label:
             "O discente apresentou interesse e comprometimento na execução do trabalho?",
           value: null,
+          placeholder: "Insira a nota de 0 a 10"
         },
         {
           id: "p6",
@@ -215,6 +220,7 @@ const forms = [
           label:
             "Todas as atividades definidas no cronograma e acordadas com o orientador foram entregues?",
           value: null,
+          placeholder: "Insira a nota de 0 a 10"
         },
         {
           id: "p7",
@@ -227,6 +233,7 @@ const forms = [
           label:
             "O discente retorna com inovações ou apenas replica as orientações passadas a ele?",
           value: null,
+          placeholder: "Insira a nota de 0 a 10"
         },
         {
           id: "fate",

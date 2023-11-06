@@ -70,24 +70,20 @@ function Login() {
   const [errorText, setErrorText] = useState<string | null>(null);
   const [show, setShow] = useState(false);
 
-  const handleToastClose = () => {
-    return navigate("/");
-  };
   const showToastSuccess = () => {
     toast({
-      title: "login sucesso",
+      title: "Login realizado com sucesso",
       description: "Sucesso",
       duration: 2500,
       isClosable: true,
       status: "success",
       position: "top-right",
       icon: <UnlockIcon />,
-      onCloseComplete: handleToastClose,
     });
   };
   const showToastError = (message: string) => {
     toast({
-      title: "Erro no login",
+      title: "Erro ao realizar login",
       description: `${message}`,
       duration: 2500,
       isClosable: true,
@@ -116,12 +112,6 @@ function Login() {
       showToastError(error.message);
     }
   };
-
-  useEffect(() => {
-    if (authContext?.token) {
-      navigate("/portal");
-    }
-  }, [authContext?.token, navigate]);
 
   return (
     <Box bg="primary">
