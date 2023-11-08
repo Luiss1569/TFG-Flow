@@ -100,7 +100,7 @@ const ResponseForm: React.FC = () => {
 
   if (isLoading) {
     return (
-      <Center h="100vh">
+      <Center h="100vh" bg="gray.100">
         <Spinner size="xl" />
       </Center>
     );
@@ -108,7 +108,7 @@ const ResponseForm: React.FC = () => {
 
   if (isError) {
     return (
-      <Center h="100vh">
+      <Center h="100vh" bg="gray.100">
         <Text>Formulário não encontrado ou não está mais disponível</Text>
       </Center>
     );

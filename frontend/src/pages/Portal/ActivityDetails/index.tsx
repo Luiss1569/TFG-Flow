@@ -157,7 +157,11 @@ const ActivityDetailsComponent: React.FC = () => {
                   </MilestoneItem>
 
                   {workflow?.activityworkflowSteps?.map((step) => (
-                    <MilestoneItem key={step.id} isStep>
+                    <MilestoneItem
+                      key={step.id}
+                      isStep
+                      isPending={step.status !== "done"}
+                    >
                       <Box
                         border={"1px"}
                         borderColor={"gray.200"}
