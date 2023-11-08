@@ -2,7 +2,7 @@
   "name": "Node.js & PostgreSQL",
   "dockerComposeFile": "docker-compose.yml",
   "service": "app",
-  "workspaceFolder": "/home/node/app",
+  "workspaceFolder": "/home/TFG-Flow",
   "forwardPorts": [
     3000,
     5632,
