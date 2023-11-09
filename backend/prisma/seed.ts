@@ -879,8 +879,8 @@ const workflows = [
         type: "send_email",
         content: {
           to: ["${student}"],
-          body: "Inscrição realizada, aguardando processamento",
-          title: "Inscrição realizada",
+          body: "Inscrição realizada, ${activity.name} #${activity.matriculation}",
+          title: "Prezado ${user.name}, sua inscrição foi realizada com sucesso!",
         },
         next_step_id: "step2",
       },
@@ -943,8 +943,8 @@ const workflows = [
         type: "send_email",
         content: {
           to: ["${student}"],
-          body: "Sua inscrição do TFG foi aprovado!",
-          title: "Inscrição realizada com sucesso!",
+          body: "Prezado ${user.name}, sua inscrição foi aprovada pelo coordenador!",
+          title: "Inscrição ${activity.name} #${activity.matriculation} aprovada!",
         },
         next_step_id: "p-step2",
       },
@@ -985,9 +985,9 @@ const workflows = [
               return {
                 result: avg >= 6,
                 body: {
-                  "Média": avg,
+                  "Média": avg.toFixed(2),
                   "Atraso": isFate ? "Sim - 10% na nota" : "Não",
-                  "Nota Final": note,
+                  "Nota Final": note.toFixed(2),
                 }
               }
             `,
@@ -1027,8 +1027,8 @@ const workflows = [
         type: "send_email",
         content: {
           to: ["${student}"],
-          body: "Sua inscrição do TFG foi aprovado!",
-          title: "Inscrição realizada com sucesso!",
+          body: "Sua entrega parcial do TFG ${activity.name} #${activity.matriculation} foi aprovado!",
+          title: "Agora você pode solicitar a banca para o seu TFG!",
         },
         next_step_id: "s-step2",
       },
@@ -1075,8 +1075,8 @@ const workflows = [
         type: "send_email",
         content: {
           to: ["${student}"],
-          body: "Sua banca foi marcada!",
-          title: "Banca marcada!",
+          body: "Prezado ${user.name}, sua banca foi marcada!",
+          title: "Banca marcada ${activity.name} #${activity.matriculation}",
         },
         next_step_id: "s-step6",
       },
@@ -1158,7 +1158,7 @@ const workflows = [
               result: avg >= 6,
               body: {
                 "Notas": notes.join(" + ") + " / " + notes.length,
-                "Nota Final": avg,
+                "Nota Final": avg.toFixed(2),
               }
             }
           `,
@@ -1195,8 +1195,8 @@ const workflows = [
         type: "send_email",
         content: {
           to: ["${student}"],
-          body: "Seu do TFG foi reprovado!",
-          title: "TFG reprovada!",
+          body: "Seu do TFG ${activity.name} #${activity.matriculation} foi reprovado!",
+          title: "Infelizmente seu TFG foi reprovado, acesso o sistema para mais informações.",
         },
         next_step_id: null,
       },
@@ -1205,8 +1205,19 @@ const workflows = [
   {
     name: "Envio Final com correções",
     status_id: "e8108535-0fb6-49b0-9426-a4a9a48dc0d9",
-    first_step_id: "h-step1",
+    first_step_id: "h-step0",
     steps: [
+      {
+        id: "h-step0",
+        name: "Aviso ao Aluno",
+        type: "send_email",
+        content: {
+          to: ["${student}"],
+          body: "Sua entrega final do TFG ${activity.name} #${activity.matriculation} foi aprovado!",
+          title: "Agora você pode enviar a versão final do seu TFG!",
+        },
+        next_step_id: "h-step1"
+      },
       {
         id: "h-step1",
         name: "Requisição de Envio Final com correções",
@@ -1273,8 +1284,8 @@ const workflows = [
         type: "send_email",
         content: {
           to: ["${student}"],
-          body: "Seu do TFG foi aprovado!",
-          title: "TFG aprovada!",
+          body: "Prezado ${user.name}, seu TFG ${activity.name} #${activity.matriculation} foi aprovado!",
+          title: "Parabéns, seu TFG foi aprovado!",
         },
         next_step_id: null,
       },
