@@ -8,6 +8,7 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
+  useColorMode,
 } from "@chakra-ui/react";
 import { InputHTMLAttributes, forwardRef, useState } from "react";
 import { FaEye, FaEyeSlash, FaSearch } from "react-icons/fa"; // Adicionando ícones de olho
@@ -32,6 +33,7 @@ export const InputComponent = forwardRef<HTMLInputElement, InputProps>(
     ref
   ) => {
     const [showPassword, setShowPassword] = useState(type === "password");
+    const { colorMode } = useColorMode();
 
     const handleTogglePassword = () => setShowPassword(!showPassword);
 
@@ -42,7 +44,12 @@ export const InputComponent = forwardRef<HTMLInputElement, InputProps>(
           {isSearch && (
             <InputLeftElement
               pointerEvents="none"
-              children={<Icon as={FaSearch} color="gray.300" />}
+              children={
+                <Icon
+                  as={FaSearch}
+                  color={colorMode === "dark" ? "#dedede" : "gray.300"}
+                />
+              }
             />
           )}
           <ChakraInput

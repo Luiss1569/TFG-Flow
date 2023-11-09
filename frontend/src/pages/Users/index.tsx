@@ -1,4 +1,5 @@
-import { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from "react";
 import { Button } from "../../components/Button";
 import { ModalUsers } from "./components/ModalUsers";
 import { TableUsers } from "./components/TableUsers";
@@ -7,11 +8,15 @@ import { Container, Title, Wrapper, WrapperTable } from "./style";
 import { FormDataUsers, ITableUsers } from "./types";
 import { defaultValues } from "./utils";
 import { ModalDelete } from "../../components/ModalDelete";
+import { useUser } from "../../hooks/network/useUsers";
+import { SubmitHandler } from "react-hook-form";
 
 export function Users() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [dataFormModalUser, setDataFormModalUser] =
     useState<FormDataUsers>(defaultValues);
+
+  const { users, loading, getAllUsers, postUser } = useUser();
 
   const [deleteOpenModal, setDeleteOpenModal] = useState(false);
   const [dataIdModalUser, setIdModalUser] = useState<number>(null);
@@ -53,15 +58,29 @@ export function Users() {
       confirmPassword: "",
       institute_id: getInstituteById(dataTable.institute),
       password: "",
+      university_degree: "",
     });
     setModalOpen(true);
   };
+
+  // função para cadastrar usuário
+  const handleCadastrar: SubmitHandler<FormDataUsers> = (data) => {
+    console.log("Data submitted:", data);
+
+    handleCloseModal();
+  };
+
+  // useEffect(() => {
+  //   getAllUsers();
+  // }, []);
 
   return (
     <Container>
       <Wrapper>
         <Title>Usuários</Title>
-        <Button onClick={handleOpenModal}>Cadastrar</Button>
+        <Button onClick={handleOpenModal} color="#fff">
+          Cadastrar
+        </Button>
       </Wrapper>
 
       <WrapperTable>
@@ -76,6 +95,7 @@ export function Users() {
         <ModalUsers
           handleCloseModal={handleCloseModal}
           dataFormModalUser={dataFormModalUser}
+          handleCadastrar={handleCadastrar}
           isModalCreate
         />
       )}

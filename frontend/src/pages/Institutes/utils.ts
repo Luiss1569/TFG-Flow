@@ -1,9 +1,4 @@
-import { FormDataInstitutes, FormDataTable } from "./types";
-
-export const defaultValues: FormDataInstitutes = {
-  name: "",
-  acronym: "",
-};
+import { FormDataTable } from "./types";
 
 export const optionsColunmTable: Array<{ value: string; label: string }> = [
   { label: "Nome", value: "Nome" },

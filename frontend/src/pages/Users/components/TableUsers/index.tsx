@@ -1,3 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { DeleteIcon } from "@chakra-ui/icons";
+import { useColorMode } from "@chakra-ui/react";
 import { FaPencilAlt } from "react-icons/fa"; // Importando o ícone de lápis
 import { Button } from "../../../../components/Button";
 import { InputComponent } from "../../../../components/Input";
@@ -12,7 +15,6 @@ import {
   TableRow,
   Wrapper,
 } from "./styles";
-import { DeleteIcon } from "@chakra-ui/icons";
 
 interface TableUsersProps {
   data: ITableUsers[];
@@ -25,6 +27,8 @@ export function TableUsers({
   handleEdit,
   handleDelete,
 }: TableUsersProps) {
+  const { colorMode } = useColorMode();
+
   return (
     <Wrapper>
       <SelectComponent
@@ -37,7 +41,7 @@ export function TableUsers({
           placeholder="Digite para pesquisar"
           isSearch={true}
         />
-        <Button>Pesquisar</Button>
+        <Button color="#fff">Pesquisar</Button>
       </Content>
 
       <Table>
@@ -58,14 +62,14 @@ export function TableUsers({
         <tbody>
           {data.map(
             ({ id, role, name, email, cpf, matriculation, institute }) => (
-              <TableRow key={id}>
+              <TableRow key={id} isLight={colorMode === "light"}>
                 <TableCell>{role}</TableCell>
                 <TableCell>{name}</TableCell>
                 <TableCell>{email}</TableCell>
                 <TableCell>{cpf}</TableCell>
                 <TableCell>{matriculation}</TableCell>
                 <TableCell>{institute}</TableCell>
-                <TableCell style={{ textAlign: "center" }}>
+                <TableCell style={{ textAlign: "center", display: "flex" }}>
                   <Button
                     style={{ marginRight: "8px" }}
                     onClick={() =>
@@ -80,10 +84,10 @@ export function TableUsers({
                       })
                     }
                   >
-                    <FaPencilAlt size={12} />
+                    <FaPencilAlt size={12} color="#fff" />
                   </Button>
                   <Button onClick={() => handleDelete(id)}>
-                    <DeleteIcon boxSize={4} />
+                    <DeleteIcon boxSize={4} color="#fff" />
                   </Button>
                 </TableCell>
               </TableRow>

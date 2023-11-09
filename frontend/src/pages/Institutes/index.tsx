@@ -1,82 +1,90 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect } from "react";
 import { Button } from "../../components/Button";
+import { ModalDelete } from "../../components/ModalDelete";
+import { useInstitute } from "../../hooks/network/useInstitutes";
 import { ModalInstitutes } from "./components/ModalInstitutes";
 import { TableInstitutes } from "./components/TableInstitutes";
-import { arrayInstitutesMock } from "./mock";
 import { Container, Title, Wrapper, WrapperTable } from "./style";
-import { FormDataInstitutes, ITableInstitutes } from "./types";
-import { defaultValues } from "./utils";
-import { ModalDelete } from "../../components/ModalDelete";
+import { SubmitHandler } from "react-hook-form";
+import { IPostInstituteModel } from "../../services/InstitueService/dtos/IPostInstituteDTOResponse";
+import { IPutInstituteModel } from "../../services/InstitueService/dtos/IPutInstituteDTOResponse";
 
 export function Institutes() {
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [dataFormModalInstitute, setDataFormModalInstitute] =
-    useState<FormDataInstitutes>(defaultValues);
-
-  const [deleteOpenModal, setDeleteOpenModal] = useState(false);
-  const [dataIdModalInstitute, setIdModalInstitute] = useState<number>(null);
+  const {
+    loading,
+    allInstitutes,
+    dataFormModalInstitute,
+    deleteOpenModal,
+    dataIdModalInstitute,
+    defaultValues,
+    isModalOpen,
+    getInstitutes,
+    deleteInsititute,
+    postInstitute,
+    putInstitute,
+    handleOpenModalCreate,
+    handleOpenModalEdit,
+    handleOpenModalDelete,
+    handleCloseModalCreate,
+    handleCloseModalEdit,
+    handleCloseModalDelete,
+  } = useInstitute();
 
   const isModalOpenCreate =
     isModalOpen && dataFormModalInstitute === defaultValues;
   const isModalOpenEdit =
     isModalOpen && dataFormModalInstitute !== defaultValues;
+  const isModalOpenDelete = deleteOpenModal && dataIdModalInstitute !== "";
 
-  const isModalOpenDelete = deleteOpenModal && dataIdModalInstitute !== null;
-
-  const handleOpenModal = () => setModalOpen(true);
-
-  const handleCloseModal = () => {
-    setDataFormModalInstitute(defaultValues);
-    setModalOpen(false);
+  const onSubmit: SubmitHandler<
+    IPostInstituteModel | IPutInstituteModel
+  > = async (data) => {
+    if (isModalOpenCreate) {
+      await postInstitute(data as IPostInstituteModel);
+    } else {
+      await putInstitute(data as IPutInstituteModel);
+    }
   };
 
-  const handleEdit = (dataTable: ITableInstitutes) => {
-    setDataFormModalInstitute({
-      ...dataTable,
-    });
-    setModalOpen(true);
-  };
-
-  const handleDelete = (id: number) => {
-    setDeleteOpenModal(true);
-    setIdModalInstitute(id);
-  };
-
-  const handleCloseModalDelete = () => {
-    setDeleteOpenModal(false);
-    setIdModalInstitute(null);
-  };
-
-  const handleConfirmDelete = (id: number) => {
-    console.log("Excluir instituto id", id);
-  };
+  useEffect(() => {
+    getInstitutes();
+  }, []);
 
   return (
     <Container>
       <Wrapper>
         <Title>Institutos</Title>
-        <Button onClick={handleOpenModal}>Cadastrar</Button>
+        <Button onClick={handleOpenModalCreate} color="#fff">
+          Cadastrar
+        </Button>
       </Wrapper>
 
       <WrapperTable>
         <TableInstitutes
-          data={arrayInstitutesMock}
-          handleEdit={handleEdit}
-          handleDelete={handleDelete}
+          data={allInstitutes}
+          loading={loading}
+          handleEdit={handleOpenModalEdit}
+          handleDelete={handleOpenModalDelete}
         />
       </WrapperTable>
 
       {isModalOpenCreate && (
         <ModalInstitutes
-          handleCloseModal={handleCloseModal}
+          handleCloseModal={handleCloseModalCreate}
           dataFormModalInstitute={dataFormModalInstitute}
+          loading={loading}
+          onSubmit={onSubmit}
+          isModalCreate
         />
       )}
 
       {isModalOpenEdit && (
         <ModalInstitutes
-          handleCloseModal={handleCloseModal}
+          handleCloseModal={handleCloseModalEdit}
           dataFormModalInstitute={dataFormModalInstitute}
+          loading={loading}
+          onSubmit={onSubmit}
         />
       )}
 
@@ -84,8 +92,7 @@ export function Institutes() {
         <ModalDelete
           handleCloseModal={handleCloseModalDelete}
           deleteOpenModal={deleteOpenModal}
-          id={dataIdModalInstitute}
-          onConfirmDelete={handleConfirmDelete}
+          onClick={deleteInsititute}
         />
       )}
     </Container>

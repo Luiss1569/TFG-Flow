@@ -1,8 +1,10 @@
+import { useColorMode } from "@chakra-ui/color-mode";
+import { DeleteIcon } from "@chakra-ui/icons";
 import { FaPencilAlt } from "react-icons/fa"; // Importando o ícone de lápis
 import { Button } from "../../../../components/Button";
 import { InputComponent } from "../../../../components/Input";
 import { SelectComponent } from "../../../../components/Select";
-import { ITableInstitutes } from "../../types";
+import { IInstituteModel } from "../../../../services/InstitueService/dtos/IGetInstituteDTOResponse";
 import { optionsColunmTable } from "../../utils";
 import {
   Content,
@@ -10,21 +12,26 @@ import {
   Table,
   TableCell,
   TableRow,
+  TdLoading,
   Wrapper,
 } from "./styles";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { Spinner } from "@chakra-ui/react";
 
 interface TableInstitutesProps {
-  data: ITableInstitutes[];
-  handleEdit: (dataTable: ITableInstitutes) => void;
-  handleDelete: (id: number) => void;
+  data: IInstituteModel[];
+  loading: boolean;
+  handleEdit: (dataTable: IInstituteModel) => void;
+  handleDelete: (id: string) => void;
 }
 
 export function TableInstitutes({
   data,
+  loading,
   handleEdit,
   handleDelete,
 }: TableInstitutesProps) {
+  const { colorMode } = useColorMode();
+
   return (
     <Wrapper>
       <SelectComponent
@@ -37,7 +44,7 @@ export function TableInstitutes({
           placeholder="Digite para pesquisar"
           isSearch={true}
         />
-        <Button>Pesquisar</Button>
+        <Button color="#fff">Pesquisar</Button>
       </Content>
 
       <Table>
@@ -52,23 +59,33 @@ export function TableInstitutes({
         </thead>
 
         <tbody>
-          {data.map(({ id, name, acronym }) => (
-            <TableRow key={id}>
-              <TableCell>{name}</TableCell>
-              <TableCell>{acronym}</TableCell>
-              <TableCell style={{ textAlign: "center" }}>
-                <Button
-                  style={{ marginRight: "8px" }}
-                  onClick={() => handleEdit({ id, name, acronym })}
-                >
-                  <FaPencilAlt size={14} />
-                </Button>
-                <Button onClick={() => handleDelete(id)}>
-                  <DeleteIcon boxSize={4} />
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
+          {loading ? (
+            <tr>
+              <TdLoading colSpan={3}>
+                <span>
+                  <Spinner size="xl" />
+                </span>
+              </TdLoading>
+            </tr>
+          ) : (
+            data.map(({ id, name, acronym }) => (
+              <TableRow key={id} isLight={colorMode === "light"}>
+                <TableCell>{name}</TableCell>
+                <TableCell>{acronym}</TableCell>
+                <TableCell style={{ textAlign: "center", display: "flex" }}>
+                  <Button
+                    style={{ marginRight: "8px" }}
+                    onClick={() => handleEdit({ id, name, acronym })}
+                  >
+                    <FaPencilAlt size={14} color="#fff" />
+                  </Button>
+                  <Button onClick={() => handleDelete(id)}>
+                    <DeleteIcon boxSize={4} color="#fff" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </tbody>
       </Table>
     </Wrapper>

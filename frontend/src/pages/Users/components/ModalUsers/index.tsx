@@ -14,12 +14,13 @@ import { InputComponent } from "../../../../components/Input";
 import { SelectComponent } from "../../../../components/Select";
 import { optionsInstituteMock } from "../../mock";
 import { FormDataUsers } from "../../types";
-import { optionsRole } from "../../utils";
-import { Grid, Wrapper } from "./styles";
+import { optionsRole, optionsRoleTypeGrau } from "../../utils";
+import { Grid, Margin, Wrapper } from "./styles";
 
 interface ModalUsersProps {
   dataFormModalUser: FormDataUsers;
   handleCloseModal: () => void;
+  handleCadastrar?: SubmitHandler<FormDataUsers>;
   isModalCreate?: boolean;
 }
 
@@ -27,15 +28,13 @@ export function ModalUsers({
   dataFormModalUser,
   isModalCreate,
   handleCloseModal,
+  handleCadastrar,
 }: ModalUsersProps) {
-  const { handleSubmit, register } = useForm<FormDataUsers>({
+  const { handleSubmit, register, watch } = useForm<FormDataUsers>({
     defaultValues: dataFormModalUser,
   });
 
-  const handleCadastrar: SubmitHandler<FormDataUsers> = (data) => {
-    console.log("Data submitted:", data);
-    handleCloseModal();
-  };
+  const selectedRole = watch("role"); // Obtenha o valor selecionado da função
 
   return (
     <Modal
@@ -58,14 +57,25 @@ export function ModalUsers({
                 isRequired
                 {...register("role")}
               />
-
+              <Wrapper>
+                {["professor", "coordenador"].includes(selectedRole) && (
+                  <SelectComponent
+                    label="Grau"
+                    options={optionsRoleTypeGrau}
+                    isRequired
+                    {...register("university_degree")}
+                  />
+                )}
+              </Wrapper>
+            </Grid>
+            <Margin>
               <InputComponent
                 label="Nome"
                 placeholder="Nome do usuário"
                 isRequired
                 {...register("name")}
               />
-            </Grid>
+            </Margin>
 
             <Grid>
               <InputComponent
@@ -79,7 +89,6 @@ export function ModalUsers({
                 label="CPF"
                 placeholder="CPF do usuário"
                 isRequired
-                // mask="999.999.999-99"
                 {...register("cpf")}
               />
             </Grid>
@@ -117,10 +126,10 @@ export function ModalUsers({
             </Wrapper>
           </ModalBody>
           <ModalFooter>
-            <Button mr={3} type="submit">
+            <Button mr={3} type="submit" color="#fff">
               Confirmar
             </Button>
-            <ChakraButton type="button" onClick={handleCloseModal}>
+            <ChakraButton type="button" onClick={handleCloseModal} color="#fff">
               Cancelar
             </ChakraButton>
           </ModalFooter>

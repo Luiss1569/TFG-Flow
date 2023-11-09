@@ -1,5 +1,4 @@
 import {
-  Button as ChakraButton,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -11,64 +10,75 @@ import {
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "../../../../components/Button";
 import { InputComponent } from "../../../../components/Input";
-import { FormDataInstitutes } from "../../types";
+import { IPostInstituteModel } from "../../../../services/InstitueService/dtos/IPostInstituteDTOResponse";
+import { IPutInstituteModel } from "../../../../services/InstitueService/dtos/IPutInstituteDTOResponse";
 import { Wrapper } from "./styles";
 
 interface ModalInstituteProps {
-  dataFormModalInstitute: FormDataInstitutes;
+  dataFormModalInstitute: IPostInstituteModel;
+  isModalCreate?: boolean;
+  loading: boolean;
   handleCloseModal: () => void;
+  onSubmit: SubmitHandler<IPostInstituteModel | IPutInstituteModel>;
 }
 
 export function ModalInstitutes({
   dataFormModalInstitute,
+  isModalCreate = false,
+  loading,
+  onSubmit,
   handleCloseModal,
 }: ModalInstituteProps) {
-  const { handleSubmit, register } = useForm<FormDataInstitutes>({
+  const { handleSubmit, register } = useForm<IPostInstituteModel>({
     defaultValues: dataFormModalInstitute,
   });
-
-  const handleCadastrar: SubmitHandler<FormDataInstitutes> = (data) => {
-    console.log("Data submitted:", data);
-    handleCloseModal();
-  };
 
   return (
     <Modal
       isOpen
-      onClose={handleCloseModal}
+      onClose={loading ? () => {} : handleCloseModal}
       closeOnOverlayClick={false}
       size="xl"
       isCentered
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Cadastro de Instituto</ModalHeader>
+        <ModalHeader>{`${
+          isModalCreate ? "Cadastrar" : "Editar"
+        } Instituto`}</ModalHeader>
         <ModalCloseButton />
-        <form onSubmit={handleSubmit(handleCadastrar)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <ModalBody>
             <Wrapper>
               <InputComponent
                 label="Nome"
                 placeholder="Nome do usuário"
-                isRequired
+                isRequired={isModalCreate}
+                disabled={loading}
                 {...register("name")}
               />
 
               <InputComponent
-                label="Instituto"
+                label="Sigla"
                 placeholder="Sigla do instituto"
-                isRequired
+                isRequired={isModalCreate}
+                disabled={loading}
                 {...register("acronym")}
               />
             </Wrapper>
           </ModalBody>
           <ModalFooter>
-            <Button mr={3} type="submit">
+            <Button mr={3} type="submit" color="#fff" isLoading={loading}>
               Confirmar
             </Button>
-            <ChakraButton type="button" onClick={handleCloseModal}>
+            <Button
+              type="button"
+              isDisabled={loading}
+              onClick={handleCloseModal}
+              color="#fff"
+            >
               Cancelar
-            </ChakraButton>
+            </Button>
           </ModalFooter>
         </form>
       </ModalContent>

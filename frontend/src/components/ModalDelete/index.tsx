@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Button as ChakraButton,
   Modal,
@@ -14,25 +13,14 @@ import { Button } from "../Button";
 interface ModalDeleteProps {
   handleCloseModal: () => void;
   deleteOpenModal: boolean;
-  id: number; // Adicione o tipo correto para o ID
-  onConfirmDelete: (id: number) => void; // Adicione a função de confirmação com o ID
+  onClick: React.MouseEventHandler<HTMLButtonElement> | undefined;
 }
 
 export function ModalDelete({
   handleCloseModal,
   deleteOpenModal,
-  id,
-  onConfirmDelete,
+  onClick,
 }: ModalDeleteProps) {
-  const handleConfirmDelete = () => {
-    // Lógica adicional de exclusão se necessário
-    console.log("Data", id);
-    // Chame a função de confirmação com o ID
-    onConfirmDelete(id);
-    // Fechar o modal
-    handleCloseModal();
-  };
-
   return (
     <Modal
       isOpen={deleteOpenModal}
@@ -52,11 +40,12 @@ export function ModalDelete({
             colorScheme="red"
             mr={3}
             type="submit"
-            onClick={handleConfirmDelete}
+            onClick={onClick}
+            color="#fff"
           >
             Confirmar
           </Button>
-          <ChakraButton type="button" onClick={handleCloseModal}>
+          <ChakraButton type="button" onClick={handleCloseModal} color="#fff">
             Cancelar
           </ChakraButton>
         </ModalFooter>

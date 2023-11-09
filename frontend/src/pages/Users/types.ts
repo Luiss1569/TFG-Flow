@@ -17,6 +17,7 @@ export interface FormDataUsers {
   confirmPassword: string;
   matriculation: string;
   institute_id: string;
+  university_degree: string;
 }
 
 export interface FormDataTable {

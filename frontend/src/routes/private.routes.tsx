@@ -23,6 +23,7 @@ const routes: RouteType = [
       {
         element: <Dashboard />,
         index: true,
+        path: "dashboard",
       },
       {
         path: "users",

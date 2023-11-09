@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { css } from "styled-components";
 
 export const Table = styled.table`
   width: 100%;
@@ -7,6 +8,10 @@ export const Table = styled.table`
 
 interface TableCellProps {
   isHeader?: boolean;
+}
+
+interface TableRowProps {
+  isLight: boolean;
 }
 
 export const TableCell = styled.td.withConfig({
@@ -21,10 +26,16 @@ export const RowHeader = styled.tr`
   background-color: black;
 `;
 
-export const TableRow = styled.tr`
-  &:nth-child(odd) {
-    background-color: #f2f2f2;
-  }
+export const TableRow = styled.tr.withConfig({
+  shouldForwardProp: (prop) => !["isLight"].includes(prop),
+})<TableRowProps>`
+  ${({ isLight }) =>
+    isLight &&
+    css`
+      &:nth-child(odd) {
+        background-color: #f2f2f2;
+      }
+    `}
 `;
 
 export const Wrapper = styled.div`

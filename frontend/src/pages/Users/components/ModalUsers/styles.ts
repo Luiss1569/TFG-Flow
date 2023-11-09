@@ -12,3 +12,7 @@ export const Wrapper = styled.div`
   flex-direction: column;
   gap: 14px;
 `;
+
+export const Margin = styled.div`
+  margin-bottom: 14px;
+`;

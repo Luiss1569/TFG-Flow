@@ -7,6 +7,11 @@ export const optionsRole: Array<{ value: string; label: string }> = [
   { value: "administrador", label: "Administrador" },
 ];
 
+export const optionsRoleTypeGrau: Array<{ value: string; label: string }> = [
+  { value: "mestrado", label: "Mestrado" },
+  { value: "doutorado", label: "Doutorado" },
+];
+
 export const defaultValues: FormDataUsers = {
   cpf: "",
   confirmPassword: "",
@@ -16,6 +21,7 @@ export const defaultValues: FormDataUsers = {
   name: "",
   password: "",
   role: "",
+  university_degree: "",
 };
 
 export const optionsColunmTable: Array<{ value: string; label: string }> = [
