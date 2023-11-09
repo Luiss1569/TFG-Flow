@@ -65,25 +65,25 @@ function Login() {
   });
 
   const [show, setShow] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [isFocusedCPF, setIsFocusedCPF] = useState(false);
+  const [isFocusedPassword, setIsFocusedPassword] = useState(false);
 
-  const handleToastClose = () => {
-    return navigate("/");
-  };
+
   const showToastSuccess = () => {
     toast({
-      title: "login sucesso",
+      title: "Login realizado com sucesso",
       description: "Sucesso",
       duration: 2500,
       isClosable: true,
       status: "success",
       position: "top-right",
       icon: <UnlockIcon />,
-      onCloseComplete: handleToastClose,
     });
   };
   const showToastError = (message: string) => {
     toast({
-      title: "Erro no login",
+      title: "Erro ao realizar login",
       description: `${message}`,
       duration: 2500,
       isClosable: true,
@@ -113,12 +113,6 @@ function Login() {
     }
   };
 
-  useEffect(() => {
-    if (authContext?.token) {
-      navigate("/portal");
-    }
-  }, [authContext?.token, navigate]);
-
   return (
     <Box bg="primary">
       <Center>
@@ -139,6 +133,7 @@ function Login() {
                 variant="title"
                 w={{ base: "30%", xl: "40%" }}
                 fontSize="5xl"
+                fontWeight="semibold"
               >
                 Faça o login para acessar sua conta
               </Text>
@@ -151,7 +146,7 @@ function Login() {
                     <FormLabel htmlFor="cpf">CPF</FormLabel>
                     <InputGroup>
                       <InputLeftElement pointerEvents="none">
-                        <AtSignIcon />
+                        <AtSignIcon color={isFocusedCPF ? "green_light" : "gray.400"} />
                       </InputLeftElement>
                       <Input
                         focusBorderColor="#3CB371"
@@ -161,6 +156,8 @@ function Login() {
                         placeholder="Digite seu CPF"
                         type="text"
                         {...register("cpf")}
+                        onFocus={() => setIsFocusedCPF(true)}
+                        onBlur={() => setIsFocusedCPF(false)}
                       />
                     </InputGroup>
 
@@ -175,7 +172,7 @@ function Login() {
 
                     <InputGroup size="md">
                       <InputLeftElement pointerEvents="none">
-                        <LockIcon />
+                        <LockIcon color={isFocusedPassword ? "green_light" : "gray.400"} />
                       </InputLeftElement>
                       <Input
                         bg="primary"
@@ -186,6 +183,8 @@ function Login() {
                         placeholder="Digite sua senha"
                         type={show ? "text" : "password"}
                         {...register("password")}
+                        onFocus={() => setIsFocusedPassword(true)}
+                        onBlur={() => setIsFocusedPassword(false)}
                       />
 
                       <InputRightElement width="4.5rem">
@@ -219,7 +218,7 @@ function Login() {
 
                 <Text align="center" pt="20px">
                   Ainda não possuí uma conta?{" "}
-                  <Link color="green_light">Cadastre-se</Link>
+                  <Link color="green_light" href="/register">Cadastre-se</Link>
                 </Text>
               </CardBody>
             </Card>

@@ -15,15 +15,31 @@ const handler: QueueWrapperHandler = async (conn, messageQueue, context) => {
     },
   });
 
+  const owner = await conn.users.findFirstOrThrow({
+    where: {
+      id: activity.user_id,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+    },
+  });
+
   const content = step.content as unknown as SendEmailInterface;
 
   const mapUser = await replaceUsers(conn, activity, content.to);
 
-
   await sendEmail(
     mapUser.map((user) => user.email),
-    content.title,
-    content.body
+    new Function("activity", "user", "return `" + content.title + "`")(
+      activity,
+      owner
+    ),
+    new Function("activity", "user", "return `" + content.body + "`")(
+      activity,
+      owner
+    )
   );
 
   if (step.next_step_id) {

@@ -30,4 +30,4 @@ export default new ApiWrapper(handler)
             methods: ["GET"],
             route: "institute/{institute_id?}",
         },
-    });
+    }).setPublic();

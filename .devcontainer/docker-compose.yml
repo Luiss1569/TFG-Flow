@@ -2,7 +2,10 @@ version: "3.8"
 
 services:
   app:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    env_file: devcontainer.env
     restart: unless-stopped
     volumes:
       - ..:/home/TFG-Flow:cached
@@ -16,8 +19,8 @@ services:
     volumes:
       - tfg-flow-postgres:/var/lib/postgresql/data
     environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: 1234
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: admin
       POSTGRES_DB: tfgflow
 
 volumes:

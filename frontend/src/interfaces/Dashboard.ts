@@ -44,5 +44,5 @@ export interface Dashboard {
   public: Form[];
   request: Form[];
   activities: Activity[];
-  teacher_activities: Activity[];
+  teacher_activities: Activity[] | null;
 }

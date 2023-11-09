@@ -180,19 +180,21 @@ const handler: ApiWrapperHandler = async (conn, req, context) => {
             status: "proccess",
           },
         });
-
-        const nextStep = await conn.steps.findFirstOrThrow({
+        
+        if (requestAnswer.activity_workflow_step.step.next_step_id) {
+        const nextStep = await conn.steps.findFirst({
           where: {
             identifier: requestAnswer.activity_workflow_step.step.next_step_id,
             workflow_id: requestAnswer.activity_workflow_step.step.workflow_id,
           },
         });
 
-        sendToQueue(context, nextStep.type, {
-          step_id: nextStep.id,
-          activity_workflow_id:
-            requestAnswer.activity_workflow_step.active_workflow_id,
-        });
+          sendToQueue(context, nextStep.type, {
+            step_id: nextStep.id,
+            activity_workflow_id:
+              requestAnswer.activity_workflow_step.active_workflow_id,
+          });
+        }
       }
     }
 

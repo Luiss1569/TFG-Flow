@@ -30,9 +30,13 @@ const customTheme = {
     Text: {
       variants: {
         title: {
-          fontWeight: "semibold",
+          // fontWeight: "semibold",
           fontSize: "14px",
         },
+      },
+      defaultProps: {
+        size: "md",
+        variant: "title",
       },
     },
     Button,

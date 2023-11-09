@@ -110,6 +110,16 @@ const stepValidator = (type: string, schema: typeof import("yup")) => {
     return schema.object().shape({
       form_id: schema.string().uuid().required(),
       answers: schema.array().of(schema.string()).required(),
+      fieldForm: schema
+        .array()
+        .of(
+          schema.object().shape({
+            form_id: schema.string().uuid().required(),
+            field_id: schema.string().required().nullable(),
+          })
+        )
+        .required()
+        .nullable(),
     });
   }
 };

@@ -10,8 +10,48 @@ const handler: QueueWrapperHandler = async (conn, messageQueue, context) => {
   try {
     await conn.$executeRaw`BEGIN;`;
     const content = step.content as unknown as RequestAnswerInterface;
+    const users: Set<string> = new Set([...(content.answers ?? [])]);
 
-    const mapUser = await replaceUsers(conn, activity, content.answers);
+    console.log("###############", content.fieldForm);
+
+    if (content.fieldForm?.length) {
+      const answers = await conn.answers.findMany({
+        where: {
+          form: {
+            id: {
+              in: content.fieldForm.map((field) => field.form_id),
+            },
+          },
+          activity: {
+            id: activity.id,
+          },
+        },
+        select: {
+          form_id: true,
+          content: true,
+        },
+      });
+
+      content.fieldForm.forEach((field) => {
+        const answer = answers.find(
+          (answer) => answer.form_id === field.form_id
+        );
+
+        if (answer) {
+          const value: string[] = answer.content[field.field_id];
+
+          if (value) {
+            value.forEach((user) => {
+              users.add(user);
+            });
+          }
+        }
+      });
+    }
+
+    const mapUser = await replaceUsers(conn, activity, [...users]);
+
+    console.log("###############", mapUser);
 
     const requestAnswer = await conn.requestAnswers.create({
       data: {

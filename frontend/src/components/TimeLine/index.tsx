@@ -5,23 +5,37 @@ import {
   Flex,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { GoWorkflow, GoCheck } from "react-icons/go";
+import { useMemo } from "react";
+import { GoWorkflow, GoCheck, GoNoEntry } from "react-icons/go";
 
 interface MilestoneItemProps extends BoxProps {
   icon?: ReturnType<typeof GoWorkflow>;
   boxProps?: BoxProps;
   skipTrail?: boolean;
   isStep?: boolean;
+  isPending?: boolean;
 }
 
 export const MilestoneItem: React.FC<MilestoneItemProps> = ({
   isStep = false,
-  icon = isStep ? GoCheck : GoWorkflow,
   boxProps = {},
   skipTrail = false,
   children,
+  isPending = false,
   ...props
 }) => {
+  const icon = useMemo(() => {
+    if (isPending) {
+      return GoNoEntry;
+    }
+
+    if (isStep) {
+      return GoCheck;
+    }
+
+    return GoWorkflow;
+  }, [isPending, isStep]);
+
   return (
     <Flex {...props} minH={"5rem"}>
       <Flex
