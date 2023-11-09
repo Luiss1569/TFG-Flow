@@ -1,26 +1,21 @@
-import { useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import InstituteService from "../../services/InstitueService";
 import { IInstituteModel } from "../../services/InstitueService/dtos/IGetInstituteDTOResponse";
 import { IPostInstituteModel } from "../../services/InstitueService/dtos/IPostInstituteDTOResponse";
 import { IPutInstituteModel } from "../../services/InstitueService/dtos/IPutInstituteDTOResponse";
-import { LockIcon, UnlockIcon } from "@chakra-ui/icons";
+import { useUtils } from "./useUtils";
 
 const defaultValues: IPostInstituteModel = {
   name: "",
   acronym: "",
 };
 
-interface IShowToast {
-  title: string;
-  description: string;
-}
-
 export function useInstitute() {
   const [loading, setLoading] = useState(false);
   const [allInstitutes, setAllInstitutes] = useState<IInstituteModel[]>([]);
   const instituteService = new InstituteService();
-  const toast = useToast();
+
+  const { showToastError, showToastSuccess } = useUtils();
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [dataFormModalInstitute, setDataFormModalInstitute] =
@@ -49,29 +44,6 @@ export function useInstitute() {
   const handleCloseModalDelete = () => {
     setDeleteOpenModal(false);
     setIdModalInstitute(null);
-  };
-
-  const showToastSuccess = ({ title, description }: IShowToast) => {
-    toast({
-      title,
-      description,
-      duration: 3000,
-      isClosable: true,
-      status: "success",
-      position: "top-right",
-      icon: <UnlockIcon />,
-    });
-  };
-  const showToastError = ({ title, description }: IShowToast) => {
-    toast({
-      title,
-      description,
-      duration: 3000,
-      isClosable: true,
-      status: "error",
-      position: "top-right",
-      icon: <LockIcon />,
-    });
   };
 
   async function getInstitutes(): Promise<void> {
