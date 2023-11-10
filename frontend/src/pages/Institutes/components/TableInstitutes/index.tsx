@@ -1,6 +1,9 @@
+import { useEffect, useState } from "react";
 import { useColorMode } from "@chakra-ui/color-mode";
 import { DeleteIcon } from "@chakra-ui/icons";
-import { FaPencilAlt } from "react-icons/fa"; // Importando o ícone de lápis
+import { Spinner } from "@chakra-ui/react";
+import { Dispatch, SetStateAction } from "react";
+import { FaPencilAlt } from "react-icons/fa";
 import { Button } from "../../../../components/Button";
 import { InputComponent } from "../../../../components/Input";
 import { SelectComponent } from "../../../../components/Select";
@@ -15,22 +18,48 @@ import {
   TdLoading,
   Wrapper,
 } from "./styles";
-import { Spinner } from "@chakra-ui/react";
 
 interface TableInstitutesProps {
   data: IInstituteModel[];
   loading: boolean;
   handleEdit: (dataTable: IInstituteModel) => void;
   handleDelete: (id: string) => void;
+  setAllInstitutes: Dispatch<SetStateAction<IInstituteModel[]>>;
 }
 
 export function TableInstitutes({
   data,
   loading,
+  setAllInstitutes,
   handleEdit,
   handleDelete,
 }: TableInstitutesProps) {
   const { colorMode } = useColorMode();
+
+  useEffect(() => {
+    setAllInstitutes(data);
+  }, [data]);
+
+  const [searchTerm, setSearchTerm] = useState<string>("");
+
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+
+    const newUpdateInstance: IInstituteModel[] = [];
+    const textTyped = new RegExp(value.toUpperCase(), "i");
+
+    for (const item of data) {
+      if (item.name.match(textTyped)) {
+        console.log(1);
+        newUpdateInstance.push(item);
+      } else {
+        console.log(2);
+        setAllInstitutes(data);
+      }
+
+      setAllInstitutes(newUpdateInstance);
+    }
+  };
 
   return (
     <Wrapper>
@@ -42,6 +71,8 @@ export function TableInstitutes({
         <InputComponent
           label="Pesquisar"
           placeholder="Digite para pesquisar"
+          value={searchTerm}
+          onChange={(e) => handleSearch(e.target.value)}
           isSearch={true}
         />
         <Button color="#fff">Pesquisar</Button>

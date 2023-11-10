@@ -29,6 +29,7 @@ export function Institutes() {
     handleCloseModalCreate,
     handleCloseModalEdit,
     handleCloseModalDelete,
+    setAllInstitutes,
   } = useInstitute();
 
   const isModalOpenCreate =
@@ -66,6 +67,7 @@ export function Institutes() {
           loading={loading}
           handleEdit={handleOpenModalEdit}
           handleDelete={handleOpenModalDelete}
+          setAllInstitutes={setAllInstitutes}
         />
       </WrapperTable>
 

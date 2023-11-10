@@ -51,3 +51,15 @@ export const Content = styled.div`
   gap: 16px;
   align-items: end;
 `;
+
+export const TdLoading = styled.td`
+  width: 100%;
+  height: 300px;
+
+  span {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;

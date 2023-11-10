@@ -1,28 +1,17 @@
-import { FormDataTable, FormDataUsers } from "./types";
+import { EnumTypeUser, EnumUniversity_Degree } from "../../constants/enums";
+import { FormDataTable } from "./types";
 
 export const optionsRole: Array<{ value: string; label: string }> = [
-  { value: "estudante", label: "Estudante" },
-  { value: "professor", label: "Professor" },
-  { value: "coordenador", label: "Coordenador" },
-  { value: "administrador", label: "Administrador" },
+  { value: EnumTypeUser.ESTUDANTE, label: "Estudante" },
+  { value: EnumTypeUser.PROFESSOR, label: "Professor" },
+  { value: EnumTypeUser.COORDENADOR, label: "Coordenador" },
+  { value: EnumTypeUser.ADMINISTRADOR, label: "Administrador" },
 ];
 
 export const optionsRoleTypeGrau: Array<{ value: string; label: string }> = [
-  { value: "mestrado", label: "Mestrado" },
-  { value: "doutorado", label: "Doutorado" },
+  { value: EnumUniversity_Degree.MESTRADO, label: "Mestrado" },
+  { value: EnumUniversity_Degree.DOUTORADO, label: "Doutorado" },
 ];
-
-export const defaultValues: FormDataUsers = {
-  cpf: "",
-  confirmPassword: "",
-  email: "",
-  institute_id: "",
-  matriculation: "",
-  name: "",
-  password: "",
-  role: "",
-  university_degree: "",
-};
 
 export const optionsColunmTable: Array<{ value: string; label: string }> = [
   { label: "Perfil", value: "Perfil" },

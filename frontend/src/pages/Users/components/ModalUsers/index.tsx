@@ -1,5 +1,4 @@
 import {
-  Button as ChakraButton,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -8,71 +7,83 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
+
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "../../../../components/Button";
 import { InputComponent } from "../../../../components/Input";
 import { SelectComponent } from "../../../../components/Select";
-import { optionsInstituteMock } from "../../mock";
-import { FormDataUsers } from "../../types";
 import { optionsRole, optionsRoleTypeGrau } from "../../utils";
 import { Grid, Margin, Wrapper } from "./styles";
+import { IPostUserModel } from "../../../../services/UserService/dtos/IPostUserDTOResponse";
+import { IPutUserModel } from "../../../../services/UserService/dtos/IPutUserDTOResponse";
+import { IInstituteModel } from "../../../../services/InstitueService/dtos/IGetInstituteDTOResponse";
+import { EnumTypeUser } from "../../../../constants/enums";
 
 interface ModalUsersProps {
-  dataFormModalUser: FormDataUsers;
-  handleCloseModal: () => void;
-  handleCadastrar?: SubmitHandler<FormDataUsers>;
+  dataFormModalUser: IPostUserModel;
   isModalCreate?: boolean;
+  loading: boolean;
+  handleCloseModal: () => void;
+  onSubmit: SubmitHandler<IPostUserModel | IPutUserModel>;
+  institutes: IInstituteModel[];
 }
 
 export function ModalUsers({
   dataFormModalUser,
-  isModalCreate,
+  isModalCreate = false,
+  loading,
+  onSubmit,
   handleCloseModal,
-  handleCadastrar,
+  institutes,
 }: ModalUsersProps) {
-  const { handleSubmit, register, watch } = useForm<FormDataUsers>({
+  const { handleSubmit, register, watch } = useForm<IPostUserModel>({
     defaultValues: dataFormModalUser,
   });
 
-  const selectedRole = watch("role"); // Obtenha o valor selecionado da função
+  const role = watch("role");
+  const isDegree =
+    role === EnumTypeUser.COORDENADOR || role === EnumTypeUser.PROFESSOR;
 
   return (
     <Modal
       isOpen
-      onClose={handleCloseModal}
+      onClose={loading ? () => {} : handleCloseModal}
       closeOnOverlayClick={false}
       size="xl"
       isCentered
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Cadastro de Usuário</ModalHeader>
+        <ModalHeader>{`${
+          isModalCreate ? "Cadastrar" : "Editar"
+        } User`}</ModalHeader>
         <ModalCloseButton />
-        <form onSubmit={handleSubmit(handleCadastrar)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <ModalBody>
             <Grid>
               <SelectComponent
                 label="Perfil"
                 options={optionsRole}
-                isRequired
+                isRequired={isModalCreate}
+                disabled={loading}
                 {...register("role")}
               />
               <Wrapper>
-                {["professor", "coordenador"].includes(selectedRole) && (
-                  <SelectComponent
-                    label="Grau"
-                    options={optionsRoleTypeGrau}
-                    isRequired
-                    {...register("university_degree")}
-                  />
-                )}
+                <SelectComponent
+                  label="Grau"
+                  options={optionsRoleTypeGrau}
+                  isRequired={isModalCreate && isDegree}
+                  disabled={loading}
+                  {...register("university_degree")}
+                />
               </Wrapper>
             </Grid>
             <Margin>
               <InputComponent
                 label="Nome"
                 placeholder="Nome do usuário"
-                isRequired
+                isRequired={isModalCreate}
+                disabled={loading}
                 {...register("name")}
               />
             </Margin>
@@ -82,13 +93,15 @@ export function ModalUsers({
                 label="Email"
                 type="email"
                 placeholder="exemplo@exemplo.com"
-                isRequired
+                isRequired={isModalCreate}
+                disabled={loading}
                 {...register("email")}
               />
               <InputComponent
                 label="CPF"
                 placeholder="CPF do usuário"
-                isRequired
+                isRequired={isModalCreate}
+                disabled={loading}
                 {...register("cpf")}
               />
             </Grid>
@@ -97,13 +110,18 @@ export function ModalUsers({
               <InputComponent
                 label="Matricula"
                 placeholder="Matrícula do usuário"
-                isRequired
+                isRequired={isModalCreate}
+                disabled={loading}
                 {...register("matriculation")}
               />
               <SelectComponent
                 label="Instituto"
-                options={optionsInstituteMock}
-                isRequired
+                options={institutes.map((institute) => ({
+                  value: institute.id.toString(),
+                  label: institute.name,
+                }))}
+                isRequired={isModalCreate}
+                disabled={loading}
                 {...register("institute_id")}
               />
             </Grid>
@@ -114,6 +132,7 @@ export function ModalUsers({
                 placeholder="Senha"
                 type="password"
                 isRequired={isModalCreate}
+                disabled={loading}
                 {...register("password")}
               />
               <InputComponent
@@ -121,17 +140,23 @@ export function ModalUsers({
                 placeholder="Confirmar Senha"
                 type="password"
                 isRequired={isModalCreate}
+                disabled={loading}
                 {...register("confirmPassword")}
               />
             </Wrapper>
           </ModalBody>
           <ModalFooter>
-            <Button mr={3} type="submit" color="#fff">
+            <Button mr={3} type="submit" color="#fff" isLoading={loading}>
               Confirmar
             </Button>
-            <ChakraButton type="button" onClick={handleCloseModal} color="#fff">
+            <Button
+              type="button"
+              isDisabled={loading}
+              onClick={handleCloseModal}
+              color="#fff"
+            >
               Cancelar
-            </ChakraButton>
+            </Button>
           </ModalFooter>
         </form>
       </ModalContent>

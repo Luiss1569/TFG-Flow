@@ -141,6 +141,7 @@ export function useInstitute() {
     handleCloseModalDelete,
     getInstitutes,
     postInstitute,
+    setAllInstitutes,
     putInstitute,
     deleteInsititute,
   };

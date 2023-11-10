@@ -1,26 +1,26 @@
 import api from "../../lib/axios";
 import { IDeleteUserDTORequest } from "./dtos/IDeleteUserDTORequest";
 import { IDeleteUserDTORespose } from "./dtos/IDeleteUserDTOResponse";
-import { IGetUserDTORespose } from "./dtos/IGetUserDTOResponse";
+import { IGetUserDTOResponse } from "./dtos/IGetUserDTOResponse";
 import { IPostUserDTORequest } from "./dtos/IPostUserDTORequest";
-import { IPostUserDTOResponse } from "./dtos/IPostUserDTOResponse";
+import { IPostUsereDTOResponse } from "./dtos/IPostUserDTOResponse";
 import { IPutUserDTORequest } from "./dtos/IPutUserDTORequest";
 import { IPutUserDTOResponse } from "./dtos/IPutUserDTOResponse";
 
 export default class UserService {
-  private route = "users";
+  private route = "user";
 
   public async postUser(
     dataRequest: IPostUserDTORequest
-  ): Promise<IPostUserDTOResponse> {
-    const { data } = await api.post<IPostUserDTOResponse>(
+  ): Promise<IPostUsereDTOResponse> {
+    const { data } = await api.post<IPostUsereDTOResponse>(
       this.route,
       dataRequest
     );
     return data;
   }
-  public async getUsers(): Promise<IGetUserDTORespose[]> {
-    const { data } = await api.get<IGetUserDTORespose[]>(this.route);
+  public async getUsers(): Promise<IGetUserDTOResponse> {
+    const { data } = await api.get<IGetUserDTOResponse>(this.route);
     return data;
   }
 
@@ -28,7 +28,7 @@ export default class UserService {
     dataRequest: IPutUserDTORequest
   ): Promise<IPutUserDTOResponse> {
     const { data } = await api.put<IPutUserDTOResponse>(
-      this.route,
+      `${this.route}/${dataRequest.id}`,
       dataRequest
     );
     return data;
@@ -38,7 +38,8 @@ export default class UserService {
     dataRequest: IDeleteUserDTORequest
   ): Promise<IDeleteUserDTORespose> {
     const { data } = await api.delete<IDeleteUserDTORespose>(
-      `${this.route}/${dataRequest.id}`
+      `${this.route}/${dataRequest.id}`,
+      {}
     );
     return data;
   }
