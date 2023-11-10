@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, user_roles } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const status = [
@@ -156,7 +156,7 @@ const forms = [
           label:
             "O documento contextualiza o assunto, descreve objetivos e justificativa para realização do trabalho?",
           value: null,
-          placeholder: "Insira a nota de 0 a 10"
+          placeholder: "Insira a nota de 0 a 10",
         },
         {
           id: "p2",
@@ -169,7 +169,7 @@ const forms = [
           label:
             "A qualidade da Revisão Bibliográfica ou do Trabalho Prático desenvolvido (ex. protótipo) está satisfatória?",
           value: null,
-          placeholder: "Insira a nota de 0 a 10"
+          placeholder: "Insira a nota de 0 a 10",
         },
         {
           id: "p3",
@@ -182,7 +182,7 @@ const forms = [
           label:
             "O trabalho apresenta coerência entre objetivos, método científico e desenvolvimento?",
           value: null,
-          placeholder: "Insira a nota de 0 a 10"
+          placeholder: "Insira a nota de 0 a 10",
         },
         {
           id: "p4",
@@ -194,7 +194,7 @@ const forms = [
           required: true,
           label: "No geral, o conteúdo entregue está satisfatório?",
           value: null,
-          placeholder: "Insira a nota de 0 a 10"
+          placeholder: "Insira a nota de 0 a 10",
         },
         {
           id: "p5",
@@ -207,7 +207,7 @@ const forms = [
           label:
             "O discente apresentou interesse e comprometimento na execução do trabalho?",
           value: null,
-          placeholder: "Insira a nota de 0 a 10"
+          placeholder: "Insira a nota de 0 a 10",
         },
         {
           id: "p6",
@@ -220,7 +220,7 @@ const forms = [
           label:
             "Todas as atividades definidas no cronograma e acordadas com o orientador foram entregues?",
           value: null,
-          placeholder: "Insira a nota de 0 a 10"
+          placeholder: "Insira a nota de 0 a 10",
         },
         {
           id: "p7",
@@ -233,7 +233,7 @@ const forms = [
           label:
             "O discente retorna com inovações ou apenas replica as orientações passadas a ele?",
           value: null,
-          placeholder: "Insira a nota de 0 a 10"
+          placeholder: "Insira a nota de 0 a 10",
         },
         {
           id: "fate",
@@ -880,7 +880,8 @@ const workflows = [
         content: {
           to: ["${student}"],
           body: "Inscrição realizada, ${activity.name} #${activity.matriculation}",
-          title: "Prezado ${user.name}, sua inscrição foi realizada com sucesso!",
+          title:
+            "Prezado ${user.name}, sua inscrição foi realizada com sucesso!",
         },
         next_step_id: "step2",
       },
@@ -944,7 +945,8 @@ const workflows = [
         content: {
           to: ["${student}"],
           body: "Prezado ${user.name}, sua inscrição foi aprovada pelo coordenador!",
-          title: "Inscrição ${activity.name} #${activity.matriculation} aprovada!",
+          title:
+            "Inscrição ${activity.name} #${activity.matriculation} aprovada!",
         },
         next_step_id: "p-step2",
       },
@@ -1196,7 +1198,8 @@ const workflows = [
         content: {
           to: ["${student}"],
           body: "Seu do TFG ${activity.name} #${activity.matriculation} foi reprovado!",
-          title: "Infelizmente seu TFG foi reprovado, acesso o sistema para mais informações.",
+          title:
+            "Infelizmente seu TFG foi reprovado, acesso o sistema para mais informações.",
         },
         next_step_id: null,
       },
@@ -1216,7 +1219,7 @@ const workflows = [
           body: "Sua entrega final do TFG ${activity.name} #${activity.matriculation} foi aprovado!",
           title: "Agora você pode enviar a versão final do seu TFG!",
         },
-        next_step_id: "h-step1"
+        next_step_id: "h-step1",
       },
       {
         id: "h-step1",
@@ -1293,6 +1296,51 @@ const workflows = [
   },
 ];
 
+const users = [
+  {
+    id: "a8108535-0fb6-49b0-9426-a4a9a48dc0d9",
+    name: "Vanessa",
+    cpf: "12312312322",
+    email: "vanessa@unifei.edu.br",
+    password: "$2b$10$N037LwRvx6mJ8eqa6SxorerK6Cws06K0FaC4GeoawXi2dcDvIjuoe",
+    role: user_roles.coordinator,
+    teacher: {
+      create: {
+        university_degree: "doctor",
+      },
+    },
+    matriculation: "12312333",
+  },
+  {
+    id: "b8108535-0fb6-49b0-9426-a4a9a48dc0d9",
+    name: "Bruno",
+    cpf: "12312312344",
+    email: "bruno@unifei.edu.br",
+    password: "$2b$10$N037LwRvx6mJ8eqa6SxorerK6Cws06K0FaC4GeoawXi2dcDvIjuoe",
+    role: user_roles.teacher,
+    teacher: {
+      create: {
+        university_degree: "doctor",
+      },
+    },
+    matriculation: "12312322",
+  },
+  {
+    id: "c8108535-0fb6-49b0-9426-a4a9a48dc0d9",
+    name: "Rafael Frinhani",
+    cpf: "12312312333",
+    email: "frinhanii@unifei.edu.br",
+    password: "$2b$10$N037LwRvx6mJ8eqa6SxorerK6Cws06K0FaC4GeoawXi2dcDvIjuoe",
+    role: user_roles.teacher,
+    teacher: {
+      create: {
+        university_degree: "doctor",
+      },
+    },
+    matriculation: "12312311",
+  },
+];
+
 async function main() {
   await prisma.$executeRaw`TRUNCATE TABLE "answers" CASCADE;`;
   await prisma.$executeRaw`TRUNCATE TABLE "activities" CASCADE;`;
@@ -1311,7 +1359,7 @@ async function main() {
     });
   }
 
-  await prisma.institutes.upsert({
+  const institute = await prisma.institutes.upsert({
     where: { acronym: "IMC" },
     update: {},
     create: {
@@ -1355,6 +1403,28 @@ async function main() {
             })),
           },
         },
+      },
+    });
+  }
+
+  for (const teacher in users) {
+    await prisma.users.upsert({
+      where: { id: users[teacher].id },
+      update: {},
+      create: {
+        id: users[teacher].id,
+        name: users[teacher].name,
+        cpf: users[teacher].cpf,
+        email: users[teacher].email,
+        password: users[teacher].password,
+        role: users[teacher].role,
+        teachers: {
+          create: {
+            university_degree: "doctor",
+          },
+        },
+        institute_id: institute.id,
+        matriculation: users[teacher].matriculation,
       },
     });
   }

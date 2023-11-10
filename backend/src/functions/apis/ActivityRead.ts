@@ -2,10 +2,8 @@ import ApiWrapper, { ApiWrapperHandler } from "../../utils/wrappers/apiWrapper";
 import res from "../../utils/wrappers/apiResponse";
 import { getAnsweredFields } from "../../services/formatAnswersForms";
 
-const handler: ApiWrapperHandler = async (conn, req) => {
-  const { activity_id } = req.params;
-
-  const activity = await conn.activities.findUnique({
+const getActivity = async (conn, activity_id) => {
+  return await conn.activities.findUnique({
     where: {
       id: activity_id,
     },
@@ -141,42 +139,59 @@ const handler: ApiWrapperHandler = async (conn, req) => {
       },
     },
   });
+};
+
+const processActivityWorkflowSteps = async (activityWorkflowSteps) => {
+  for (const activityWorkflowStep of activityWorkflowSteps) {
+    const requestAnswers = activityWorkflowStep.requestAnswers;
+    const response = activityWorkflowStep.response as { [key: string]: any };
+
+    if (response?.result?.body) {
+      activityWorkflowStep["data"] = response.result.body;
+    }
+
+    delete activityWorkflowStep.response;
+
+    if (!requestAnswers) {
+      continue;
+    }
+
+    await processRequestAnswers(requestAnswers);
+  }
+};
+
+const processRequestAnswers = async (requestAnswers) => {
+  for (const requestAnswer of requestAnswers) {
+    const userRequestAnswers = requestAnswer.userRequestAnswers;
+
+    for (const userRequestAnswer of userRequestAnswers) {
+      const answer = userRequestAnswer.answer;
+      delete userRequestAnswer.answer;
+
+      let content = null;
+
+      if (answer) {
+        content = await getAnsweredFields([answer] as unknown);
+      } else {
+        content = answer;
+      }
+
+      userRequestAnswer["answered"] = content;
+    }
+  }
+};
+
+const handler: ApiWrapperHandler = async (conn, req) => {
+  const { activity_id } = req.params;
+
+  const activity = await getActivity(conn, activity_id);
 
   const answeredFields = await getAnsweredFields(activity.answers as unknown);
   activity["answered"] = answeredFields;
   delete activity.answers;
 
   for (const activityWorkflow of activity.activityWorkflow) {
-    const activityWorkflowSteps = activityWorkflow.activityworkflowSteps;
-
-    for (const activityWorkflowStep of activityWorkflowSteps) {
-      const requestAnswers = activityWorkflowStep.requestAnswers;
-      const response = activityWorkflowStep.response as { [key: string]: any };
-
-      if (response?.result?.body) {
-        activityWorkflowStep["data"] = response.result.body;
-      }
-
-      delete activityWorkflowStep.response;
-
-      if (!requestAnswers) {
-        continue;
-      }
-
-      for (const requestAnswer of requestAnswers) {
-        const userRequestAnswers = requestAnswer.userRequestAnswers;
-
-        for (const userRequestAnswer of userRequestAnswers) {
-          const answer = userRequestAnswer.answer;
-
-          delete userRequestAnswer.answer;
-          userRequestAnswer["answered"] = await getAnsweredFields([
-            answer,
-          ] as unknown);
-         
-        }
-      }
-    }
+    await processActivityWorkflowSteps(activityWorkflow.activityworkflowSteps);
   }
 
   if (!activity) {
