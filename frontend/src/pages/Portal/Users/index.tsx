@@ -41,6 +41,13 @@ export function Users() {
   const onSubmit: SubmitHandler<IPostUserModel | IPutUserModel> = async (
     data
   ) => {
+    data = {
+      ...data,
+      university_degree: !data.university_degree
+        ? null
+        : data.university_degree,
+    };
+
     if (isModalOpenCreate) {
       await postUser(data as IPostUserModel);
     } else {

@@ -11,6 +11,6 @@ export interface IPostUserModel {
   password: string;
   confirmPassword?: string;
   role: EnumTypeUser;
-  university_degree: EnumUniversity_Degree;
+  university_degree: EnumUniversity_Degree | null;
 }
 export interface IPostUsereDTOResponse extends IBaseResponse<IPostUserModel> {}

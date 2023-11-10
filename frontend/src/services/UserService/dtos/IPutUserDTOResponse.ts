@@ -10,7 +10,7 @@ export interface IPutUserModel {
   password?: string;
   matriculation?: string;
   institute_id?: string;
-  university_degree: EnumUniversity_Degree;
+  university_degree: EnumUniversity_Degree | null;
   created_at?: string;
   updated_at?: string;
 }

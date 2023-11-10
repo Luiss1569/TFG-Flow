@@ -70,12 +70,12 @@ export default new ApiWrapper(handler)
             university_degree: schema.mixed().oneOf([
                 'mastermin',
                 'doctor',
-            ]).when('role', ([role], schema) => role === 'teacher' ? schema.required() : schema.notRequired()),
+            ]).when('role', ([role], schema) => role === 'teacher' ? schema.required() : schema.notRequired()).nullable(),
         })
     })).configure({
         name: "UserCreate",
         options: {
             methods: ["POST"],
-            route: "users",
+            route: "user",
         },
     }).setPublic();

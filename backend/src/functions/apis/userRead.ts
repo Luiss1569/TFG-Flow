@@ -17,6 +17,11 @@ const handler: ApiWrapperHandler = async (conn, req) => {
       institute_id: true,
       created_at: true,
       updated_at: true,
+      teachers: {
+        select: {
+          university_degree: true,
+        },
+      },
     },
   });
   return res.success(user);
