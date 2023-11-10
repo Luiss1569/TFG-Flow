@@ -22,7 +22,7 @@ const routes: RouteType = [
     element: <Portal />,
     children: [
       {
-        element: <Dashboard />,
+        element: <></>,
         index: true,
       },
       {
