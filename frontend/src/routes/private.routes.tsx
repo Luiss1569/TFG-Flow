@@ -4,6 +4,7 @@ import Dashboard from "../pages/Portal/Dashboard";
 import ActivityDetails from "../pages/Portal/ActivityDetails";
 import { Users } from "../pages/Users";
 import { Institutes } from "../pages/Institutes";
+import Reportings from "../pages/Portal/Reportings";
 
 type RouteType = {
   path: string;
@@ -36,6 +37,10 @@ const routes: RouteType = [
       {
         path: "institutes",
         element: <Institutes />,
+      },
+      {
+        path: "reportings",
+        element: <Reportings />,
       },
     ],
   },

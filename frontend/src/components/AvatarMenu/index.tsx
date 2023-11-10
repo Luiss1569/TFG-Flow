@@ -17,6 +17,19 @@ import {
 } from "@chakra-ui/react";
 import useAuth from "../../hooks/useAuth";
 
+const rolesMap = (role: string) => {
+  switch (role) {
+    case "student":
+      return "Aluno";
+    case "professor":
+      return "Professor";
+    case "admin":
+      return "Administrador";
+    default:
+      return "Usuário";
+  }
+};
+
 const AvatarMenu: React.FC = () => {
   const navigate = useNavigate();
 
@@ -60,7 +73,7 @@ const AvatarMenu: React.FC = () => {
                 Perfil:
               </Text>
               <Text mb={2} fontSize="sm" fontWeight="bold">
-                {role}
+                {rolesMap(role ?? "")}
               </Text>
             </Flex>
             <Flex flexDir="row" alignItems="center" gap={1}>

@@ -235,25 +235,31 @@ const RequestAnswerItem = memo(({ requestAnswers }: RequestAnswerProps) => {
               mb={4}
               p={4}
             >
-              {userRequestAnswer.answered.map((answeredField) => (
-                <Flex key={answeredField.id} mb={2} direction={"column"}>
-                  <Text fontSize="sm" mr={2}>
-                    {answeredField.label}:
-                  </Text>
-
-                  {typeof answeredField.value === "object" ? (
-                    <FileItem
-                      name={answeredField.value.name}
-                      mimeType={answeredField.value.mimeType}
-                      url={answeredField.value.url}
-                    />
-                  ) : (
-                    <Text fontSize="sm" fontWeight={"bold"}>
-                      {answeredField.value}
+              {userRequestAnswer.answered ? (
+                userRequestAnswer.answered.map((answeredField) => (
+                  <Flex key={answeredField.id} mb={2} direction={"column"}>
+                    <Text fontSize="sm" mr={2}>
+                      {answeredField.label}:
                     </Text>
-                  )}
-                </Flex>
-              ))}
+
+                    {typeof answeredField.value === "object" ? (
+                      <FileItem
+                        name={answeredField.value.name}
+                        mimeType={answeredField.value.mimeType}
+                        url={answeredField.value.url}
+                      />
+                    ) : (
+                      <Text fontSize="sm" fontWeight={"bold"}>
+                        {answeredField.value || "-"}
+                      </Text>
+                    )}
+                  </Flex>
+                ))
+              ) : (
+                <Text fontSize="sm" fontWeight={"bold"}>
+                  {userRequestAnswer.user.name}
+                </Text>
+              )}
               <Divider mb={2} mt={2} />
               <Badge
                 colorScheme="gray.100"

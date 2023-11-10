@@ -45,7 +45,7 @@ const DashboardPage: React.FC = () => {
 
   return (
     <Box w="100%">
-      <Accordion allowToggle defaultIndex={[0, 1]} mt={5}>
+      <Accordion allowToggle defaultIndex={[0, 1, 2, 3]} mt={5}>
         <AccordionItem>
           <h2>
             <AccordionButton>
@@ -150,6 +150,7 @@ const FormBox = memo(({ form }: FormBoxProps) => {
       display="flex"
       alignItems="center"
       mb={4}
+      _hover={{ borderColor: "green.500" }}
     >
       <Flex w="100%" justifyContent="space-between">
         <div>
@@ -225,6 +226,7 @@ const ActivityBox = memo(({ activity }: ActivityBoxProps) => (
     display="flex"
     flexDirection="column"
     mb={4}
+    _hover={{ borderColor: "green.500" }}
   >
     <Flex w="100%" justifyContent="space-between" direction="row">
       <Flex direction="row" justifyContent="center" align="baseline" gap="2">
