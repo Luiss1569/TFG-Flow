@@ -1,46 +1,43 @@
-import React, { SyntheticEvent, useState, useContext, useEffect } from "react";
-import "./style.css";
-import api from "../../lib/axios";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  useToast,
-  IconButton,
-  Link,
-  InputLeftElement,
-  FormControl,
-  FormHelperText,
-  Show,
-  Hide,
-  HStack,
-  Button,
-  Flex,
-  Text,
-  FormLabel,
-  VStack,
-  Input,
-  Alert,
-  AlertIcon,
-  InputGroup,
-  InputRightElement,
-  useColorMode,
-  Box,
-  Center,
-  Stack,
-  Card,
-  CardBody,
-} from "@chakra-ui/react";
-import {
-  SunIcon,
+  AtSignIcon,
+  LockIcon,
   MoonIcon,
+  SunIcon,
+  UnlockIcon,
   ViewIcon,
   ViewOffIcon,
-  UnlockIcon,
 } from "@chakra-ui/icons";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import {
+  Box,
+  Button,
+  Card,
+  CardBody,
+  Center,
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  HStack,
+  Hide,
+  IconButton,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
+  Link,
+  Stack,
+  Text,
+  useColorMode,
+  useToast,
+} from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LockIcon, AtSignIcon } from "@chakra-ui/icons";
+import { useContext, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import AuthProvider, { AuthContext } from "../../contexts/AuthContext";
+import { z } from "zod";
+import { AuthContext } from "../../contexts/AuthContext";
+import api from "../../lib/axios";
+import "./style.css";
 
 const loginUserFormSchema = z.object({
   cpf: z
@@ -53,7 +50,7 @@ const loginUserFormSchema = z.object({
 type CreateUserFormData = z.infer<typeof loginUserFormSchema>;
 
 function Login() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const authContext = useContext(AuthContext);
 
   const { colorMode, toggleColorMode } = useColorMode();
@@ -67,7 +64,6 @@ function Login() {
     resolver: zodResolver(loginUserFormSchema),
   });
 
-  const [errorText, setErrorText] = useState<string | null>(null);
   const [show, setShow] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [isFocusedCPF, setIsFocusedCPF] = useState(false);

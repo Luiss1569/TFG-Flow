@@ -26,19 +26,18 @@ function App() {
         {publicRoutes.map((route) => (
           <Route key={route.path} path={route.path} element={route.element} />
         ))}
-        {authContext?.token &&
-          privateRoutes.map((route) => (
-            <Route key={route.path} path={route.path} element={route.element}>
-              {route.children?.map((child) => (
-                <Route
-                  key={child.path}
-                  path={child.path}
-                  element={child.element}
-                  index={child.index}
-                />
-              ))}
-            </Route>
-          ))}
+        {privateRoutes.map((route) => (
+          <Route key={route.path} path={route.path} element={route.element}>
+            {route.children?.map((child) => (
+              <Route
+                key={child.path}
+                path={child.path}
+                element={child.element}
+                index={child.index}
+              />
+            ))}
+          </Route>
+        ))}
       </Routes>
     </BrowserRouter>
   );

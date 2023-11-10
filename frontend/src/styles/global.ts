@@ -1,0 +1,20 @@
+import { createGlobalStyle } from "styled-components";
+
+export const Colors = {
+  blue: "#073763ff",
+  blueButton: "#3D4FBE",
+  blueBorder: "#242f71",
+  lightBlue: "#cbdbe5ff",
+  lightBlueUnifei: "#C4D2EB",
+  textTitle: "#434343",
+  lightGray: "#eeeeeeff",
+  textBody: "#969cb3",
+  textLabel: "#303238",
+  background: "#f0f2f5",
+  white: "#FFFFFF",
+  linkFooter: "#00a000",
+  cyan: "cyan",
+  black: "black",
+  blueBar: "#0000ff",
+  gray: "#C0C0C0",
+};
