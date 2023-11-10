@@ -61,9 +61,11 @@ const handler: QueueWrapperHandler = async (conn, messageQueue, context) => {
       },
       where: {
         userRequestAnswers: {
-          some: {
-            request_answer_id: {
-              in: requestAnswers.map((r) => r.id),
+          every: {
+            request_answer: {
+              id: {
+                in: requestAnswers.map((r) => r.id),
+              },
             },
           },
         },
@@ -94,7 +96,7 @@ const handler: QueueWrapperHandler = async (conn, messageQueue, context) => {
         return new Function("operations", content.condition)(operations);
       } catch (error) {
         context.log("Error on condition: ", error);
-        return false;
+        throw error;
       }
     })();
 

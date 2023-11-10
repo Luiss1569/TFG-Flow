@@ -15,7 +15,7 @@ interface FileProps {
   label?: string;
 }
 
-const FileItem: React.FC<FileProps> = ({ name, mimeType, url, label }) => {
+const FileItem: React.FC<FileProps> = ({ name, mimeType = "", url, label }) => {
   let IconComponent: IconType;
 
   if (mimeType.startsWith("image")) {
@@ -29,6 +29,8 @@ const FileItem: React.FC<FileProps> = ({ name, mimeType, url, label }) => {
   } else {
     IconComponent = FaFile;
   }
+
+  if (!name) return null;
 
   return (
     <Flex direction={"column"}>

@@ -27,6 +27,7 @@ const mapZodType = (
   | typeof z.date
   | typeof z.array
   | typeof z.any
+  | typeof z.boolean
 > => {
   switch (type) {
     case "string":
@@ -37,6 +38,8 @@ const mapZodType = (
       return z.coerce.date();
     case "select":
       return z.string();
+    case "boolean":
+      return z.coerce.boolean();
     case "multiselect":
       return z
         .array(z.object({ value: z.string(), label: z.string() }))

@@ -3,12 +3,16 @@
   "dockerComposeFile": "docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/home/TFG-Flow",
-
-  "forwardPorts": [3000, 5632, 7071],
-
+  "forwardPorts": [
+    3000,
+    5632,
+    7071
+  ],
+  "postCreateCommand": "chmod +x .devcontainer/install.sh && ./.devcontainer/install.sh",
   "features": {
     "ghcr.io/devcontainers-contrib/features/zsh-plugins:0": {},
     "ghcr.io/devcontainers/features/common-utils:2": {},
-    "ghcr.io/stuartleeks/dev-container-features/shell-history:0": {}
+    "ghcr.io/stuartleeks/dev-container-features/shell-history:0": {},
+    "ghcr.io/devcontainers/features/github-cli": {}
   }
 }

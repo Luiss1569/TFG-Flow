@@ -66,6 +66,7 @@ export interface ActivityDetails {
       id: string;
       status: string;
       created_at: string;
+      data: string | { [key: string]: string };
       requestAnswers: RequestAnswer[];
       step: {
         id: string;

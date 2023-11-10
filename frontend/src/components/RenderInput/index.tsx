@@ -1,6 +1,7 @@
 import React, { memo, useCallback, useEffect, useRef } from "react";
 import { FiFile } from "react-icons/fi";
 import {
+  Checkbox,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -137,6 +138,26 @@ const RenderInput: React.FC<Props> = ({
                       )}
                     </Stack>
                   </RadioGroup>
+                )}
+                rules={{ required: !!input.required }}
+              />
+              <ErrorMessage error={errors?.[input.id]} />
+            </FormControl>
+          );
+        case "checkbox":
+          return (
+            <FormControl
+              id={input.id}
+              isInvalid={!!errors?.[input.id]}
+              isRequired={input.required}
+            >
+              <Controller
+                name={input.id}
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Checkbox onChange={onChange} value={value} isChecked={value}>
+                    <FormLabel>{input.label}</FormLabel>
+                  </Checkbox>
                 )}
                 rules={{ required: !!input.required }}
               />
