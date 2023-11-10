@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useColorMode } from "@chakra-ui/color-mode";
-import { DeleteIcon } from "@chakra-ui/icons";
 import { Spinner } from "@chakra-ui/react";
 import { Dispatch, SetStateAction } from "react";
 import { FaPencilAlt } from "react-icons/fa";
@@ -32,13 +31,13 @@ export function TableInstitutes({
   loading,
   setAllInstitutes,
   handleEdit,
-  handleDelete,
 }: TableInstitutesProps) {
   const { colorMode } = useColorMode();
 
   useEffect(() => {
     setAllInstitutes(data);
-  }, [data]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [searchTerm, setSearchTerm] = useState<string>("");
 
@@ -109,9 +108,6 @@ export function TableInstitutes({
                     onClick={() => handleEdit({ id, name, acronym })}
                   >
                     <FaPencilAlt size={14} color="#fff" />
-                  </Button>
-                  <Button onClick={() => handleDelete(id)}>
-                    <DeleteIcon boxSize={4} color="#fff" />
                   </Button>
                 </TableCell>
               </TableRow>

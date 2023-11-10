@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useColorMode } from "@chakra-ui/color-mode";
-import { DeleteIcon } from "@chakra-ui/icons";
 import { Spinner } from "@chakra-ui/react";
 import { Dispatch, SetStateAction } from "react";
 import { FaPencilAlt } from "react-icons/fa";
@@ -35,13 +34,14 @@ export function TableUsers({
   loading,
   setAllUsers,
   handleEdit,
-  handleDelete,
+
   institutes,
 }: TableUsersProps) {
   const { colorMode } = useColorMode();
 
   useEffect(() => {
     setAllUsers(data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -133,9 +133,6 @@ export function TableUsers({
                       }
                     >
                       <FaPencilAlt size={14} color="#fff" />
-                    </Button>
-                    <Button onClick={() => handleDelete(id)}>
-                      <DeleteIcon boxSize={4} color="#fff" />
                     </Button>
                   </TableCell>
                 </TableRow>
