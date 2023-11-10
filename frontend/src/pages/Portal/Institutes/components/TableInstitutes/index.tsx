@@ -3,10 +3,10 @@ import { useColorMode } from "@chakra-ui/color-mode";
 import { Spinner } from "@chakra-ui/react";
 import { Dispatch, SetStateAction } from "react";
 import { FaPencilAlt } from "react-icons/fa";
-import { Button } from "../../../../components/Button";
-import { InputComponent } from "../../../../components/Input";
-import { SelectComponent } from "../../../../components/Select";
-import { IInstituteModel } from "../../../../services/InstitueService/dtos/IGetInstituteDTOResponse";
+import { Button } from "../../../../../components/Button";
+import { InputComponent } from "../../../../../components/Input";
+import { SelectComponent } from "../../../../../components/Select";
+import { IInstituteModel } from "../../../../../services/InstitueService/dtos/IGetInstituteDTOResponse";
 import { optionsColunmTable } from "../../utils";
 import {
   Content,

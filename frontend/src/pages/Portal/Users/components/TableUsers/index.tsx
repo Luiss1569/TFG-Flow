@@ -3,9 +3,9 @@ import { useColorMode } from "@chakra-ui/color-mode";
 import { Spinner } from "@chakra-ui/react";
 import { Dispatch, SetStateAction } from "react";
 import { FaPencilAlt } from "react-icons/fa";
-import { Button } from "../../../../components/Button";
-import { InputComponent } from "../../../../components/Input";
-import { SelectComponent } from "../../../../components/Select";
+import { Button } from "../../../../../components/Button";
+import { InputComponent } from "../../../../../components/Input";
+import { SelectComponent } from "../../../../../components/Select";
 
 import { optionsColunmTable } from "../../utils";
 import {
@@ -17,8 +17,8 @@ import {
   TdLoading,
   Wrapper,
 } from "./styles";
-import { IUserModel } from "../../../../services/UserService/dtos/IGetUserDTOResponse";
-import { IInstituteModel } from "../../../../services/InstitueService/dtos/IGetInstituteDTOResponse";
+import { IUserModel } from "../../../../../services/UserService/dtos/IGetUserDTOResponse";
+import { IInstituteModel } from "../../../../../services/InstitueService/dtos/IGetInstituteDTOResponse";
 
 interface TableUsersProps {
   data: IUserModel[];
@@ -28,6 +28,21 @@ interface TableUsersProps {
   setAllUsers: Dispatch<SetStateAction<IUserModel[]>>;
   institutes: IInstituteModel[];
 }
+
+const rolesMap = (role: string) => {
+  switch (role) {
+    case "student":
+      return "Aluno";
+    case "teacher":
+      return "Professor";
+    case "coordinator":
+      return "Coordenador";
+    case "admin":
+      return "Administrador";
+    default:
+      return "Usuário";
+  }
+};
 
 export function TableUsers({
   data,
@@ -87,7 +102,7 @@ export function TableUsers({
           <RowHeader>
             <TableCell isHeader>Nome</TableCell>
             <TableCell isHeader>Email</TableCell>
-            <TableCell isHeader>CPF</TableCell>
+            <TableCell isHeader>Perfil</TableCell>
             <TableCell isHeader>Matricula</TableCell>
             <TableCell isHeader>Instituto</TableCell>
             <TableCell isHeader style={{ textAlign: "center", width: "10%" }}>
@@ -109,10 +124,9 @@ export function TableUsers({
             data.map(
               ({ id, role, name, email, cpf, matriculation, institute_id }) => (
                 <TableRow key={id} isLight={colorMode === "light"}>
-                  <TableCell>{role}</TableCell>
                   <TableCell>{name}</TableCell>
                   <TableCell>{email}</TableCell>
-                  <TableCell>{cpf}</TableCell>
+                  <TableCell>{rolesMap(role)}</TableCell>
                   <TableCell>{matriculation}</TableCell>
                   <TableCell>
                     {institutes.find((inst) => inst.id === institute_id)?.name}

@@ -8,10 +8,10 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Button } from "../../../../components/Button";
-import { InputComponent } from "../../../../components/Input";
-import { IPostInstituteModel } from "../../../../services/InstitueService/dtos/IPostInstituteDTOResponse";
-import { IPutInstituteModel } from "../../../../services/InstitueService/dtos/IPutInstituteDTOResponse";
+import { Button } from "../../../../../components/Button";
+import { InputComponent } from "../../../../../components/Input";
+import { IPostInstituteModel } from "../../../../../services/InstitueService/dtos/IPostInstituteDTOResponse";
+import { IPutInstituteModel } from "../../../../../services/InstitueService/dtos/IPutInstituteDTOResponse";
 import { Wrapper } from "./styles";
 
 interface ModalInstituteProps {

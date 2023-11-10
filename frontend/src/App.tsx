@@ -26,7 +26,7 @@ function App() {
         {publicRoutes.map((route) => (
           <Route key={route.path} path={route.path} element={route.element} />
         ))}
-        {privateRoutes.map((route) => (
+        {authContext?.token && privateRoutes.map((route) => (
           <Route key={route.path} path={route.path} element={route.element}>
             {route.children?.map((child) => (
               <Route

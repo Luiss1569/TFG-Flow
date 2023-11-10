@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
-import { Button } from "../../components/Button";
-import { ModalDelete } from "../../components/ModalDelete";
-import { useInstitute } from "../../hooks/network/useInstitutes";
+import { Button } from "../../../components/Button";
+import { ModalDelete } from "../../../components/ModalDelete";
+import { useInstitute } from "../../../hooks/network/useInstitutes";
 import { ModalInstitutes } from "./components/ModalInstitutes";
 import { TableInstitutes } from "./components/TableInstitutes";
 import { Container, Title, Wrapper, WrapperTable } from "./style";
 import { SubmitHandler } from "react-hook-form";
-import { IPostInstituteModel } from "../../services/InstitueService/dtos/IPostInstituteDTOResponse";
-import { IPutInstituteModel } from "../../services/InstitueService/dtos/IPutInstituteDTOResponse";
+import { IPostInstituteModel } from "../../../services/InstitueService/dtos/IPostInstituteDTOResponse";
+import { IPutInstituteModel } from "../../../services/InstitueService/dtos/IPutInstituteDTOResponse";
 
 export function Institutes() {
   const {

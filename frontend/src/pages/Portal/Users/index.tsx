@@ -1,14 +1,14 @@
 import { useEffect } from "react";
-import { Button } from "../../components/Button";
-import { ModalDelete } from "../../components/ModalDelete";
-import { useUser } from "../../hooks/network/useUsers";
+import { Button } from "../../../components/Button";
+import { ModalDelete } from "../../../components/ModalDelete";
+import { useUser } from "../../../hooks/network/useUsers";
 import { ModalUsers } from "./components/ModalUsers";
 import { TableUsers } from "./components/TableUsers";
 import { Container, Title, Wrapper, WrapperTable } from "./style";
 import { SubmitHandler } from "react-hook-form";
-import { IPostUserModel } from "../../services/UserService/dtos/IPostUserDTOResponse";
-import { IPutUserModel } from "../../services/UserService/dtos/IPutUserDTOResponse";
-import { useInstitute } from "../../hooks/network/useInstitutes";
+import { IPostUserModel } from "../../../services/UserService/dtos/IPostUserDTOResponse";
+import { IPutUserModel } from "../../../services/UserService/dtos/IPutUserDTOResponse";
+import { useInstitute } from "../../../hooks/network/useInstitutes";
 
 export function Users() {
   const {
@@ -19,7 +19,7 @@ export function Users() {
     dataIdModalUser,
     defaultValues,
     isModalOpen,
-    // getUsers,
+    getUsers,
     deleteInsititute,
     postUser,
     putUser,
@@ -49,7 +49,7 @@ export function Users() {
   };
 
   useEffect(() => {
-    // getUsers();
+    getUsers();
     getInstitutes();
   }, []);
 

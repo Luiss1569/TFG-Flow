@@ -1,4 +1,4 @@
-import { EnumTypeUser, EnumUniversity_Degree } from "../../constants/enums";
+import { EnumTypeUser, EnumUniversity_Degree } from "../../../constants/enums";
 import { FormDataTable } from "./types";
 
 export const optionsRole: Array<{ value: string; label: string }> = [

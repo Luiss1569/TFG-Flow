@@ -9,15 +9,15 @@ import {
 } from "@chakra-ui/react";
 
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Button } from "../../../../components/Button";
-import { InputComponent } from "../../../../components/Input";
-import { SelectComponent } from "../../../../components/Select";
+import { Button } from "../../../../../components/Button";
+import { InputComponent } from "../../../../../components/Input";
+import { SelectComponent } from "../../../../../components/Select";
 import { optionsRole, optionsRoleTypeGrau } from "../../utils";
 import { Grid, Margin, Wrapper } from "./styles";
-import { IPostUserModel } from "../../../../services/UserService/dtos/IPostUserDTOResponse";
-import { IPutUserModel } from "../../../../services/UserService/dtos/IPutUserDTOResponse";
-import { IInstituteModel } from "../../../../services/InstitueService/dtos/IGetInstituteDTOResponse";
-import { EnumTypeUser } from "../../../../constants/enums";
+import { IPostUserModel } from "../../../../../services/UserService/dtos/IPostUserDTOResponse";
+import { IPutUserModel } from "../../../../../services/UserService/dtos/IPutUserDTOResponse";
+import { IInstituteModel } from "../../../../../services/InstitueService/dtos/IGetInstituteDTOResponse";
+import { EnumTypeUser } from "../../../../../constants/enums";
 
 interface ModalUsersProps {
   dataFormModalUser: IPostUserModel;

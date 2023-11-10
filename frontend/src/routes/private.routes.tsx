@@ -2,8 +2,8 @@ import Response from "../pages/Response";
 import Portal from "../pages/Portal";
 import Dashboard from "../pages/Portal/Dashboard";
 import ActivityDetails from "../pages/Portal/ActivityDetails";
-import { Users } from "../pages/Users";
-import { Institutes } from "../pages/Institutes";
+import { Users } from "../pages/Portal/Users";
+import { Institutes } from "../pages/Portal/Institutes";
 import Reportings from "../pages/Portal/Reportings";
 
 type RouteType = {
@@ -24,7 +24,6 @@ const routes: RouteType = [
       {
         element: <Dashboard />,
         index: true,
-        path: "dashboard",
       },
       {
         path: "users",
