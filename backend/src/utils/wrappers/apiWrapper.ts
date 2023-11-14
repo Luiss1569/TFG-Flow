@@ -11,6 +11,8 @@ import jwt from "../../services/jwt";
 import * as prisma from "../../services/prisma";
 import * as res from "./apiResponse";
 
+const hasBody = ["POST", "PUT", "PATCH"];
+
 interface THttpRequest {
   body: Object;
   query: Object;
@@ -68,7 +70,7 @@ export default class ApiWrapper {
     const invocationId = context.invocationId;
 
     try {
-      const body = request.method === "GET" ? {} : await request.json();
+      const body = !hasBody.includes(request.method) ? {} : request.body;
       const query = Object.fromEntries(request.query.entries());
       const headers = Object.fromEntries(request.headers.entries());
       const params = request.params;
