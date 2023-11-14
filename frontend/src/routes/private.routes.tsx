@@ -5,6 +5,7 @@ import ActivityDetails from "../pages/Portal/ActivityDetails";
 import { Users } from "../pages/Portal/Users";
 import { Institutes } from "../pages/Portal/Institutes";
 import Reportings from "../pages/Portal/Reportings";
+import Status from "../pages/Portal/Status";
 
 type RouteType = {
   path: string;
@@ -22,7 +23,7 @@ const routes: RouteType = [
     element: <Portal />,
     children: [
       {
-        element: <></>,
+        element: <Dashboard/>,
         index: true,
       },
       {
@@ -41,6 +42,10 @@ const routes: RouteType = [
         path: "reportings",
         element: <Reportings />,
       },
+      {
+        path: "status",
+        element: <Status />,
+      }
     ],
   },
   {
