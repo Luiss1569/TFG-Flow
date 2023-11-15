@@ -1,0 +1,77 @@
+run-name: "Build and Deploy React App"
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  REPO_PATH: "frontend"
+  NODE_VERSION: "18.x"
+  VITE_BASE_URL: https://tfgflowfunction.azurewebsites.net
+  OUTPUT_PATH: "dist"
+  ARTIFACT_NAME: build-${{ github.event.repository.name }}-${{ github.run_id }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: "React App Build"
+    environment:
+      name: Production
+    steps:
+      - name: "Checkout GitHub Action"
+        uses: actions/checkout@v3
+
+      - name: Setup Node ${{ env.NODE_VERSION }} Environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: "Build project"
+        shell: bash
+        run: |
+          pushd './${{ env.REPO_PATH }}'
+          npm install
+
+      - name: "Zip build artifact"
+        shell: bash
+        run: |
+          pushd './${{ env.REPO_PATH }}/${{ env.OUTPUT_PATH }}'
+          zip -r ${{env.ARTIFACT_NAME}}.zip *
+
+      - name: "Upload Artifact of Function App"
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ env.REPO_PATH }}/${{env.OUTPUT_PATH}}/${{env.ARTIFACT_NAME}}.zip
+          if-no-files-found: error
+
+  deploy:
+    name: "Deploy"
+    runs-on: ubuntu-latest
+    environment:
+      name: Production
+      url: ${{ steps.builddeploy.outputs.static_web_app_url }}
+    steps:
+      - name: "Download Artifact of Function App"
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+
+      - name: "Unzip Artifact of Function App"
+        shell: bash
+        run: |
+          unzip ${{env.ARTIFACT_NAME}}.zip -d .
+          rm ${{env.ARTIFACT_NAME}}.zip
+
+      - name: Deploy to Azure Static Web Apps
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          azure_static_web_apps_api_token: ${{ secrets.TOKEN }}
+          action: "upload"
+          app_location: "/"
+          app_artifact_location: "/"
+          skip_app_build: true 

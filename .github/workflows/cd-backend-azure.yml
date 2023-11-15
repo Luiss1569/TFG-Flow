@@ -1,0 +1,90 @@
+run-name: Build and Deploy ${{ github.actor }}
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: "backend"
+  NODE_VERSION: "18.x"
+  ARTIFACT_NAME: build-${{ github.event.repository.name }}-${{ github.run_id }}
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    environment: 
+      name: "Production"
+    steps:
+      - name: "Checkout GitHub Action"
+        uses: actions/checkout@v4
+
+      - name: Setup Node ${{ env.NODE_VERSION }} Environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: "Resolve Project Dependencies Using Npm"
+        shell: bash
+        run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          npm install
+
+      - name: "Building Project"
+        shell: bash
+        run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          npm run build
+
+      - name: "Remove Dev Dependencies"
+        shell: bash
+        run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          npm prune --production
+      
+      - name: "Zip build artifact"
+        shell: bash
+        run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          rm -rf ./tfgflowTests
+          zip -r ${{env.ARTIFACT_NAME}}.zip * 
+
+      - name: "Upload Artifact of Function App"
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{env.ARTIFACT_NAME}}
+          path: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/${{env.ARTIFACT_NAME}}.zip
+          if-no-files-found: error
+
+  deploy:
+    name: "Azure Functions Deploy"
+    needs: build
+    runs-on: ubuntu-latest
+    outputs:
+      url: ${{ steps.deployFunctionApp.outputs.app-url }}
+    environment: 
+        name: Production
+        url: ${{ steps.deployFunctionApp.outputs.app-url }}
+    steps:
+      - name: "Download Artifact"
+        uses: actions/download-artifact@v3
+        with:
+            name: ${{ env.ARTIFACT_NAME }}
+
+      - name: "Unzip Artifact"
+        shell: bash
+        run: |
+          unzip ${{env.ARTIFACT_NAME}}.zip -d .
+          rm ${{env.ARTIFACT_NAME}}.zip
+
+      - name: "Run process of Azure Functions Deploy"
+        uses: Azure/functions-action@v1
+        id: deployFunctionApp
+        with:
+          app-name: "tfgflowfunction"
+          slot-name: "production"
+          package: .
+          publish-profile: ${{ secrets.PUBLISH_PROFILE }}
+
