@@ -28,12 +28,16 @@ export interface Form {
   id: string;
   name: string;
   description: string;
-  form_type: string;
+  form_type: "public" | "private";
   slug: string;
   status_id: string;
   content: FormContent;
   created_at: string;
   updated_at: string;
+  formOpenPeriod?: {
+    start_date: string;
+    end_date: string;
+  }[];
 }
 
 export interface FormResponse {
