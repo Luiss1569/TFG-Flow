@@ -8,22 +8,23 @@ interface Body {
   slug: string;
   status_id?: string;
   content: any;
-  openPeriod?: {
-    startDate?: Date ;
-    endDate?: Date;
-  };
+  formOpenPeriod?: {
+    start_date?: Date;
+    end_date?: Date;
+  }[];
 }
 
 const handler: ApiWrapperHandler = async (conn, req) => {
   const body = req.body as Body;
 
-  const haveOpenPeriod = body.openPeriod?.startDate && body.openPeriod?.endDate;
+  const haveOpenPeriod =
+    body.formOpenPeriod?.at(0).start_date && body.formOpenPeriod?.at(0).end_date;
 
   const objectOpenPeriod = haveOpenPeriod && {
     formOpenPeriod: {
       create: {
-        start_date: body.openPeriod?.startDate,
-        end_date: body.openPeriod?.endDate,
+        start_date: new Date(body.formOpenPeriod.at(0).start_date),
+        end_date: new Date(body.formOpenPeriod.at(0).end_date),
       },
     },
   };
@@ -49,6 +50,17 @@ export default new ApiWrapper(handler)
       name: schema.string().required().max(100),
       form_type: schema.mixed().oneOf(["public", "private"]),
       description: schema.string().max(255),
+      formOpenPeriod: schema.array().of(
+        schema
+          .object()
+          .shape({
+            start_date: schema.date(),
+            end_date: schema.date(),
+          })
+          .when("form_type", ([form_type], schema) =>
+            form_type === "public" ? schema.required() : schema
+          )
+      ),
       slug: schema
         .string()
         .required()
@@ -103,7 +115,8 @@ export default new ApiWrapper(handler)
               value: schema.mixed().optional().nullable(),
               required: schema.boolean(),
               placeholder: schema.string(),
-              visible: schema.boolean().optional(),            })
+              visible: schema.boolean().optional(),
+            })
           )
           .min(1)
           .required(),
