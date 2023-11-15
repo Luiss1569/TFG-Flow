@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Button } from "../../../components/Button";
-import { ModalDelete } from "../../../components/ModalDelete";
+import { ModalDelete } from "../Status/ModalDelete";
 import { useUser } from "../../../hooks/network/useUsers";
 import { ModalUsers } from "./components/ModalUsers";
 import { TableUsers } from "./components/TableUsers";

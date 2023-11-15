@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useState } from "react";
 import { Button } from "../../../components/Button";
-import { ModalDelete } from "../../../components/ModalDelete";
+import { ModalDelete } from "./ModalDelete";
 import { ModalStatus } from "./components/ModalStatus";
 import { TableStatus } from "./components/TableStatus";
 import { Container, Title, Wrapper, WrapperTable } from "./style";

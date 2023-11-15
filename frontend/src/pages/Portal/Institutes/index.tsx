@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
 import { Button } from "../../../components/Button";
-import { ModalDelete } from "../../../components/ModalDelete";
+import { ModalDelete } from "../Status/ModalDelete";
 import { useInstitute } from "../../../hooks/network/useInstitutes";
 import { ModalInstitutes } from "./components/ModalInstitutes";
 import { TableInstitutes } from "./components/TableInstitutes";

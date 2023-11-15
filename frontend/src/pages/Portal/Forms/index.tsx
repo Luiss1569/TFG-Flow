@@ -1,13 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useState } from "react";
 import { Button } from "../../../components/Button";
-import { ModalDelete } from "../../../components/ModalDelete";
+import { ModalDelete } from "./components/ModalDelete";
 import { ModalForm } from "./components/ModalForm";
 import { TableForm } from "./components/TableForm";
 import { Container, Title, Wrapper, WrapperTable } from "./style";
 import { useQuery } from "react-query";
 import api from "../../../lib/axios";
 import Form from "../../../interfaces/Form";
+import Status from "../../../interfaces/Status";
 
 export default function FormsPage() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -28,6 +29,11 @@ export default function FormsPage() {
       }));
     }
   );
+
+  const { data: status } = useQuery<Status[]>("status", async () => {
+    const response = await api.get("/status");
+    return response.data?.body;
+  });
 
   const isModalOpenCreate = isModalOpen && dataFormModalForm === null;
   const isModalOpenEdit = isModalOpen && dataFormModalForm !== null;
@@ -85,6 +91,7 @@ export default function FormsPage() {
         <ModalForm
           handleCloseModal={handleCloseModalCreate}
           loading={loading}
+          status={status ?? []}
           isModalCreate
         />
       )}
@@ -93,6 +100,7 @@ export default function FormsPage() {
         <ModalForm
           handleCloseModal={handleCloseModalEdit}
           loading={loading}
+          status={status ?? []}
           dataFormModalForm={dataFormModalForm}
         />
       )}

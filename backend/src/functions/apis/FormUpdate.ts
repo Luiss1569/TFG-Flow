@@ -12,7 +12,8 @@ interface FormUpdateBody {
     end_date: Date;
   }[];
   form_type?: string;
-  status?: boolean;
+  status_id?: string;
+  content: any;
 }
 
 const updateForm: ApiWrapperHandler = async (conn, req) => {
@@ -51,7 +52,10 @@ const updateForm: ApiWrapperHandler = async (conn, req) => {
       slug: body.slug,
       description: body.description,
       form_type: body.form_type as "public" | "private",
-      ...(body.formOpenPeriod.length ? formOpenPeriod : {}),
+      content: body.content,
+      ...(body.formOpenPeriod.at(0)?.id ? formOpenPeriod : {}),
+      status_id: body.status_id,
+
     },
     select: {
       id: true,
@@ -84,20 +88,61 @@ export default new ApiWrapper(updateForm)
             .optional()
             .shape({
               id: schema.string(),
-              start_date: schema.date().transform((value) => {
-                return new Date(value);
-              }),
+              start_date: schema.string(),
               end_date: schema
-                .date()
-                .transform((value) => {
-                  return new Date(value);
-                })
-                .min(schema.ref("start_date")),
+                .string()
             })
         )
         .optional(),
       form_type: schema.string().optional(),
-      status: schema.object().optional(),
+      status_id: schema.string().nullable(),
+      content: schema.object().shape({
+        fields: schema
+          .array()
+          .of(
+            schema.object().shape({
+              id: schema.string().required(),
+              zod: schema.object().shape({
+                type: schema
+                  .mixed()
+                  .oneOf([
+                    "string",
+                    "number",
+                    "date",
+                    "select",
+                    "multiselect",
+                    "file",
+                    "email",
+                    "boolean",
+                  ]),
+                validation: schema.object(),
+              }),
+              type: schema
+                .mixed()
+                .oneOf([
+                  "text",
+                  "textarea",
+                  "select",
+                  "radio",
+                  "multiselect",
+                  "checkbox",
+                  "date",
+                  "time",
+                  "datetime",
+                  "file",
+                  "number",
+                  "email",
+                ])
+                .required(),
+              label: schema.string().required(),
+              value: schema.mixed().optional().nullable(),
+              required: schema.boolean(),
+              placeholder: schema.string(),
+              visible: schema.boolean().optional(),            })
+          )
+          .min(1)
+          .required(),
+      }),
     }),
     params: schema.object().shape({
       form_id: schema.string().required(),

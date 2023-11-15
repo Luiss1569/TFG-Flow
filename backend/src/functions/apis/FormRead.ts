@@ -15,7 +15,9 @@ const handler: ApiWrapperHandler = async (conn, req) => {
       description: true,
       formOpenPeriod: true,
       form_type: true,
+      status_id: true,
       status: true,
+      content: true,
     },
   });
 

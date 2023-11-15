@@ -4,7 +4,7 @@ import res from "../../utils/wrappers/apiResponse";
 interface Body {
   name: string;
   description?: string;
-  formType: "public" | "private";
+  form_type: "public" | "private";
   slug: string;
   status_id?: string;
   content: any;
@@ -34,7 +34,7 @@ const handler: ApiWrapperHandler = async (conn, req) => {
       description: body.description,
       slug: body.slug,
       status_id: body.status_id,
-      form_type: body.formType,
+      form_type: body.form_type,
       content: body.content,
       ...(haveOpenPeriod ? objectOpenPeriod : {}),
     },
@@ -47,7 +47,7 @@ export default new ApiWrapper(handler)
   .setSchemaValidator((schema) => ({
     body: schema.object().shape({
       name: schema.string().required().max(100),
-      formType: schema.mixed().oneOf(["public", "private"]).required(),
+      form_type: schema.mixed().oneOf(["public", "private"]),
       description: schema.string().max(255),
       slug: schema
         .string()
@@ -59,8 +59,8 @@ export default new ApiWrapper(handler)
       status_id: schema
         .string()
         .uuid()
-        .when("formType", ([formType], schema) =>
-          formType === "public" ? schema.required() : schema
+        .when("form_type", ([form_type], schema) =>
+          form_type === "public" ? schema.required() : schema
         ),
       content: schema.object().shape({
         fields: schema

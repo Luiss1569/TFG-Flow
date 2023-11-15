@@ -9,9 +9,9 @@ import {
   ModalOverlay,
   useToast,
 } from "@chakra-ui/react";
-import { Button } from "../Button";
+import { Button } from "../../../../components/Button";
 import { useMutation, useQueryClient } from "react-query";
-import api from "../../lib/axios";
+import api from "../../../../lib/axios";
 import { useCallback } from "react";
 
 interface ModalDeleteProps {

@@ -5,6 +5,7 @@ export interface FormField {
   label: string;
   required?: boolean;
   placeholder?: string;
+  visible: boolean;
   options?: {
     value: string;
     label: string;
@@ -18,6 +19,7 @@ export interface FormField {
       options?: string[];
     };
   };
+  especial_type?: "teacher";
 }
 
 export interface FormContent {
