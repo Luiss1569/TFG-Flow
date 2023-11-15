@@ -2,17 +2,27 @@ import ApiWrapper, { ApiWrapperHandler } from "../../utils/wrappers/apiWrapper";
 import res from "../../utils/wrappers/apiResponse";
 
 const handler: ApiWrapperHandler = async (conn, req) => {
-  const { status_id } = req.params;
+  const { form_id } = req.params;
 
-  const status = await conn.status.findMany({
+  const forms = await conn.forms.findMany({
     where: {
-      id: status_id ? status_id : undefined,
+      id: form_id,
+    },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      description: true,
+      formOpenPeriod: true,
+      form_type: true,
+      status: true,
     },
   });
-  if (!status) {
+
+  if (!forms) {
     return res.error(404, null, "Status not found");
   }
-  return res.success(status);
+  return res.success(forms);
 };
 
 export default new ApiWrapper(handler)
@@ -22,9 +32,9 @@ export default new ApiWrapper(handler)
     }),
   }))
   .configure({
-    name: "StatusRead",
+    name: "FormRead",
     options: {
       methods: ["GET"],
-      route: "status/{status_id?}",
+      route: "forms/{form_id?}",
     },
   });

@@ -70,7 +70,7 @@ export default class ApiWrapper {
     const invocationId = context.invocationId;
 
     try {
-      const body = !hasBody.includes(request.method) ? {} : request.body;
+      const body = hasBody.includes(request.method) ? (await request.json()) : {};
       const query = Object.fromEntries(request.query.entries());
       const headers = Object.fromEntries(request.headers.entries());
       const params = request.params;
