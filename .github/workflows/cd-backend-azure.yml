@@ -1,4 +1,5 @@
-run-name: Build and Deploy ${{ github.actor }}
+run-name: Build and Deploy Backend by ${{ github.actor }}
+name: Build and Deploy Backend
 
 on:
   push:
