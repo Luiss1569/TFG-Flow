@@ -154,6 +154,7 @@ export default class ApiWrapper {
       ...options,
       route: options.route ?? name.toLowerCase().replace(/\s/g, "-"),
       handler: this.run,
+      authLevel: "anonymous",
     });
     return this;
   };
