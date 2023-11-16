@@ -4,6 +4,8 @@ import { IUserModel } from "../../services/UserService/dtos/IGetUserDTOResponse"
 import { IPostUserModel } from "../../services/UserService/dtos/IPostUserDTOResponse";
 import { IPutUserModel } from "../../services/UserService/dtos/IPutUserDTOResponse";
 import { useUtils } from "./useUtils";
+import { IPutUserDTORequest } from "../../services/UserService/dtos/IPutUserDTORequest";
+import { IPostUserDTORequest } from "../../services/UserService/dtos/IPostUserDTORequest";
 
 const defaultValues: IPostUserModel = {
   cpf: "",
@@ -19,7 +21,7 @@ const defaultValues: IPostUserModel = {
 
 export function useUser() {
   const [loading, setLoading] = useState(false);
-  const [allUsers, setAllUsers] = useState<IUserModel[]>([]);
+  const [allUsers, setAllUsers] = useState<IUserModel[] | null>([]);
   const userService = new UserService();
 
   const { showToastError, showToastSuccess } = useUtils();
@@ -28,12 +30,12 @@ export function useUser() {
   const [dataFormModalUser, setDataFormModalUser] =
     useState<IPostUserModel>(defaultValues);
   const [deleteOpenModal, setDeleteOpenModal] = useState(false);
-  const [dataIdModalUser, setIdModalUser] = useState<string>("");
+  const [dataIdModalUser, setIdModalUser] = useState<string | null>("");
 
   const handleOpenModalCreate = () => setModalOpen(true);
   const handleCloseModalCreate = () => setModalOpen(false);
 
-  const handleOpenModalEdit = (dataTable: IUserModel) => {
+  const handleOpenModalEdit = (dataTable: IPostUserModel) => {
     setDataFormModalUser({
       ...dataTable,
     });
@@ -73,7 +75,7 @@ export function useUser() {
     setLoading(true);
 
     try {
-      await userService.postUser(dataForm);
+      await userService.postUser(dataForm as IPostUserDTORequest);
       showToastSuccess({
         title: "Sucesso",
         description: "Usuário cadastrado com sucesso",
@@ -94,7 +96,7 @@ export function useUser() {
     setLoading(true);
 
     try {
-      await userService.putUser(dataForm);
+      await userService.putUser(dataForm as IPutUserDTORequest);
       showToastSuccess({
         title: "Sucesso",
         description: "Usuário editado com sucesso!",

@@ -16,18 +16,18 @@ import { useCallback } from "react";
 
 interface ModalDeleteProps {
   handleCloseModal: () => void;
-  deleteOpenModal: string | null;
+  deleteOpenModal: boolean | string;
 }
 
 export function ModalDelete({
   handleCloseModal,
   deleteOpenModal,
-}: Readonly<ModalDeleteProps>) {
+}: ModalDeleteProps) {
   const toast = useToast();
   const queryClient = useQueryClient();
 
   const { mutateAsync } = useMutation(
-    async (id: string) => {
+    async (id: string | boolean) => {
       const response = await api.delete(`/status/${id}`, {});
 
       if (response.data?.body) {

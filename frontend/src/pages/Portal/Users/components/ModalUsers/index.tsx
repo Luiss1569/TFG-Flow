@@ -25,7 +25,7 @@ interface ModalUsersProps {
   loading: boolean;
   handleCloseModal: () => void;
   onSubmit: SubmitHandler<IPostUserModel | IPutUserModel>;
-  institutes: IInstituteModel[];
+  institutes: IInstituteModel[] | null;
 }
 
 export function ModalUsers({
@@ -116,10 +116,10 @@ export function ModalUsers({
               />
               <SelectComponent
                 label="Instituto"
-                options={institutes.map((institute) => ({
+                options={institutes?.map((institute) => ({
                   value: institute.id.toString(),
                   label: institute.name,
-                }))}
+                })) || []}
                 isRequired={isModalCreate}
                 disabled={loading}
                 {...register("institute_id")}

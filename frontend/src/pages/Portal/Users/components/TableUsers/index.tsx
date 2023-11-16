@@ -19,14 +19,17 @@ import {
 } from "./styles";
 import { IUserModel } from "../../../../../services/UserService/dtos/IGetUserDTOResponse";
 import { IInstituteModel } from "../../../../../services/InstitueService/dtos/IGetInstituteDTOResponse";
+import { IPostUserModel } from "../../../../../services/UserService/dtos/IPostUserDTOResponse";
 
 interface TableUsersProps {
-  data: IUserModel[];
+  data: IUserModel[] | null;
   loading: boolean;
-  handleEdit: (dataTable: IUserModel) => void;
+  //@ts-ignore
+  handleEdit: (dataTable: IPostUserModel) => void;
   handleDelete: (id: string) => void;
-  setAllUsers: Dispatch<SetStateAction<IUserModel[]>>;
-  institutes: IInstituteModel[];
+  //@ts-ignore
+  setAllUsers: Dispatch<SetStateAction<IUserModel[] | null>>;
+  institutes: IInstituteModel[] | null;
 }
 
 const rolesMap = (role: string) => {
@@ -43,7 +46,7 @@ const rolesMap = (role: string) => {
       return "Usuário";
   }
 };
-
+//ts-ignore
 export function TableUsers({
   data,
   loading,
@@ -55,6 +58,7 @@ export function TableUsers({
   const { colorMode } = useColorMode();
 
   useEffect(() => {
+    //@ts-ignore
     setAllUsers(data);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -66,13 +70,15 @@ export function TableUsers({
 
     const newUpdateInstance: IUserModel[] = [];
     const textTyped = new RegExp(value.toUpperCase(), "i");
-
+    //@ts-ignore
     for (const item of data) {
       if (item.name.match(textTyped)) {
         console.log(1);
+        //@ts-ignore
         newUpdateInstance.push(item);
       } else {
         console.log(2);
+        //@ts-ignore
         setAllUsers(data);
       }
 
@@ -121,28 +127,39 @@ export function TableUsers({
               </TdLoading>
             </tr>
           ) : (
-            data.map(
-              ({ id, role, name, email, cpf, matriculation, institute_id }) => (
+            data?.map(
+              ({
+                id,
+                role,
+                name,
+                email,
+                cpf,
+                matriculation,
+                institute_id,
+                ...rest
+              }) => (
                 <TableRow key={id} isLight={colorMode === "light"}>
                   <TableCell>{name}</TableCell>
                   <TableCell>{email}</TableCell>
                   <TableCell>{rolesMap(role)}</TableCell>
                   <TableCell>{matriculation}</TableCell>
                   <TableCell>
-                    {institutes.find((inst) => inst.id === institute_id)?.name}
+                    {institutes?.find((inst) => inst.id === institute_id)?.name}
                   </TableCell>
                   <TableCell style={{ textAlign: "center", display: "flex" }}>
                     <Button
                       style={{ marginRight: "8px" }}
                       onClick={() =>
                         handleEdit({
-                          id,
-                          role,
-                          name,
-                          email,
                           cpf,
-                          matriculation,
+                          email,
                           institute_id,
+                          matriculation,
+                          name,
+                          role,
+                          password: "",
+                          confirmPassword: "",
+                          ...rest,
                         })
                       }
                     >

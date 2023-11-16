@@ -94,6 +94,7 @@ export function Institutes() {
         <ModalDelete
           handleCloseModal={handleCloseModalDelete}
           deleteOpenModal={deleteOpenModal}
+          //@ts-ignore
           onClick={deleteInsititute}
         />
       )}

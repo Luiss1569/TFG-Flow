@@ -12,7 +12,7 @@ const defaultValues: IPostInstituteModel = {
 
 export function useInstitute() {
   const [loading, setLoading] = useState(false);
-  const [allInstitutes, setAllInstitutes] = useState<IInstituteModel[]>([]);
+  const [allInstitutes, setAllInstitutes] = useState<IInstituteModel[] | null>([]);
   const instituteService = new InstituteService();
 
   const { showToastError, showToastSuccess } = useUtils();
@@ -43,6 +43,7 @@ export function useInstitute() {
   };
   const handleCloseModalDelete = () => {
     setDeleteOpenModal(false);
+    //@ts-ignore
     setIdModalInstitute(null);
   };
 

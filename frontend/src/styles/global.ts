@@ -1,5 +1,3 @@
-import { createGlobalStyle } from "styled-components";
-
 export const Colors = {
   blue: "#073763ff",
   blueButton: "#3D4FBE",

@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Button } from "../../../components/Button";
-import { ModalDelete } from "../Status/ModalDelete";
 import { useUser } from "../../../hooks/network/useUsers";
 import { ModalUsers } from "./components/ModalUsers";
 import { TableUsers } from "./components/TableUsers";
@@ -10,17 +9,15 @@ import { IPostUserModel } from "../../../services/UserService/dtos/IPostUserDTOR
 import { IPutUserModel } from "../../../services/UserService/dtos/IPutUserDTOResponse";
 import { useInstitute } from "../../../hooks/network/useInstitutes";
 
+//ts-ignore
 export function Users() {
   const {
     loading,
     allUsers,
     dataFormModalUser,
-    deleteOpenModal,
-    dataIdModalUser,
     defaultValues,
     isModalOpen,
     getUsers,
-    deleteInsititute,
     postUser,
     putUser,
     handleOpenModalCreate,
@@ -28,7 +25,6 @@ export function Users() {
     handleOpenModalDelete,
     handleCloseModalCreate,
     handleCloseModalEdit,
-    handleCloseModalDelete,
     setAllUsers,
   } = useUser();
 
@@ -36,7 +32,6 @@ export function Users() {
 
   const isModalOpenCreate = isModalOpen && dataFormModalUser === defaultValues;
   const isModalOpenEdit = isModalOpen && dataFormModalUser !== defaultValues;
-  const isModalOpenDelete = deleteOpenModal && dataIdModalUser !== "";
 
   const onSubmit: SubmitHandler<IPostUserModel | IPutUserModel> = async (
     data
@@ -98,14 +93,6 @@ export function Users() {
           loading={loading}
           onSubmit={onSubmit}
           institutes={allInstitutes}
-        />
-      )}
-
-      {isModalOpenDelete && (
-        <ModalDelete
-          handleCloseModal={handleCloseModalDelete}
-          deleteOpenModal={deleteOpenModal}
-          onClick={deleteInsititute}
         />
       )}
     </Container>

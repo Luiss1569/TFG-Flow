@@ -19,11 +19,11 @@ import {
 } from "./styles";
 
 interface TableInstitutesProps {
-  data: IInstituteModel[];
+  data: IInstituteModel[] | null;
   loading: boolean;
   handleEdit: (dataTable: IInstituteModel) => void;
   handleDelete: (id: string) => void;
-  setAllInstitutes: Dispatch<SetStateAction<IInstituteModel[]>>;
+  setAllInstitutes: Dispatch<SetStateAction<IInstituteModel[] | null>>;
 }
 
 export function TableInstitutes({
@@ -43,21 +43,6 @@ export function TableInstitutes({
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
-
-    const newUpdateInstance: IInstituteModel[] = [];
-    const textTyped = new RegExp(value.toUpperCase(), "i");
-
-    for (const item of data) {
-      if (item.name.match(textTyped)) {
-        console.log(1);
-        newUpdateInstance.push(item);
-      } else {
-        console.log(2);
-        setAllInstitutes(data);
-      }
-
-      setAllInstitutes(newUpdateInstance);
-    }
   };
 
   return (
@@ -98,7 +83,7 @@ export function TableInstitutes({
               </TdLoading>
             </tr>
           ) : (
-            data.map(({ id, name, acronym }) => (
+            data?.map(({ id, name, acronym }) => (
               <TableRow key={id} isLight={colorMode === "light"}>
                 <TableCell>{name}</TableCell>
                 <TableCell>{acronym}</TableCell>
