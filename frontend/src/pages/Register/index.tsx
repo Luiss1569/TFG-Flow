@@ -121,7 +121,7 @@ function Register() {
 
   const registerUser = async (data: CreateUserFormData) => {
     try {
-      await api.post("users", {
+      await api.post("user", {
         ...data,
         role: "student",
       });
