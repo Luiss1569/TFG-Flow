@@ -41,7 +41,7 @@ export function ModalDelete({
         queryClient.invalidateQueries("forms");
         toast({
           title: "Excluído com sucesso",
-          description: "O status foi excluído com sucesso",
+          description: "O forms foi excluído com sucesso",
           status: "success",
           duration: 9000,
           isClosable: true,
@@ -50,7 +50,7 @@ export function ModalDelete({
       onError: () => {
         toast({
           title: "Erro ao excluir",
-          description: "Ocorreu um erro ao excluir o status",
+          description: "Ocorreu um erro ao excluir o forms",
           status: "error",
           duration: 9000,
           isClosable: true,

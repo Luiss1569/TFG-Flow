@@ -73,12 +73,14 @@ export function TableStatus({
                   <Button
                     style={{ marginRight: "8px" }}
                     onClick={() => handleEdit(status)}
+                    id="btn-edit"
                   >
                     <FaPencilAlt size={14} color="#fff" />
                   </Button>
                   <Button
                     onClick={() => handleDelete(status.id)}
                     color="#fff"
+                    id="btn-delete"
                   >
                     <FaEraser size={14} color="#fff" />
                   </Button>

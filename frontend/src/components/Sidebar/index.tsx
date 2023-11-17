@@ -88,6 +88,7 @@ const NavLink = React.memo(
           placement="right-end"
           bg="white"
           color={"icons"}
+          id={to.replace("/portal/", "")}
         >
           <CustomCard
             _hover={{ textDecor: "none", color: "green_light" }}

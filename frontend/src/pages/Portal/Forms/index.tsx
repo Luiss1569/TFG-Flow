@@ -73,7 +73,7 @@ export default function FormsPage() {
     <Container>
       <Wrapper>
         <Title>Formulário</Title>
-        <Button onClick={handleOpenModalCreate} color="#fff">
+        <Button onClick={handleOpenModalCreate} color="#fff" id="btn-create">
           Cadastrar
         </Button>
       </Wrapper>

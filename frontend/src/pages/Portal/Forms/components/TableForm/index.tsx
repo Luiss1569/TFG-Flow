@@ -82,10 +82,15 @@ export function TableForm({
                   <Button
                     style={{ marginRight: "8px" }}
                     onClick={() => handleEdit(form)}
+                    id="btn-edit"
                   >
                     <FaPencilAlt size={14} color="#fff" />
                   </Button>
-                  <Button onClick={() => handleDelete(form.id)} color="#fff">
+                  <Button
+                    onClick={() => handleDelete(form.id)}
+                    color="#fff"
+                    id="btn-delete"
+                  >
                     <FaEraser size={14} color="#fff" />
                   </Button>
                 </TableCell>

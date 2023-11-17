@@ -8,14 +8,8 @@ import {
   ModalOverlay,
   Heading,
   useToast,
-  Checkbox,
-  FormControl,
-  FormLabel,
-  Box,
 } from "@chakra-ui/react";
 import {
-  Control,
-  UseFormRegister,
   useFieldArray,
   useForm,
 } from "react-hook-form";
@@ -26,10 +20,9 @@ import api from "../../../../../lib/axios";
 import { useMutation, useQueryClient } from "react-query";
 import Form from "../../../../../interfaces/Form";
 import { SelectComponent } from "../../../../../components/Select";
-import { FaTrash } from "react-icons/fa";
-import { memo, useState } from "react";
-import { MdOutlineAdd } from "react-icons/md";
 import Status from "../../../../../interfaces/Status";
+import FieldForms from "../../../../../components/FieldForm";
+import { useState } from "react";
 
 interface ModalInstituteProps {
   isModalCreate?: boolean;
@@ -79,7 +72,7 @@ export function ModalForm({
         queryClient.invalidateQueries("forms");
         toast({
           title: "Salvo com sucesso",
-          description: "O status foi salvo com sucesso",
+          description: "O forms foi salvo com sucesso",
           status: "success",
           duration: 9000,
           isClosable: true,
@@ -88,7 +81,7 @@ export function ModalForm({
       onError: () => {
         toast({
           title: "Erro ao salvar",
-          description: "Ocorreu um erro ao salvar o status",
+          description: "Ocorreu um erro ao forms o status",
           status: "error",
           duration: 9000,
           isClosable: true,
@@ -115,7 +108,7 @@ export function ModalForm({
           isModalCreate ? "Cadastrar" : "Editar"
         } Formulário`}</ModalHeader>
         <ModalCloseButton />
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} id="form-form">
           <ModalBody>
             <Wrapper>
               <InputComponent
@@ -124,6 +117,7 @@ export function ModalForm({
                 isRequired={isModalCreate}
                 disabled={loading}
                 {...register("name")}
+                id="name"
               />
               <InputComponent
                 label="Slug"
@@ -131,6 +125,7 @@ export function ModalForm({
                 isRequired={isModalCreate}
                 disabled={loading}
                 {...register("slug")}
+                id="slug"
               />
               <SelectComponent
                 label="Tipo"
@@ -151,6 +146,7 @@ export function ModalForm({
                   setValue("form_type", e.target.value as "private" | "public");
                   setIsPublic(e.target.value === "public");
                 }}
+                id="form_type"
               />
 
               {isPublic && (
@@ -165,6 +161,7 @@ export function ModalForm({
                   isRequired={isModalCreate}
                   disabled={loading}
                   {...register("status_id")}
+                  id="status_id"
                 />
               )}
 
@@ -174,6 +171,7 @@ export function ModalForm({
                 isRequired={isModalCreate}
                 disabled={loading}
                 {...register("description")}
+                id="description"
               />
               <InputComponent
                 type="date"
@@ -181,6 +179,7 @@ export function ModalForm({
                 placeholder="Data de início"
                 disabled={loading}
                 {...register("formOpenPeriod.0.start_date")}
+                id="start_date"
               />
               <InputComponent
                 type="date"
@@ -188,99 +187,21 @@ export function ModalForm({
                 placeholder="Data de fim"
                 disabled={loading}
                 {...register("formOpenPeriod.0.end_date")}
+                id="end_date"
               />
               <Heading as="h6" fontSize="lg">
                 Campos
               </Heading>
               {fields.map((field, index) => (
-                <Box
+                <FieldForms
                   key={field.id}
-                  mb="2rem"
-                  p="1rem"
-                  border="1px solid gray"
-                  borderRadius="lg"
-                >
-                  <InputComponent
-                    label="Digite o identificador do campo"
-                    placeholder="ID"
-                    {...register(`content.fields.${index}.id`, {
-                      required: true,
-                    })}
-                  />
-                  <InputComponent
-                    label="Digite o label do campo"
-                    placeholder="Label"
-                    {...register(`content.fields.${index}.label`, {
-                      required: true,
-                    })}
-                  />
-
-                  <SelectComponent
-                    label="Digite o tipo do campo"
-                    placeholder="Tipo"
-                    options={[
-                      { label: "Text", value: "text" },
-                      { label: "Number", value: "number" },
-                      { label: "Date", value: "date" },
-                      { label: "Email", value: "email" },
-                      { label: "Password", value: "password" },
-                      { label: "Textarea", value: "textarea" },
-                      { label: "Select", value: "select" },
-                      { label: "Multi Select", value: "multiselect" },
-                      { label: "Radio", value: "radio" },
-                      { label: "Checkbox", value: "checkbox" },
-                      { label: "File", value: "file" },
-                    ]}
-                    {...register(`content.fields.${index}.type`, {
-                      required: true,
-                    })}
-                  />
-
-                  {["select", "multiselect", "radio", "checkbox"].includes(
-                    getValues(`content.fields.${index}.type`)
-                  ) && (
-                    <FieldOptionsMenu
-                      index={index}
-                      {...{ register, control }}
-                    />
-                  )}
-
-                  <InputComponent
-                    label="Digite o placeholder do campo"
-                    placeholder="Placeholder"
-                    {...register(`content.fields.${index}.placeholder`)}
-                  />
-
-                  <FormControl>
-                    <Checkbox
-                      type="checkbox"
-                      {...register(`content.fields.${index}.required`)}
-                    >
-                      <FormLabel htmlFor="required">Obrigatorio</FormLabel>
-                    </Checkbox>
-                  </FormControl>
-
-                  <FormControl>
-                    <Checkbox
-                      type="checkbox"
-                      {...register(`content.fields.${index}.visible`)}
-                    >
-                      <FormLabel htmlFor="visible">Visível</FormLabel>
-                    </Checkbox>
-                  </FormControl>
-
-                  <Button
-                    type="button"
-                    onClick={() => remove(index)}
-                    color="#fff"
-                  >
-                    <FaTrash />
-                  </Button>
-                </Box>
+                  {...{ field, index, register, control, getValues, remove, setValue }}
+                />
               ))}
 
               <button
                 type="button"
+                id="add-field"
                 onClick={() =>
                   append({
                     id: `campo#${fields.length + 1}`,
@@ -322,67 +243,3 @@ export function ModalForm({
 }
 
 export default ModalForm;
-
-interface OptionFieldProps {
-  index: number;
-  register: UseFormRegister<Form>;
-  control: Control<Form>;
-}
-
-const FieldOptionsMenu = memo(
-  ({ index, control, register }: Readonly<OptionFieldProps>) => {
-    const {
-      fields: optionFields,
-      append: appendOption,
-      remove: removeOption,
-    } = useFieldArray({
-      control,
-      name: `content.fields.${index}.options`,
-    });
-
-    return (
-      <Box my="sm">
-        <Heading as="h6" fontSize="md">
-          Opções
-        </Heading>
-        <SelectComponent
-          label="Tipo especial?"
-          options={[{ label: "Professores", value: "teacher" }]}
-          {...register(`content.fields.${index}.especial_type`)}
-        />
-        {optionFields.map((optionField, optionIndex) => (
-          <Box key={optionField.id} mb="2rem" p="1rem" border="1px solid gray">
-            <InputComponent
-              label="Digite o valor da opção"
-              type="text"
-              {...register(
-                `content.fields.${index}.options.${optionIndex}.label`
-              )}
-            />
-            <InputComponent
-              label="Digite o valor da opção"
-              type="text"
-              {...register(
-                `content.fields.${index}.options.${optionIndex}.value`
-              )}
-            />
-
-            <Button
-              type="button"
-              onClick={() => removeOption(optionIndex)}
-              color="#fff"
-            >
-              <FaTrash />
-            </Button>
-          </Box>
-        ))}
-        <Button
-          type="button"
-          onClick={() => appendOption({ value: "", label: "" })}
-        >
-          <MdOutlineAdd color="white" />
-        </Button>
-      </Box>
-    );
-  }
-);

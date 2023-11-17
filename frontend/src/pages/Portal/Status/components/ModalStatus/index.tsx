@@ -87,17 +87,18 @@ export function ModalStatus({
       <ModalContent>
         <ModalHeader>{`${
           isModalCreate ? "Cadastrar" : "Editar"
-        } Instituto`}</ModalHeader>
+        } Status`}</ModalHeader>
         <ModalCloseButton />
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} id="form-status">
           <ModalBody>
             <Wrapper>
               <InputComponent
                 label="Nome"
-                placeholder="Nome do usuário"
+                placeholder="Nome do status"
                 isRequired={isModalCreate}
                 disabled={loading}
                 {...register("name")}
+                id="name"
               />
             </Wrapper>
           </ModalBody>

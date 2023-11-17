@@ -11,6 +11,10 @@
     {
       "path": "./frontend",
       "name": "Frontend"
+    },
+    {
+      "path": "./cypress"
+      "name": "Testes"
     }
   ],
 

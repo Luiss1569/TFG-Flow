@@ -9,8 +9,8 @@ interface Body {
   status_id?: string;
   content: any;
   formOpenPeriod?: {
-    start_date?: Date;
-    end_date?: Date;
+    start_date?: string;
+    end_date?: string;
   }[];
 }
 
@@ -18,7 +18,7 @@ const handler: ApiWrapperHandler = async (conn, req) => {
   const body = req.body as Body;
 
   const haveOpenPeriod =
-    body.formOpenPeriod?.at(0).start_date && body.formOpenPeriod?.at(0).end_date;
+    body.formOpenPeriod?.at(0).start_date !== "" && body.formOpenPeriod?.at(0).end_date !== "";
 
   const objectOpenPeriod = haveOpenPeriod && {
     formOpenPeriod: {
@@ -54,8 +54,8 @@ export default new ApiWrapper(handler)
         schema
           .object()
           .shape({
-            start_date: schema.date(),
-            end_date: schema.date(),
+            start_date: schema.string(),
+            end_date: schema.string(),
           })
           .when("form_type", ([form_type], schema) =>
             form_type === "public" ? schema.required() : schema

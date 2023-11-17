@@ -62,7 +62,7 @@ export default function StatusPage() {
     <Container>
       <Wrapper>
         <Title>Status</Title>
-        <Button onClick={handleOpenModalCreate} color="#fff">
+        <Button onClick={handleOpenModalCreate} color="#fff" id="btn-create">
           Cadastrar
         </Button>
       </Wrapper>
