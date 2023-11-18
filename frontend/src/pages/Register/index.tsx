@@ -136,20 +136,25 @@ function Register() {
   return (
     <Box bg="primary">
       <Center>
-        <Stack width="60%">
-          <HStack h="100vh" justifyContent="space-between" spacing="5%">
+        <Stack  w={{ base: "100%", xl: "70%" }}
+>
+          <HStack h="100vh" 
+          justifyContent={{ base: "center", xl: "space-between" }}
+          spacing="5%">
             <IconButton
               aria-label="toggle theme"
               rounded="full"
               size="xs"
               position="absolute"
               bottom={4}
+              zIndex={2}
               left={4}
               onClick={toggleColorMode}
               icon={colorMode === "dark" ? <SunIcon /> : <MoonIcon />}
             />
 
-            <Card bg="secondary" p="10">
+            <Card bg="secondary" p="10" 
+            >
               <CardHeader pb={3}>
                 <Heading size="md">Cadastro de usuário</Heading>
               </CardHeader>
