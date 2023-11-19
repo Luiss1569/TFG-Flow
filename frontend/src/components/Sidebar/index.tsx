@@ -12,7 +12,6 @@ import { Link as ReactRouterLink, useLocation } from "react-router-dom";
 
 import {
   BsHouse,
-  BsCardText,
   BsBuilding,
   BsPerson,
   BsTag,
