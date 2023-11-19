@@ -76,3 +76,48 @@ export interface ActivityDetails {
     }[];
   }[];
 }
+
+interface User {
+  id: string;
+  name: string;
+  cpf: string;
+  matriculation: string;
+}
+
+interface Mastermind {
+  activity_id: string;
+  teacher_id: string;
+  assigned_at: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface ActivityWorkflow {
+  id: string;
+  activity_id: string;
+  workflow_id: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Activity {
+  id: string;
+  name: string;
+  matriculation: number;
+  users: User;
+  masterminds: Mastermind[];
+  activityWorkflow: ActivityWorkflow[];
+  status: {
+    id: string;
+    name: string;
+  };
+}
+
+interface ActivityResponse {
+  activities: Activity[];
+  total: number;
+  nextPage: number | null;
+  page: number;
+}
+
+export default ActivityResponse;

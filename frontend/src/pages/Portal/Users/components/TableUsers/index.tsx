@@ -151,6 +151,7 @@ export function TableUsers({
                       style={{ marginRight: "8px" }}
                       onClick={() =>
                         handleEdit({
+                          id,
                           cpf,
                           email,
                           institute_id,

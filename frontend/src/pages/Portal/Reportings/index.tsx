@@ -8,7 +8,7 @@ const Reportings: React.FC = () => {
       <Heading mb={4}>Relatórios</Heading>
       <Divider />
       <Flex flexWrap="wrap" justifyContent="start" width="100%" gap={4} mt={5}>
-        <ContentBox to="/report-of-activities">
+        <ContentBox to="/portal/report-of-activities">
           <Heading fontSize="md">Relatório de Atividades</Heading>
         </ContentBox>
         <ContentBox to="/logs">

@@ -1,48 +1,77 @@
-import ApiWrapper, {
-    ApiWrapperHandler,
-} from "../../utils/wrappers/apiWrapper";
+import ApiWrapper, { ApiWrapperHandler } from "../../utils/wrappers/apiWrapper";
 import res from "../../utils/wrappers/apiResponse";
-import { status } from "@prisma/client";
-
 
 const handler: ApiWrapperHandler = async (conn, req) => {
-    const {activity_id , name, matriculation, status_id, status: status, created_at, updated_at, user_id } = req.params;
-    
-    const activity = await conn.activities.findMany({
-        where: {
-            id: activity_id ? activity_id : undefined,
-            name: name ? name : undefined,
-            matriculation: +matriculation ? +matriculation : undefined,
-            status_id: status_id ? status_id : undefined,
-        //status: status ? status : undefined,
-            created_at: created_at ? created_at : undefined,
-            updated_at: updated_at ? updated_at : undefined,
-            user_id: user_id ? user_id : undefined,
-        }
-    });
-    if (!activity) {
-        return res.error(404, null, "Activity not found");
+  const totalActivities = await conn.activities.count();
+
+  const totalActivitiesLast24Hours = await conn.activities.count({
+    where: {
+      created_at: {
+        gte: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+      },
+    },
+  });
+
+  const activitiesLast7Days: Array<{ date: string; count: number }> =
+    await conn.$queryRaw`
+  SELECT DATE(created_at) as date, COUNT(id)::integer as count
+  FROM activities
+  WHERE created_at >= NOW() - INTERVAL '7 days'
+  GROUP BY DATE(created_at)
+`;
+
+  const activitiesPerStatus = await conn.activities.groupBy({
+    by: ["status_id"],
+    _count: true,
+  });
+
+  const activitiesPerStatusName = await conn.status.findMany({
+    where: {
+      id: {
+        in: activitiesPerStatus.map((status) => status.status_id),
+      },
+    },
+  });
+
+  const activitiesPerStatusNameMap = activitiesPerStatus.map((activStatus) => ({
+    count: activStatus._count,
+    status: activitiesPerStatusName.find(
+      (status) => status.id === activStatus.status_id
+    )?.name,
+  }));
+
+  // Create a map of the existing dates in activitiesLast7Days
+  const existingDatesMap = new Map(
+    activitiesLast7Days.map((activity) => [activity.date, activity.count])
+  );
+
+  const currentDate = new Date();
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date(currentDate.getTime() - i * 24 * 60 * 60 * 1000);
+    const formattedDate = date.toISOString().split("T")[0];
+    if (!existingDatesMap.has(formattedDate)) {
+      activitiesLast7Days.push({ date: formattedDate, count: 0 });
     }
+  }
+  activitiesLast7Days.sort((a, b) => a.date.localeCompare(b.date));
+  activitiesLast7Days.forEach((activity) => {
+    if (activity.date) {
+      activity.date = new Date(activity.date).toLocaleDateString();
+    }
+  });
 
-    return res.success(activity);
-}
+  return res.success({
+    totalActivities,
+    activitiesLast7Days,
+    totalActivitiesLast24Hours,
+    activitiesPerStatus: activitiesPerStatusNameMap
+  });
+};
 
-export default new ApiWrapper(handler)
-    .setSchemaValidator((schema) => ({
-        params: schema.object().shape({
-            activity_id: schema.string().optional(),
-            name: schema.string().optional(),
-            matriculation: schema.number().optional(),
-            status_id: schema.string().optional(),
-            //status: schema.enum(status).optional(),
-            created_at: schema.string().optional(),
-            updated_at: schema.string().optional(),
-            user_id: schema.string().optional(),
-        })
-    })).configure({
-        name: "ActivityReport",
-        options: {
-            methods: ["GET"],
-            route: "report/activity",
-        },
-    });
+export default new ApiWrapper(handler).configure({
+  name: "ActivityReport",
+  options: {
+    methods: ["GET"],
+    route: "report/activity",
+  },
+});

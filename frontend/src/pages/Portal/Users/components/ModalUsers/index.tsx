@@ -61,6 +61,7 @@ export function ModalUsers({
         <form onSubmit={handleSubmit(onSubmit)}>
           <ModalBody>
             <Grid>
+              <input type="hidden" {...register("id")} />
               <SelectComponent
                 label="Perfil"
                 options={optionsRole}
@@ -68,15 +69,17 @@ export function ModalUsers({
                 disabled={loading}
                 {...register("role")}
               />
-              <Wrapper>
-                <SelectComponent
-                  label="Grau"
-                  options={optionsRoleTypeGrau}
-                  isRequired={isModalCreate && isDegree}
-                  disabled={loading}
-                  {...register("university_degree")}
-                />
-              </Wrapper>
+              {isDegree && (
+                <Wrapper>
+                  <SelectComponent
+                    label="Grau"
+                    options={optionsRoleTypeGrau}
+                    isRequired
+                    disabled={loading}
+                    {...register("university_degree")}
+                  />
+                </Wrapper>
+              )}
             </Grid>
             <Margin>
               <InputComponent
@@ -116,10 +119,12 @@ export function ModalUsers({
               />
               <SelectComponent
                 label="Instituto"
-                options={institutes?.map((institute) => ({
-                  value: institute.id.toString(),
-                  label: institute.name,
-                })) || []}
+                options={
+                  institutes?.map((institute) => ({
+                    value: institute.id.toString(),
+                    label: institute.name,
+                  })) || []
+                }
                 isRequired={isModalCreate}
                 disabled={loading}
                 {...register("institute_id")}

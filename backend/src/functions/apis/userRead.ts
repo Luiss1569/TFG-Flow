@@ -24,6 +24,19 @@ const handler: ApiWrapperHandler = async (conn, req) => {
       },
     },
   });
+
+  if (!user) {
+    return res.error(404, null, "User not found");
+  }
+
+  user.forEach((user) => {
+    const university_degree = user?.teachers.at(-1)?.university_degree;
+    if (university_degree) {
+      delete user.teachers;
+      user["university_degree"] = university_degree;
+    }
+  });
+
   return res.success(user);
 };
 

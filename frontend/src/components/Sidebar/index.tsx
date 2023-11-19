@@ -19,7 +19,18 @@ import {
   BsFileEarmarkText,
   BsPostcardFill,
 } from "react-icons/bs";
-import React from "react";
+import React, { useMemo } from "react";
+import useAuth from "../../hooks/useAuth";
+
+const links = [{ to: "/portal", label: "Dashboard", icon: BsHouse }];
+
+const coordinatorLinks = [
+  { to: "/portal/users", label: "Usuários", icon: BsPerson },
+  { to: "/portal/institutes", label: "Instituições", icon: BsBuilding },
+  { to: "/portal/status", label: "Status", icon: BsTag },
+  { to: "/portal/forms", label: "Formulários", icon: BsFileEarmarkText },
+  { to: "/portal/reportings", label: "Relatórios", icon: BsPostcardFill },
+];
 
 const CustomCard = React.forwardRef<HTMLSpanElement, TagProps>(
   ({ children, ...rest }, ref) => (
@@ -39,18 +50,16 @@ const CustomCard = React.forwardRef<HTMLSpanElement, TagProps>(
   )
 );
 
-const items = [
-  { to: "/portal", label: "Dashboard", icon: BsHouse },
-  { to: "/portal/activities", label: "Atividades", icon: BsCardText },
-  { to: "/portal/users", label: "Usuários", icon: BsPerson },
-  { to: "/portal/institutes", label: "Instituições", icon: BsBuilding },
-  { to: "/portal/status", label: "Status", icon: BsTag },
-  { to: "/portal/forms", label: "Formulários", icon: BsFileEarmarkText },
-  { to: "/portal/reportings", label: "Relatórios", icon: BsPostcardFill },
-];
-
 function Sidebar() {
   const location = useLocation();
+  const [token] = useAuth();
+
+  const items = useMemo(() => {
+    if (token?.role === "student") {
+      return links;
+    }
+    return links.concat(coordinatorLinks);
+  }, [token?.role]);
 
   return (
     <List fontSize="xl" spacing={4}>

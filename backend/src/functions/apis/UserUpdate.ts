@@ -76,16 +76,19 @@ const handler: ApiWrapperHandler = async (conn, req) => {
           id: institute_id ? institute_id : user.institute_id,
         },
       },
-      ...(role === "teacher"
+      ...(role === "teacher" || role === "coordinator"
         ? {
             teachers: {
-              create: {
-                matriculation: matriculation
-                  ? matriculation
-                  : user.matriculation,
-                university_degree: university_degree
-                  ? university_degree
-                  : user.teachers.at(0).university_degree,
+              upsert: {
+                create: {
+                  university_degree: university_degree,
+                },
+                update: {
+                  university_degree: university_degree,
+                },
+                where: {
+                  user_id: user_id,
+                },
               },
             },
           }

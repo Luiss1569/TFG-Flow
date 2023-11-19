@@ -47,6 +47,6 @@ describe("Crud", () => {
     cy.get(".css-59nyk3").click();
     cy.wait("@deleteStatus");
 
-    cy.get('#toast-4-description').should("contain", "Excluído com sucesso");
+    cy.get('#toast-4-description').should("contain", "excluído com sucesso");
   });
 });
