@@ -38,59 +38,68 @@ const handler: ApiWrapperHandler = async (conn, req) => {
     },
   });
 
-  const requestAnswers = await conn.forms.findMany({
+  const requestAnswers = await conn.userRequestAnswers.findMany({
     where: {
-      form_type: "private",
-      formOpenPeriod: {
-        every: {
-          start_date: {
-            lte: new Date(),
-          },
-          end_date: {
-            gte: new Date(),
-          },
-        },
+      user: {
+        id: req.user.id,
       },
-      requestAnswers: {
-        every: {
-          userRequestAnswers: {
-            every: {
-              user: {
-                id: req.user.id,
-              },
-              answer_id: {
-                equals: null,
+      answer_id: null,
+      request_answer: {
+        form: {
+          form_type: "private",
+          OR: [
+            {
+              formOpenPeriod: {
+                some: {
+                  start_date: {
+                    lte: new Date(),
+                  },
+                  end_date: {
+                    gte: new Date(),
+                  },
+                },
               },
             },
-          },
+            {
+              formOpenPeriod: {
+                none: {},
+              },
+            },
+          ],
         },
       },
     },
     select: {
-      id: true,
-      name: true,
-      slug: true,
-      description: true,
-      status: {
-        select: {
-          name: true,
-        },
-      },
-      requestAnswers: {
+      request_answer_id: true,
+      request_answer: {
         select: {
           activity: {
             select: {
               id: true,
-              matriculation: true,
               name: true,
+              matriculation: true,
+              created_at: true,
+              status: {
+                select: {
+                  name: true,
+                },
+              },
             },
           },
-        },
-      },
-      formOpenPeriod: {
-        select: {
-          start_date: true,
-          end_date: true,
+          form: {
+            select: {
+              id: true,
+              name: true,
+              description: true,
+              slug: true,
+              formOpenPeriod: {
+                select: {
+                  start_date: true,
+                  end_date: true,
+                },
+              }
+            },
+          },
         },
       },
     },

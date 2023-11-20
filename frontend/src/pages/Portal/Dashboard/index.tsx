@@ -19,7 +19,12 @@ import {
   TagLabel,
   TagLeftIcon,
 } from "@chakra-ui/react";
-import { Dashboard, Form, Activity } from "../../../interfaces/Dashboard";
+import {
+  Dashboard,
+  Form,
+  Activity,
+  RequestForm,
+} from "../../../interfaces/Dashboard";
 import { BiLinkExternal } from "react-icons/bi";
 import { FaEye } from "react-icons/fa";
 import { Link as RouterLink } from "react-router-dom";
@@ -76,8 +81,8 @@ const DashboardPage: React.FC = () => {
             </AccordionButton>
           </h2>
           <AccordionPanel>
-            {dashboard?.request.map((form: Form) => (
-              <FormBox key={form.id} form={form} />
+            {dashboard?.request.map((request: RequestForm) => (
+              <RequestBox key={request.request_answer_id} request={request} />
             ))}
 
             {dashboard?.request.length === 0 && (
@@ -158,35 +163,8 @@ const FormBox = memo(({ form }: FormBoxProps) => {
             {form.name}
           </Text>
           <Text mt={4}>{form.description}</Text>
-          {!!form.requestAnswers?.length && (
-            <>
-              <Divider my={4} w="100%" />
-              <Flex direction="row" mt={4} gap={1} alignItems="baseline">
-                <Text fontSize="md">Atividade:</Text>
-                <Text fontSize="md" fontWeight="bolder">
-                  {form.requestAnswers.at(-1)?.activity.name}
-                </Text>
-                <Text fontSize="md">
-                  #{form.requestAnswers.at(-1)?.activity.matriculation}
-                </Text>
-              </Flex>
-            </>
-          )}
         </div>
         <Flex>
-          {!!form.requestAnswers?.length && (
-            <Link
-              as={RouterLink}
-              to={`/portal/activity/${
-                form.requestAnswers.at(-1)?.activity.id
-              }/details`}
-              display="flex"
-              alignItems="center"
-              mr={4}
-            >
-              <Icon as={FaEye} />
-            </Link>
-          )}
           {!!form.formOpenPeriod?.length && (
             <Tag colorScheme="gray.100" mr={4}>
               <TagLeftIcon boxSize="12px" as={BsCalendarX} />
@@ -198,7 +176,6 @@ const FormBox = memo(({ form }: FormBoxProps) => {
           <Link
             as={RouterLink}
             to={`/response/${form.slug}`}
-            state={{ activity_id: form?.requestAnswers?.at(-1)?.activity.id }}
             display="flex"
             alignItems="center"
             mr={4}
@@ -256,3 +233,74 @@ const ActivityBox = memo(({ activity }: ActivityBoxProps) => (
     <Text fontSize="sm">Criado em: {formatDate(activity.created_at)}</Text>
   </Box>
 ));
+
+interface RequestBoxProps {
+  request: RequestForm;
+}
+
+const RequestBox = memo(({ request }: RequestBoxProps) => {
+  const { request_answer } = request;
+  const { activity, form } = request_answer;
+
+  return (
+    <Box
+      key={form.id}
+      py={3}
+      px={5}
+      shadow="md"
+      borderWidth="1px"
+      borderRadius="lg"
+      display="flex"
+      alignItems="center"
+      mb={4}
+      _hover={{ borderColor: "green.500" }}
+    >
+      <Flex w="100%" justifyContent="space-between">
+        <div>
+          <Text fontSize="lg" fontWeight="bold">
+            {form.name}
+          </Text>
+          <Text mt={4}>{form.description}</Text>
+
+          <Divider my={4} w="100%" />
+          <Flex direction="row" mt={4} gap={1} alignItems="baseline">
+            <Text fontSize="md">Atividade:</Text>
+            <Text fontSize="md" fontWeight="bolder">
+              {activity.name}
+            </Text>
+            <Text fontSize="md">#{activity.matriculation}</Text>
+          </Flex>
+        </div>
+        <Flex>
+          <Link
+            as={RouterLink}
+            to={`/portal/activity/${activity.id}/details`}
+            display="flex"
+            alignItems="center"
+            mr={4}
+          >
+            <Icon as={FaEye} />
+          </Link>
+          {!!form.formOpenPeriod?.length && (
+            <Tag colorScheme="gray.100" mr={4}>
+              <TagLeftIcon boxSize="12px" as={BsCalendarX} />
+              <TagLabel>
+                {formatDate(form.formOpenPeriod?.at(-1)?.end_date)}
+              </TagLabel>
+            </Tag>
+          )}
+          <Link
+            as={RouterLink}
+            to={`/response/${form.slug}`}
+            state={{ activity_id: activity.id }}
+            display="flex"
+            alignItems="center"
+            mr={4}
+          >
+            <Icon as={BiLinkExternal} />
+          </Link>
+        </Flex>
+      </Flex>
+    </Box>
+  );
+});

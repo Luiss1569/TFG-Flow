@@ -17,14 +17,6 @@ export interface Activity {
   }[];
 }
 
-interface RequestAnswer {
-  activity: {
-    id: string;
-    matriculation: number;
-    name: string;
-  };
-}
-
 export interface Form {
   id: string;
   name: string;
@@ -33,16 +25,26 @@ export interface Form {
   status: {
     name: string | null;
   } | null;
-  requestAnswers?: RequestAnswer[];
   formOpenPeriod?: {
     start_date: string;
     end_date: string;
   }[];
 }
 
+interface RequestAnswer {
+  request_answer_id: string;
+  activity: Pick<Activity, 'id' | 'name' | 'matriculation' | 'status'>;
+  form: Pick<Form, 'id' | 'slug' | 'name' | 'description'| 'formOpenPeriod'>;
+}
+
+export interface RequestForm {
+  request_answer_id: string;
+  request_answer: RequestAnswer;
+}
+
 export interface Dashboard {
   public: Form[];
-  request: Form[];
+  request: RequestForm[];
   activities: Activity[];
   teacher_activities: Activity[] | null;
 }
