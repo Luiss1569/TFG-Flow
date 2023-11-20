@@ -52,9 +52,9 @@ const handler: ApiWrapperHandler = async (conn, req) => {
         },
       },
       requestAnswers: {
-        some: {
+        every: {
           userRequestAnswers: {
-            some: {
+            every: {
               user: {
                 id: req.user.id,
               },
