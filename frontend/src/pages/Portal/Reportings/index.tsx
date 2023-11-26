@@ -11,7 +11,7 @@ const Reportings: React.FC = () => {
         <ContentBox to="/portal/report-of-activities">
           <Heading fontSize="md">Relatório de Atividades</Heading>
         </ContentBox>
-        <ContentBox to="/logs">
+        <ContentBox to="/portal/logs">
           <Heading fontSize="md">Logs</Heading>
         </ContentBox>
         <ContentBox to="/workflows">
