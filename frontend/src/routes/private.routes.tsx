@@ -8,7 +8,7 @@ import Reportings from "../pages/Portal/Reportings";
 import Status from "../pages/Portal/Status";
 import Forms from "../pages/Portal/Forms";
 import ReportActivity from "../pages/Portal/ReportActivity";
-import LogTable from "../pages/Portal/Log";
+import LogTable from "../pages/Portal/LogsReport";
 
 type RouteType = {
   path: string;
