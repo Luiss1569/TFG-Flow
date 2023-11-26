@@ -8,6 +8,7 @@ import Reportings from "../pages/Portal/Reportings";
 import Status from "../pages/Portal/Status";
 import Forms from "../pages/Portal/Forms";
 import ReportActivity from "../pages/Portal/ReportActivity";
+import LogTable from "../pages/Portal/Log";
 
 type RouteType = {
   path: string;
@@ -55,6 +56,10 @@ const routes: RouteType = [
       {
         path: "report-of-activities",
         element: <ReportActivity />,
+      },
+      {
+        path: "logs",
+        element: <LogTable />,
       }
     ],
   },
