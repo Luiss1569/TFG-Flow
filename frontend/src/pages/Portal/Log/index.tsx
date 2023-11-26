@@ -39,9 +39,11 @@ export default function LogTable() {
 
     const fetchData = async (days: any) => {
         try {
-            const response = await api.get(`/report/logs/${days}`);
-            const data = response.data?.body;
+            const response = await api.get(`/report/logsReport/${days}`);
+            console.log('chegou aqui');
+            const data = response.data?.body.logsReports;
             console.log(data);
+            console.log(typeof data);
             setDataLogs(data || []);
         } catch (error) {
             console.error('Error get:', error);
