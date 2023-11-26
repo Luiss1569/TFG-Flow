@@ -39,7 +39,7 @@ export default function LogTable() {
 
     const fetchData = async (days: any) => {
         try {
-            const response = await api.get(`/logsReport/${days}`);
+            const response = await api.get(`/reports/logs/${days}`);
             const data = response.data?.body;
             console.log(data);
             setDataLogs(data || []);
