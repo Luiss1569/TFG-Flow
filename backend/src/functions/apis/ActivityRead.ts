@@ -208,7 +208,7 @@ export default new ApiWrapper(handler)
     }),
   }))
   .configure({
-    name: "Activity-Read",
+    name: "ActivityRead",
     options: {
       methods: ["GET"],
       route: "activity/{activity_id}",

@@ -118,7 +118,7 @@ export default new ApiWrapper(handler)
     }),
   }))
   .configure({
-    name: "User-Update",
+    name: "UserUpdate",
     options: {
       methods: ["PUT"],
       route: "user/{user_id}",

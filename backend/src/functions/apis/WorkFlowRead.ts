@@ -30,7 +30,7 @@ export default new ApiWrapper(handler)
     }),
   }))
   .configure({
-    name: "Workflow-Read",
+    name: "WorkflowRead",
     options: {
       methods: ["GET"],
       route: "workflow/{workflow_id}",

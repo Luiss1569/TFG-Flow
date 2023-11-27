@@ -124,7 +124,7 @@ export default new ApiWrapper(handler)
     }),
   }))
   .configure({
-    name: "Form-Create",
+    name: "FormCreate",
     options: {
       methods: ["POST"],
       route: "form",

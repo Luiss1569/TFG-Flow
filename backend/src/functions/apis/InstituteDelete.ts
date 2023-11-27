@@ -30,7 +30,7 @@ export default new ApiWrapper(handler)
             institute_id: schema.string().required(),
         }),
     })).configure({
-        name: "Institute-Delete",
+        name: "InstituteDelete",
         options: {
             methods: ["DELETE"],
             route: "institute/{institute_id}",

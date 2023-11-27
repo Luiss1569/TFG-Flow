@@ -47,7 +47,7 @@ export default new ApiWrapper(handler)
     }),
   }))
   .configure({
-    name: "User-Read",
+    name: "UserRead",
     options: {
       methods: ["GET"],
       route: "user/{user_id?}",

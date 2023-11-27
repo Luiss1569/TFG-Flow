@@ -36,7 +36,7 @@ export default new ApiWrapper(handler)
     }),
   }))
   .configure({
-    name: "Form-Delete",
+    name: "FormDelete",
     options: {
       methods: ["DELETE"],
       route: "forms/{form_id}",

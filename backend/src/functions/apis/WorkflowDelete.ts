@@ -36,7 +36,7 @@ export default new ApiWrapper(handler)
     }),
   }))
   .configure({
-    name: "Workflow-Delete",
+    name: "WorkflowDelete",
     options: {
       methods: ["DELETE"],
       route: "workflow/{workflow_id}",

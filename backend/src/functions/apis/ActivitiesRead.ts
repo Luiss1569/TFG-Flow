@@ -64,7 +64,7 @@ const handler: ApiWrapperHandler = async (conn, req) => {
 };
 
 export default new ApiWrapper(handler).configure({
-  name: "Activities-Read",
+  name: "ActivitiesRead",
   options: {
     methods: ["GET"],
     route: "activities",

@@ -47,7 +47,7 @@ export default new ApiWrapper(handler)
             name: schema.string().optional(),
         }),
     })).configure({
-        name: "Status-Update",
+        name: "StatusUpdate",
         options: {
             methods: ["PUT"],
             route: "status/{status_id}",

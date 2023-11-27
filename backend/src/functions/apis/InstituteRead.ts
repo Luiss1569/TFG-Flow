@@ -25,7 +25,7 @@ export default new ApiWrapper(handler)
         }),
     }))
     .configure({
-        name: "Institute-Read",
+        name: "InstituteRead",
         options: {
             methods: ["GET"],
             route: "institute/{institute_id?}",

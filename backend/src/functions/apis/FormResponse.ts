@@ -231,7 +231,7 @@ export default new ApiWrapper(handler)
     }),
   }))
   .configure({
-    name: "Form-Response",
+    name: "FormResponse",
     options: {
       methods: ["POST"],
       route: "form/{form_id}/response",

@@ -48,7 +48,7 @@ export default new ApiWrapper(handler)
             acronym: schema.string().optional(),
         })
     })).configure({
-        name: "Institute-Upadate",
+        name: "InstituteUpadate",
         options: {
             methods: ["PUT"],
             route: "institute/{institute_id}",

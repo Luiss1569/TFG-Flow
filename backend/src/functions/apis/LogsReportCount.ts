@@ -49,7 +49,7 @@ const handler: ApiWrapperHandler = async (conn, req) => {
     }
 
     export default new ApiWrapper(handler).configure({
-        name: "Logs-Report",
+        name: "LogsReport",
         options: {
             methods: ["GET"],
             route: "report/logs",
