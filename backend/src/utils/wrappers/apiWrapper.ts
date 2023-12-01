@@ -101,7 +101,7 @@ export default class ApiWrapper {
         data: {
           invocation_id: invocationId,
           function: this.name,
-          user_id: user?.id,
+          user_id: user?.id || "-",
           content: JSON.stringify({
             body,
             query,
