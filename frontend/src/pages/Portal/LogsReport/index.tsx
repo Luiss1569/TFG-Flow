@@ -104,6 +104,7 @@ export default function LogTable() {
           <Tr>
             <Th>ID</Th>
             <Th>Usuário</Th>
+            <Th>Function</Th>
             <Th>Content</Th>
             <Th>Data de criação</Th>
           </Tr>
@@ -113,6 +114,7 @@ export default function LogTable() {
             <Tr key={item.id}>
               <Td>{item.id}</Td>
               <Td>{dataLogs.usersMap[item.user_id]?.name ?? "-"}</Td>
+              <Td>{item.function}</Td>
               <Td>{JSON.stringify(item.content, null, 2)}</Td>
               <Td>{new Date(item.created_at).toLocaleString()}</Td>
             </Tr>
