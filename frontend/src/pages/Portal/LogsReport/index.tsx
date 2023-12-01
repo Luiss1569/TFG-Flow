@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   FormLabel,
   Box,
@@ -20,58 +19,51 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import api from "../../../lib/axios";
-import { useEffect } from "react";
+import { useQuery } from "react-query";
+import LogsData, { LogReport } from "../../../interfaces/logsReport";
 
 const logFromSchema = z.object({
-  days: z.string().nonempty("O número de dias é obrigatório"),
+  days: z.number().int().positive().min(1).max(30).optional(),
 });
 
 type CreateLogFormData = z.infer<typeof logFromSchema>;
-
-interface LogData {
-  id: number;
-  content: string;
-  created_at: string;
-}
 
 export default function LogTable() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-    getValues,
+    watch,
   } = useForm<CreateLogFormData>({
     resolver: zodResolver(logFromSchema),
   });
 
-  useEffect(() => {
-    fetchData(getValues().days || "");
-  }, []);
+  const days = watch("days");
 
-  const [dataLogs, setDataLogs] = useState<LogData[]>([]);
+  const {
+    data: dataLogs,
+    isLoading,
+    isError,
+    error,
+    refetch: fetchData,
+  } = useQuery<LogsData>(["logs", days], async () => {
+    const response = await api.get(`/report/logsReport/${days ?? 7}`);
 
-  const fetchData = async (days: any) => {
-    try {
-      const response = await api.get(`/report/logsReport/${days}`);
-
-      const data = response.data?.body.logsReports;
-
-      setDataLogs(data || []);
-    } catch (error) {
-      console.error("Error get:", error);
-      setDataLogs([]);
-    }
-  };
+    return response.data.body;
+  });
 
   const onSubmit = async () => {
-    const formValues = getValues();
     try {
-      await fetchData(formValues.days);
+      await fetchData();
     } catch (error) {
       console.error("Error get:", error);
-      setDataLogs([]);
     }
   };
+
+  if (isError) {
+    return <div>Error: {JSON.stringify(error)}</div>;
+  }
+
   return (
     <Box width="100%" p={5}>
       <Text
@@ -98,7 +90,12 @@ export default function LogTable() {
             <FormHelperText color="red">{errors.days.message}</FormHelperText>
           )}
         </FormControl>
-        <Button type="submit" rightIcon={<Icon as={BsFilter} />}>
+        <Button
+          type="submit"
+          rightIcon={<Icon as={BsFilter} />}
+          isLoading={isLoading}
+          isDisabled={isLoading}
+        >
           Filtrar
         </Button>
       </form>
@@ -106,16 +103,18 @@ export default function LogTable() {
         <Thead>
           <Tr>
             <Th>ID</Th>
+            <Th>Usuário</Th>
+            <Th>Content</Th>
             <Th>Data de criação</Th>
-            <Th>Descrição</Th>
           </Tr>
         </Thead>
         <Tbody>
-          {dataLogs?.map((item) => (
+          {dataLogs?.logsReports?.map((item: LogReport) => (
             <Tr key={item.id}>
               <Td>{item.id}</Td>
-              <Td>{item.created_at}</Td>
-              <Td>{item.content}</Td>
+              <Td>{dataLogs.usersMap[item.user_id]?.name ?? "-"}</Td>
+              <Td>{JSON.stringify(item.content, null, 2)}</Td>
+              <Td>{new Date(item.created_at).toLocaleString()}</Td>
             </Tr>
           ))}
         </Tbody>

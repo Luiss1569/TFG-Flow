@@ -97,7 +97,7 @@ export default class ApiWrapper {
 
       conn = prisma.connect();
 
-      conn.logs.create({
+      await conn.logs.create({
         data: {
           invocation_id: invocationId,
           function: this.name,
